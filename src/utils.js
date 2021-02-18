@@ -58,7 +58,7 @@ export const reorderStickerList = function ({
   if (!items || items.length <= 0) throw Error("items list is empty");
   if (!direction || !["up", "down"].includes(direction))
     throw Error("direction needs to be either `up` or `down`");
-  if (typeof itemsIndex !== "number" && itemIndex < 0)
+  if (typeof itemIndex !== "number" && itemIndex < 0)
     throw Error("itemIndex needs to be a valid array index");
 
   // First, we can't change the array itself otherwise
@@ -67,7 +67,7 @@ export const reorderStickerList = function ({
   // the order of the sticker on the DOM as a z-index CSS prop.
   const max = items.length - 1; // the max is the number of items on the array
   const min = 0; // can't go lower than 0 with z-index
-  const { order: currentOrder } = items.find((item, i) => i === index); // get item to change and its current order
+  const { order: currentOrder } = items.find((item, i) => i === itemIndex); // get item to change and its current order
 
   // if we are going to the extreme, we max it up otherwise
   // we just make sure that we are not going over our max/min
@@ -85,7 +85,7 @@ export const reorderStickerList = function ({
 
   return items.map((item, i) => {
     // if it's our item we update its order
-    if (i === index) item.order = newOrder;
+    if (i === itemIndex) item.order = newOrder;
     else if (direction === "up") {
       // if we are going to the extreme edges, we gotta
       // move all items before/after the new order

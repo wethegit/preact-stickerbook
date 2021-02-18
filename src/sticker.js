@@ -247,7 +247,6 @@ export default function Sticker({
   };
 
   const onStickerPointerMove = function (e) {
-    console.log(STATES, state);
     if (state !== STATES.ROTATESCALE && state !== STATES.MOVE) return;
 
     e.preventDefault();
@@ -279,7 +278,6 @@ export default function Sticker({
 
       mousePositionRef.current = mousePosition;
     } else if (state === STATES.MOVE) {
-      console.log("move");
       const pos = new Vec2(e.clientX, e.clientY)
         .subtract(mousePositionRef.current)
         .subtract(parentPosition);
