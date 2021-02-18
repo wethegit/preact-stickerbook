@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "src/index.js",
   "main": "dist/preact-stickerbook.js",
@@ -35,8 +35,7 @@
     "preact": "^10.5.12"
   },
   "devDependencies": {
-    "microbundle": "^0.13.0",
-    "preact": "^10.5.12"
+    "microbundle": "^0.13.0"
   },
   "dependencies": {
     "wtc-math": "^0.0.4"
