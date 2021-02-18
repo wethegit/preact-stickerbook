@@ -4,8 +4,9 @@ import { Vec2, Mat2 } from "wtc-math";
 
 import { StickerbookContext } from "./stickerbook";
 
-import styles from "./sticker.module.css";
-import { classnames } from "./utils";
+import { classnames } from "./helpers";
+
+import styles from "./sticker.module.scss";
 
 const STATES = {
   LOADING: 0,

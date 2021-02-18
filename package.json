@@ -1,19 +1,23 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Easily create collage apps that are accessible by default.",
-  "source": "src/index.js",
-  "main": "dist/preact-stickerbook.js",
-  "umd:main": "dist/preact-stickerbook.umd.js",
-  "unpkg": "dist/preact-stickerbook.umd.js",
-  "module": "dist/preact-stickerbook.module.js",
-  "exports": "./dist/preact-stickerbook.modern.js",
-  "styles": "dist/preact-stickerbook.css",
+  "main": "dist/stickerbook.js",
+  "umd:main": "dist/stickerbook.umd.js",
+  "unpkg": "dist/stickerbook.umd.js",
+  "module": "dist/stickerbook.module.js",
+  "exports": {
+    ".": "./dist/stickerbook.modern.js",
+    "./sticker": "./dist/sticker.modern.js",
+    "./helpers": "./dist/helpers.modern.js"
+  },
+  "style": "dist/stickerbook.css",
+  "sass": "dist/preact-stickerbook.scss",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist; microbundle build src/index.js",
+    "build": "rm -rf dist && microbundle build src/*.js && cp src/all.scss dist/preact-stickerbook.scss",
     "prepare": "npm run build"
   },
   "repository": {
@@ -37,7 +41,8 @@
     "preact": "^10.5.12"
   },
   "devDependencies": {
-    "microbundle": "^0.13.0"
+    "microbundle": "^0.13.0",
+    "sass": "^1.32.7"
   },
   "dependencies": {
     "wtc-math": "^0.0.4"

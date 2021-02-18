@@ -8,9 +8,9 @@ import {
 } from "preact/hooks";
 import { Vec2 } from "wtc-math";
 
-import { classnames } from "./utils";
+import { classnames } from "./helpers";
 
-import styles from "./stickerbook.module.css";
+import styles from "./stickerbook.module.scss";
 
 // if in the future we have the need to have two
 // stickerbook components rendering, I think
