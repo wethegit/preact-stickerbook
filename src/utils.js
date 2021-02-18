@@ -81,7 +81,7 @@ export const reorderStickerList = function ({
       : Math.max(min, currentOrder - 1);
 
   // if the order didn't change, than we just return
-  if (newOrder === currentOrder) return cur;
+  if (newOrder === currentOrder) return items;
 
   return items.map((item, i) => {
     // if it's our item we update its order
