@@ -190,7 +190,7 @@ export default function Sticker({
       const { shiftKey, key } = e;
       const multiplier = shiftKey ? 10 : 1;
 
-      if (key === "Delete" || key === "Backspace") onDelete();
+      if ((key === "Delete" || key === "Backspace") && onDelete) onDelete();
 
       if (key === "ArrowLeft")
         updatePosition(new Vec2(position.x - 1 * multiplier, position.y));
@@ -239,13 +239,15 @@ export default function Sticker({
       else if (key === "c")
         updatePosition(new Vec2(parentDimensions.width * 0.5, position.y));
 
-      if (key === "[" || key === "{") onReorder("up", multiplier > 1);
-      else if (key === "]" || key === "}") onReorder("down", multiplier > 1);
+      if (onReorder) {
+        if (key === "[" || key === "{") onReorder("up", multiplier > 1);
+        else if (key === "]" || key === "}") onReorder("down", multiplier > 1);
+      }
     }
   };
 
   const onStickerPointerMove = function (e) {
-    console.log(e);
+    console.log(STATES, state);
     if (state !== STATES.ROTATESCALE && state !== STATES.MOVE) return;
 
     e.preventDefault();
@@ -277,6 +279,7 @@ export default function Sticker({
 
       mousePositionRef.current = mousePosition;
     } else if (state === STATES.MOVE) {
+      console.log("move");
       const pos = new Vec2(e.clientX, e.clientY)
         .subtract(mousePositionRef.current)
         .subtract(parentPosition);
@@ -294,7 +297,7 @@ export default function Sticker({
   };
 
   const onDeletePointerDown = function () {
-    onDelete();
+    if (onDelete) onDelete();
   };
 
   const onPinPointerDown = function () {
@@ -397,7 +400,7 @@ export default function Sticker({
     } else {
       // If, instead, this sticker has been clicked then focus it, set it to moving and add the pointer move event
       element.focus();
-      onReorder("up", true);
+      if (onReorder) onReorder("up", true);
       setState(STATES.MOVE);
     }
   };
@@ -537,13 +540,17 @@ export default function Sticker({
         />
       </div>
       <div className={styles.Sticker__controls} style={controlsStyle}>
-        <div
+        <button
+          tabIndex="-1"
+          aria-hidden="true"
           className={styles["Sticker__controll-pin"]}
           style={controlsPinStyle}
           onPointerDown={onPinPointerDown}
           onPointerUp={onPinPointerUp}
         />
-        <div
+        <button
+          tabIndex="-1"
+          aria-hidden="true"
           className={styles["Sticker__controll-delete"]}
           style={controlsDeleteStyle}
           onPointerDown={onDeletePointerDown}
