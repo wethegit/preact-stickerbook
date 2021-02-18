@@ -5,6 +5,7 @@ import { Vec2, Mat2 } from "wtc-math";
 import { StickerbookContext } from "./stickerbook";
 
 import styles from "./sticker.module.css";
+import { classnames } from "./utils";
 
 const STATES = {
   LOADING: 0,
@@ -29,6 +30,9 @@ export default function Sticker({
   onPosition,
   onScale,
   onRotate,
+  // others
+  className,
+  ...props
 }) {
   // parent stickerbook information
   const {
@@ -241,6 +245,7 @@ export default function Sticker({
   };
 
   const onStickerPointerMove = function (e) {
+    console.log(e);
     if (state !== STATES.ROTATESCALE && state !== STATES.MOVE) return;
 
     e.preventDefault();
@@ -511,7 +516,7 @@ export default function Sticker({
   return (
     <div
       ref={elementRef}
-      className={styles.Sticker}
+      className={classnames([styles.Sticker, className])}
       tabindex="0"
       style={stickerStyles}
       onFocus={onStickerFocus}
@@ -519,6 +524,7 @@ export default function Sticker({
       onPointerMove={onStickerPointerMove}
       onPointerLeave={onStickerPointerLeave}
       onPointerCancel={onStickerPointerLeave}
+      {...props}
     >
       <div className={styles.Sticker__container} style={containerStyles}>
         <img
