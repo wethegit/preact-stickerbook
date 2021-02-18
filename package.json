@@ -1,0 +1,44 @@
+{
+  "name": "@wethegit/preact-stickerbook",
+  "version": "0.0.1",
+  "description": "Easily create collage apps that are accessible by default.",
+  "source": "src/index.js",
+  "main": "dist/preact-stickerbook.js",
+  "exports": "./dist/preact-stickerbook.modern.js",
+  "module": "dist/preact-stickerbook.module.js",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist; microbundle build -f modern,es,cjs src/index.js",
+    "dev": "microbundle watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wethegit/preact-stickerbook.git"
+  },
+  "keywords": [
+    "preact",
+    "preact-component"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wethegit/preact-stickerbook/issues"
+  },
+  "homepage": "https://github.com/wethegit/preact-stickerbook#readme",
+  "peerDependencies": {
+    "preact": "^10.5.12"
+  },
+  "devDependencies": {
+    "microbundle": "^0.13.0",
+    "preact": "^10.5.12"
+  },
+  "dependencies": {
+    "wtc-math": "^0.0.4"
+  }
+}

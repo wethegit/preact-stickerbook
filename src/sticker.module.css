@@ -1,0 +1,95 @@
+.Sticker {
+  --image-focus-background: rgba(43, 178, 241, 0.36);
+  --controls-shadow-color: #000;
+  --controls-hover-background: #e8e8e8;
+
+  position: absolute;
+}
+
+.Sticker:focus .Sticker__controls {
+  display: block;
+}
+
+.Sticker:focus .Sticker__img {
+  background: var(--image-focus-background);
+}
+
+.Sticker__container {
+  left: 0px;
+  pointer-events: none;
+  position: absolute;
+  top: 0px;
+  transform: translate(-50%, -50%);
+}
+
+.Sticker__img,
+.Sticker__canvas {
+  left: 0px;
+  position: absolute;
+  top: 0px;
+}
+
+.Sticker__img {
+  cursor: grab;
+  pointer-events: all;
+  user-select: none;
+  touch-action: none;
+}
+
+.Sticker__img:active {
+  cursor: grabbing;
+}
+
+.Sticker__img:focus {
+  outline: none;
+}
+
+.Sticker__controls {
+  border: 3px solid white;
+  box-shadow: 0px 0px 0px 3px var(--controls-shadow-color);
+  border-radius: 50%;
+  display: none;
+  left: 0px;
+  pointer-events: none;
+  position: absolute;
+  top: 0px;
+  transform: translate(-50%, -50%);
+}
+
+.Sticker__controll-delete,
+.Sticker__controll-pin {
+  background: white
+    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTcuNjI3IDEwLjMwNmMuMDQ4LS41OTguNDI4LS43MzEuODQ4LS4zMWw3LjU5NSA3LjU5NGMuNDE2LjQxNi4yNzguNzk3LS4zMTguODRsLTcuNzU1LjU2N2MtLjYwMS4wNDMtMS4wNC0uNDAyLS45OTMtLjk5NHptMTEuMzctMi4zMDlsLS41NjYgNy43NTVjLS4wNDQuNTk2LS40MjUuNzM0LS44NC4zMThMOS45OTQgOC40NzVjLS40Mi0uNDItLjI4Ny0uOC4zMS0uODQ4bDcuNjk4LS42MjNjLjU5Mi0uMDQ4IDEuMDM3LjM5Mi45OTQuOTkzeiIgZmlsbD0iIzMwMzUzQSIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+")
+    center center/cover no-repeat;
+  border: solid 3px white;
+  box-shadow: 0px 0px 0px 3px var(--controls-shadow-color);
+  border-radius: 15px;
+  height: 28px;
+  pointer-events: all;
+  position: absolute;
+  touch-action: none;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  width: 28px;
+}
+
+.Sticker__controll-delete:hover {
+  background-color: var(--controls-hover-background);
+}
+
+.Sticker__controll-pin:hover {
+  background-color: var(--controls-hover-background);
+}
+
+.Sticker__controll-pin {
+  cursor: grab;
+}
+
+.Sticker__controll-pin:active {
+  cursor: grabbing;
+}
+
+.Sticker__controll-delete {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMzAuMTE2IDEzLjc1N2wtNi4yNzMtNi4yNzNhMS42NTEgMS42NTEgMCAwMC0yLjMzNSAwTDEzLjUgMTUuNDlsOC42MDkgOC42MDkgOC4wMDctOC4wMDhhMS42NTEgMS42NTEgMCAwMDAtMi4zMzVtLTkuNDMzIDEyLjQ5N2wuOTE3LS44NjQtOS4wMS04LjQ4OS0zLjAyNiAyLjg1YTEuNzQxIDEuNzQxIDAgMDAwIDIuNTY3bDQuMTU3IDMuOTE2YTIuMTIgMi4xMiAwIDAwMS40NTMuNTY3aDQuMTA3Yy41MjYgMCAxLjAzLS4xOTcgMS40MDItLjU0N00yOC44IDI4LjZjMCAuNDk3LS4zMDIuOS0uNjc0LjlIMTEuNDc0Yy0uMzcyIDAtLjY3NC0uNDAzLS42NzQtLjlzLjMwMi0uOS42NzQtLjloMTYuNjUyYy4zNzIgMCAuNjc0LjQwMy42NzQuOSIgZmlsbD0iIzMwMzUzQSIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDkgMzAuNCkiPjxtYXNrIGlkPSJhIiBmaWxsPSIjZmZmIj48dXNlLz48L21hc2s+PHBhdGggZD0iTTE0LjMyMi45MjdjMCAuNDgyLS4zMDUuODczLS42ODEuODczSC43N0MuMzk1IDEuOC4wODkgMS40MDkuMDg5LjkyNy4wOS40NDQuMzk1LjA1My43NzEuMDUzaDEyLjg3Yy4zNzYgMCAuNjgxLjM5MS42ODEuODc0IiBmaWxsPSIjMzAzNTNBIiBtYXNrPSJ1cmwoI2EpIi8+PC9nPjwvZz48L3N2Zz4=");
+}

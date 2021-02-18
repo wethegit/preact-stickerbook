@@ -1,0 +1,21 @@
+.Stickerbook {
+  overflow: hidden;
+  position: relative;
+}
+
+.Stickerbook__overlay,
+.Stickerbook__background {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.Stickerbook__background {
+  background-position: left top;
+}
+
+.Stickerbook__overlay {
+  pointer-events: none;
+}
