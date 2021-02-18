@@ -88,12 +88,12 @@ export default function Sticker({
       // Create the rotation matrix - this is used to transform the point coordinates for the purpose of testing the rotated bounds
       let s = Math.sin(rotation);
       let c = Math.cos(rotation);
-      let rotation = new Mat2(c, s, -s, c);
+      let rMat = new Mat2(c, s, -s, c);
 
       // Transform the corner by rotating it, scaling it and adding
       // the sticker position
       let transformedPosition = corner
-        .transformByMat2New(rotation)
+        .transformByMat2New(rMat)
         .scale(scale)
         .add(position);
       stickerBounds.push(transformedPosition);
