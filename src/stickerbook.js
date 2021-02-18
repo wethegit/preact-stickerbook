@@ -23,6 +23,7 @@ export default function Stickerbook({
   className,
   width = 1410,
   height = 1084,
+  overlay,
   ...props
 }) {
   const [dimensions, setDimensions] = useState({
@@ -34,7 +35,10 @@ export default function Stickerbook({
   const [position, setPosition] = useState();
   const [backgroundDetails, setBackgroundDetails] = useState({});
   const mainRef = useRef();
-  const overlayIndex = useMemo(() => children.flat().length + 2, [children]);
+  const overlayIndex = useMemo(
+    () => (children ? children.flat().length + 2 : 2),
+    [children]
+  );
 
   // styles
   const stickerStyles = useMemo(() => {
@@ -162,12 +166,14 @@ export default function Stickerbook({
       >
         {dimensions.rendered && children}
       </StickerbookContext.Provider>
-      <img
-        src={OVERLAY_IMAGE}
-        alt=""
-        className={styles.Stickerbook__overlay}
-        style={{ zIndex: overlayIndex }}
-      />
+      {overlay && (
+        <img
+          src={overlay}
+          alt=""
+          className={styles.Stickerbook__overlay}
+          style={{ zIndex: overlayIndex }}
+        />
+      )}
     </div>
   );
 }
