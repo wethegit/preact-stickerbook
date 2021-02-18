@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Easily create collage apps that are accessible by default.",
   "main": "dist/stickerbook.js",
   "umd:main": "dist/stickerbook.umd.js",
@@ -12,12 +12,12 @@
     "./helpers": "./dist/helpers.modern.js"
   },
   "style": "dist/stickerbook.css",
-  "sass": "dist/preact-stickerbook.scss",
+  "sass": "dist/all.scss",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist && microbundle build src/*.js && cp src/all.scss dist/preact-stickerbook.scss",
+    "build": "rm -rf dist && microbundle build src/*.js && cp src/*.scss dist/",
     "prepare": "npm run build"
   },
   "repository": {
