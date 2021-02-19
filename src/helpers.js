@@ -110,7 +110,13 @@ export async function generateDownload({
   outputCanvas.height = outputHeight;
 
   // draw background
-  if (background && background.image) await drawFromCenter(background.image);
+  if (background && background.image)
+    await drawFromCenter({
+      ctx: outputCtx,
+      image: background.image,
+      outputWidth,
+      outputHeight,
+    });
 
   if (stickers && stickers.length > 0) {
     // sort by order
@@ -177,7 +183,13 @@ export async function generateDownload({
   }
 
   // draw foreground
-  if (foreground && foreground.image) await drawFromCenter(background.image);
+  if (foreground && foreground.image)
+    await drawFromCenter({
+      ctx: outputCtx,
+      image: foreground.image,
+      outputWidth,
+      outputHeight,
+    });
 
   // download
   if (type === "image" || type === "blob") {
