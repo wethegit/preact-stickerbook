@@ -3,7 +3,7 @@
   position: relative;
 }
 
-.Stickerbook__overlay,
+.Stickerbook__foreground,
 .Stickerbook__background {
   height: 100%;
   left: 0;
@@ -13,9 +13,12 @@
 }
 
 .Stickerbook__background {
-  background-position: left top;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.Stickerbook__overlay {
+.Stickerbook__foreground {
+  object-fit: cover;
   pointer-events: none;
 }
