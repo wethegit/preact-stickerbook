@@ -96,12 +96,11 @@ export async function generateDownload({
 }) {
   const TYPES = ["image", "canvas", "blob"];
 
-  if (!stickers || stickers.length <= 0)
-    throw Error("'stickers' list is empty");
   if (!outputWidth && !outputHeight)
     throw Error("'outputWidth' and 'outputHeight' needs to be bigger than 0");
+
   if (!TYPES.includes(type))
-    throw Error(`Invalid 'type'. 'type' must be one of ${TYPES.join(",")}`);
+    throw Error(`Invalid 'type'. 'type' must be one of: ${TYPES.join(",")}`);
 
   // output canvas
   const outputCanvas = document.createElement("canvas");
