@@ -5,15 +5,25 @@ export default function useStickerbook({
   background: [background, setBackground],
   foreground: [foreground, setForeground],
 }) {
+  const onChangeForeground = function (item) {
+    setForeground((cur) => {
+      if (cur && cur.image.includes("blob:"))
+        window.URL.revokeObjectURL(cur.image);
+      return item;
+    });
+  };
+
+  const onChangeBackground = function (item) {
+    setBackground((cur) => {
+      if (cur && cur.image.includes("blob:"))
+        window.URL.revokeObjectURL(cur.image);
+      return item;
+    });
+  };
+
   // Sticker actions
   const onAddSticker = function (item) {
-    if (item.category === "backgrounds")
-      setBackground((cur) => {
-        if (cur && cur.image.includes("blob:"))
-          window.URL.revokeObjectURL(cur.image);
-        return item;
-      });
-    else setStickers((cur) => addSticker(cur, item));
+    setStickers((cur) => addSticker(cur, item));
   };
 
   const onDeleteSticker = function (index) {
@@ -58,6 +68,8 @@ export default function useStickerbook({
   };
 
   return {
+    onChangeBackground,
+    onChangeForeground,
     onAddSticker,
     onDeleteSticker,
     onPositionSticker,
