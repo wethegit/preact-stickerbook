@@ -63,27 +63,49 @@ export function loadUrlAsImage(item) {
 
 export async function drawFromCenter({
   ctx,
-  image,
-  outputWidth,
-  outputHeight,
+  img,
+  w,
+  h,
+  x = 0,
+  y = 0,
+  offsetX = 0.5,
+  offsetY = 0.5,
 }) {
   const loadedImage =
-    typeof image === "string" ? await loadUrlAsImage(image) : image;
-  const imageRatio = loadedImage.naturalWidth / loadedImage.naturalHeight;
-  const outputRatio = outputWidth / outputHeight;
-  let width = outputWidth;
-  let height = outputHeight;
+    typeof img === "string" ? await loadUrlAsImage(image) : image;
 
-  if (imageRatio < outputRatio) height = width / imageRatio;
-  else width = height * imageRatio;
+  var iw = loadedImage.width,
+    ih = loadedImage.height,
+    r = Math.min(w / iw, h / ih),
+    nw = iw * r, // new prop. width
+    nh = ih * r, // new prop. height
+    cx,
+    cy,
+    cw,
+    ch,
+    ar = 1;
 
-  ctx.drawImage(
-    loadedImage,
-    (outputWidth - width) * 0.5,
-    (outputWidth - height) * 0.5,
-    width,
-    height
-  );
+  // decide which gap to fill
+  if (nw < w) ar = w / nw;
+  if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh; // updated
+  nw *= ar;
+  nh *= ar;
+
+  // calc source rectangle
+  cw = iw / (nw / w);
+  ch = ih / (nh / h);
+
+  cx = (iw - cw) * offsetX;
+  cy = (ih - ch) * offsetY;
+
+  // make sure source rectangle is valid
+  if (cx < 0) cx = 0;
+  if (cy < 0) cy = 0;
+  if (cw > iw) cw = iw;
+  if (ch > ih) ch = ih;
+
+  // fill image in dest. rectangle
+  ctx.drawImage(loadedImage, cx, cy, cw, ch, x, y, w, h);
 }
 
 export async function exportStickerbook({
@@ -115,9 +137,9 @@ export async function exportStickerbook({
   if (background && background.image)
     await drawFromCenter({
       ctx: outputCtx,
-      image: background.image,
-      outputWidth,
-      outputHeight,
+      img: background.image,
+      w: outputWidth,
+      h: outputHeight,
     });
 
   if (stickers && stickers.length > 0) {
@@ -188,9 +210,9 @@ export async function exportStickerbook({
   if (foreground && foreground.image)
     await drawFromCenter({
       ctx: outputCtx,
-      image: foreground.image,
-      outputWidth,
-      outputHeight,
+      img: foreground.image,
+      w: outputWidth,
+      h: outputHeight,
     });
 
   // download
