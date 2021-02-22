@@ -296,8 +296,8 @@ export function reorderSticker({
 }
 
 export function addSticker(stickers, sticker) {
-  if (!stickers || stickers.length <= 0)
-    throw Error("`stickers` array is empty");
+  if (!stickers || !stickers instanceof Array)
+    throw Error("`stickers` isn't an array");
   if (!sticker) throw Error("No `sticker` provided");
 
   // we add a unique key based on the time because otherwise the
@@ -307,10 +307,10 @@ export function addSticker(stickers, sticker) {
 }
 
 export function deleteSticker(stickers, index) {
-  if (!stickers || stickers.length <= 0)
+  if (!stickers || !stickers instanceof Array || stickers.length <= 0)
     throw Error("`stickers` array is empty");
 
-  if (typeof index !== "number" || index < 0 || index >= stickers.length)
+  if (typeof index !== "number" || !stickers[index])
     throw Error("`index` needs to be a valid `stickers` array index");
 
   const order = stickers[index].order;
