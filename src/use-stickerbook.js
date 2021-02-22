@@ -7,7 +7,12 @@ export default function useStickerbook({
 }) {
   // Sticker actions
   const onAddSticker = function (item) {
-    if (item.category === "backgrounds") setBackground(item);
+    if (item.category === "backgrounds")
+      setBackground((cur) => {
+        if (cur && cur.image.includes("blob:"))
+          window.URL.revokeObjectURL(cur.image);
+        return item;
+      });
     else setStickers((cur) => addSticker(cur, item));
   };
 
