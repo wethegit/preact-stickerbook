@@ -7,8 +7,8 @@ export function classnames(namesArray) {
     .trim();
 }
 
-export function logStickerbook({ background, stickers }) {
-  if (!background && !stickers) {
+export function stickerbookToJson({ background, stickers, foreground }) {
+  if (!background && !stickers && !foreground) {
     console.log("No data provided");
     return;
   }
@@ -86,21 +86,23 @@ export async function drawFromCenter({
   );
 }
 
-export async function generateDownload({
+export async function exportStickerbook({
   stickers = [],
   background,
   foreground,
   outputWidth = 500,
   outputHeight = 500,
-  type = "image",
+  format = "image",
 }) {
   const TYPES = ["image", "canvas", "blob"];
 
   if (!outputWidth && !outputHeight)
     throw Error("'outputWidth' and 'outputHeight' needs to be bigger than 0");
 
-  if (!TYPES.includes(type))
-    throw Error(`Invalid 'type'. 'type' must be one of: ${TYPES.join(",")}`);
+  if (!TYPES.includes(format))
+    throw Error(
+      `Invalid 'format'. 'format' must be one of: ${TYPES.join(",")}`
+    );
 
   // output canvas
   const outputCanvas = document.createElement("canvas");
@@ -192,11 +194,11 @@ export async function generateDownload({
     });
 
   // download
-  if (type === "image" || type === "blob") {
+  if (format === "image" || format === "blob") {
     const imageUrl = await new Promise((resolve, reject) => {
       try {
         outputCanvas.toBlob((blob) => {
-          if (type === "blob") resolve(blob);
+          if (format === "blob") resolve(blob);
           else resolve(window.URL.createObjectURL(blob));
         });
       } catch (err) {
@@ -210,17 +212,18 @@ export async function generateDownload({
   return outputCanvas;
 }
 
-export function reorderStickerList({
+export function reorderSticker({
   index,
   direction = "up",
   extreme = false,
   stickers = [],
 }) {
-  if (!stickers || stickers.length <= 0) throw Error("stickers list is empty");
+  if (!stickers || stickers.length <= 0)
+    throw Error("`stickers` array is empty");
   if (!direction || !["up", "down"].includes(direction))
-    throw Error("direction needs to be either `up` or `down`");
-  if (typeof index !== "number" && index < 0)
-    throw Error("index needs to be a valid array index");
+    throw Error("`direction` needs to be either `up` or `down`");
+  if (typeof index !== "number" || index < 0 || index >= stickers.length)
+    throw Error("`index` needs to be a valid `stickers` array index");
 
   // First, we can't change the array itself otherwise
   // it will cause a re-render and the item will loose focus.
@@ -268,4 +271,33 @@ export function reorderStickerList({
 
     return item;
   });
+}
+
+export function addSticker(stickers, sticker) {
+  if (!stickers || stickers.length <= 0)
+    throw Error("`stickers` array is empty");
+  if (!sticker) throw Error("No `sticker` provided");
+
+  // we add a unique key based on the time because otherwise the
+  // sticker will loose its state when re-rendering it, even though
+  // we save the state globally, this is a good failsafe
+  return stickers.concat([{ ...sticker, order: cur.length, key: Date.now() }]);
+}
+
+export function deleteSticker(stickers, index) {
+  if (!stickers || stickers.length <= 0)
+    throw Error("`stickers` array is empty");
+
+  if (typeof index !== "number" || index < 0 || index >= stickers.length)
+    throw Error("`index` needs to be a valid `stickers` array index");
+
+  const order = stickers[index].order;
+
+  return stickers
+    .filter((item, i) => i !== index)
+    .map((item) => {
+      // fix the order
+      if (item.order > order) item.order -= 1;
+      return item;
+    });
 }
