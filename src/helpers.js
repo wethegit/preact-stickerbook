@@ -109,6 +109,7 @@ export async function drawFromCenter({
 }
 
 export async function exportStickerbook({
+  canvas,
   stickers = [],
   background,
   foreground,
@@ -127,7 +128,7 @@ export async function exportStickerbook({
     );
 
   // output canvas
-  const outputCanvas = document.createElement("canvas");
+  const outputCanvas = canvas || document.createElement("canvas");
   const outputCtx = outputCanvas.getContext("2d");
 
   outputCanvas.width = outputWidth;
