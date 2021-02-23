@@ -307,14 +307,14 @@ export function reorderSticker({
 }
 
 export function addSticker(stickers, sticker) {
-  if (!stickers || !stickers instanceof Array)
-    throw Error("`stickers` isn't an array");
   if (!sticker) throw Error("No `sticker` provided");
 
   // we add a unique key based on the time because otherwise the
   // sticker will loose its state when re-rendering it, even though
   // we save the state globally, this is a good failsafe
-  return stickers.concat([{ ...sticker, order: cur.length, key: Date.now() }]);
+  return (stickers || []).concat([
+    { ...sticker, order: cur.length, key: Date.now() },
+  ]);
 }
 
 export function deleteSticker(stickers, index) {
