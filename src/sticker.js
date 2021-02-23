@@ -513,7 +513,7 @@ export default function Sticker({
     if (initialRotation !== null) setRotation(initialRotation);
     else updateRotation(0);
 
-    if (initialOrder !== null) setOrder(initialRotation);
+    if (initialOrder !== null) setOrder(initialOrder);
     else updateOrder(0);
 
     setState(STATES.IDLE);
