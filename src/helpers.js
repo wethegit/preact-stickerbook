@@ -64,8 +64,8 @@ export function loadUrlAsImage(item) {
 export async function drawFromCenter({
   ctx,
   img,
-  w,
-  h,
+  width,
+  height,
   x = 0,
   y = 0,
   offsetX = 0.5,
@@ -73,38 +73,50 @@ export async function drawFromCenter({
 }) {
   const loadedImage = typeof img === "string" ? await loadUrlAsImage(img) : img;
 
-  var iw = loadedImage.width,
-    ih = loadedImage.height,
-    r = Math.min(w / iw, h / ih),
-    nw = iw * r, // new prop. width
-    nh = ih * r, // new prop. height
-    cx,
-    cy,
-    cw,
-    ch,
-    ar = 1;
+  let imageWidth = loadedImage.width,
+    imageHeight = loadedImage.height,
+    ratio = Math.min(width / imageWidth, height / imageHeight),
+    newWidth = imageWidth * ratio, // new prop. width
+    newHeight = imageHeight * ratio, // new prop. height
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    scaledRatio = 1;
 
   // decide which gap to fill
-  if (nw < w) ar = w / nw;
-  if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh; // updated
-  nw *= ar;
-  nh *= ar;
+  if (newWidth < width) scaledRatio = width / newWidth;
+  if (Math.abs(scaledRatio - 1) < 1e-14 && newHeight < height)
+    scaledRatio = height / newHeight; // updated
+
+  newWidth *= scaledRatio;
+  newHeight *= scaledRatio;
 
   // calc source rectangle
-  cw = iw / (nw / w);
-  ch = ih / (nh / h);
+  sourceWidth = imageWidth / (newWidth / width);
+  sourceHeight = imageHeight / (newHeight / height);
 
-  cx = (iw - cw) * offsetX;
-  cy = (ih - ch) * offsetY;
+  sourceX = (imageWidth - sourceWidth) * offsetX;
+  sourceY = (imageHeight - sourceHeight) * offsetY;
 
   // make sure source rectangle is valid
-  if (cx < 0) cx = 0;
-  if (cy < 0) cy = 0;
-  if (cw > iw) cw = iw;
-  if (ch > ih) ch = ih;
+  if (sourceX < 0) sourceX = 0;
+  if (sourceY < 0) sourceY = 0;
+  if (sourceWidth > imageWidth) sourceWidth = imageWidth;
+  if (sourceHeight > imageHeight) sourceHeight = imageHeight;
 
   // fill image in dest. rectangle
-  ctx.drawImage(loadedImage, cx, cy, cw, ch, x, y, w, h);
+  ctx.drawImage(
+    loadedImage,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    x,
+    y,
+    width,
+    height
+  );
 }
 
 export async function exportStickerbook({
@@ -139,8 +151,8 @@ export async function exportStickerbook({
     await drawFromCenter({
       ctx: outputCtx,
       img: background.image,
-      w: outputWidth,
-      h: outputHeight,
+      width: outputWidth,
+      height: outputHeight,
     });
 
   // draw background
@@ -148,8 +160,8 @@ export async function exportStickerbook({
     await drawFromCenter({
       ctx: outputCtx,
       img: frame.image,
-      w: outputWidth,
-      h: outputHeight,
+      width: outputWidth,
+      height: outputHeight,
     });
 
   if (stickers && stickers.length > 0) {
@@ -181,20 +193,23 @@ export async function exportStickerbook({
       const ctx = cvs.getContext("2d");
 
       // adapted to unit sizing
-      const d = new Vec2(stickerImage.naturalWidth, stickerImage.naturalHeight);
+      const dimensions = new Vec2(
+        stickerImage.naturalWidth,
+        stickerImage.naturalHeight
+      );
       const scale = (sticker.scale * outputWidth) / Math.min(d.x, d.y) / 0.5;
-      const sd = d.scaleNew(scale);
+      const scaledDimensions = dimensions.scaleNew(scale);
 
-      cvs.width = sd.width;
-      cvs.height = sd.height;
+      cvs.width = scaledDimensions.width;
+      cvs.height = scaledDimensions.height;
 
-      ctx.drawImage(stickerImage, 0, 0, sd.x, sd.y);
+      ctx.drawImage(stickerImage, 0, 0, scaledDimensions.x, scaledDimensions.y);
 
-      const s = Math.sin(sticker.rotation);
-      const c = Math.cos(sticker.rotation);
+      const sin = Math.sin(sticker.rotation);
+      const cos = Math.cos(sticker.rotation);
       const rotatedSize = new Vec2(
-        Math.abs(sd.y * s) + Math.abs(sd.x * c),
-        Math.abs(sd.y * c) + Math.abs(sd.x * s)
+        Math.abs(scaledDimensions.y * sin) + Math.abs(scaledDimensions.x * cos),
+        Math.abs(scaledDimensions.y * cos) + Math.abs(scaledDimensions.x * sin)
       );
       const rotatedSizeHalf = rotatedSize.scaleNew(0.5);
 
@@ -205,7 +220,7 @@ export async function exportStickerbook({
 
       ctx.translate(rotatedSizeHalf.x, rotatedSizeHalf.y);
       ctx.rotate(sticker.rotation);
-      ctx.drawImage(cvs, -sd.x * 0.5, -sd.y * 0.5);
+      ctx.drawImage(cvs, -scaledDimensions.x * 0.5, -scaledDimensions.y * 0.5);
 
       const hw = new Vec2(scvs.width * 0.5, scvs.height * 0.5);
 
@@ -221,8 +236,8 @@ export async function exportStickerbook({
     await drawFromCenter({
       ctx: outputCtx,
       img: foreground.image,
-      w: outputWidth,
-      h: outputHeight,
+      width: outputWidth,
+      height: outputHeight,
     });
 
   // download
