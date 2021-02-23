@@ -144,33 +144,33 @@ export async function exportStickerbook({
       // allows me to think through the problem logically, however I
       // think that this can be greatly simplified in practice by
       // combining these 2 steps into a single canvas.
-      const cvs = document.createElement("canvas");
-      const scvs = document.createElement("canvas");
-      const ctx = cvs.getContext("2d");
+      let cvs = document.createElement("canvas");
+      let scvs = document.createElement("canvas");
+      let ctx = cvs.getContext("2d");
 
       // adapted to unit sizing
-      const dimensions = new Vec2(
+      let dimensions = new Vec2(
         stickerImage.naturalWidth,
         stickerImage.naturalHeight
       );
-      const scale =
+      let scale =
         (sticker.scale * outputWidth) /
         Math.min(dimensions.x, dimensions.y) /
         0.5;
-      const scaledDimensions = dimensions.scaleNew(scale);
+      let scaledDimensions = dimensions.scaleNew(scale);
 
       cvs.width = scaledDimensions.width;
       cvs.height = scaledDimensions.height;
 
       ctx.drawImage(stickerImage, 0, 0, scaledDimensions.x, scaledDimensions.y);
 
-      const sin = Math.sin(sticker.rotation);
-      const cos = Math.cos(sticker.rotation);
-      const rotatedSize = new Vec2(
+      let sin = Math.sin(sticker.rotation);
+      let cos = Math.cos(sticker.rotation);
+      let rotatedSize = new Vec2(
         Math.abs(scaledDimensions.y * sin) + Math.abs(scaledDimensions.x * cos),
         Math.abs(scaledDimensions.y * cos) + Math.abs(scaledDimensions.x * sin)
       );
-      const rotatedSizeHalf = rotatedSize.scaleNew(0.5);
+      let rotatedSizeHalf = rotatedSize.scaleNew(0.5);
 
       scvs.width = rotatedSize.x;
       scvs.height = rotatedSize.y;
@@ -181,10 +181,10 @@ export async function exportStickerbook({
       ctx.rotate(sticker.rotation);
       ctx.drawImage(cvs, -scaledDimensions.x * 0.5, -scaledDimensions.y * 0.5);
 
-      const hw = new Vec2(scvs.width * 0.5, scvs.height * 0.5);
+      let hw = new Vec2(scvs.width * 0.5, scvs.height * 0.5);
 
       // adapting position to unit sizing
-      const pos = sticker.position.scaleNew(outputWidth);
+      let pos = sticker.position.scaleNew(outputWidth);
 
       outputCtx.drawImage(scvs, pos.x - hw.x, pos.y - hw.y);
     }
