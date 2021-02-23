@@ -39,7 +39,7 @@ export default function useStickerbook({
   };
 
   const onAddSticker = function (item) {
-    setStickers((cur) => addSticker(cur, item));
+    setStickers((cur) => addSticker(cur || [], item));
   };
 
   const onDeleteSticker = function (index) {
@@ -47,7 +47,9 @@ export default function useStickerbook({
   };
 
   const onReorderSticker = function (opts) {
-    setStickers((stickers) => reorderSticker({ ...opts, stickers }));
+    setStickers((stickers) =>
+      reorderSticker({ ...opts, stickers: stickers || [] })
+    );
   };
 
   const onPositionSticker = function (value, index) {
