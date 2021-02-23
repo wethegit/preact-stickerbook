@@ -197,7 +197,10 @@ export async function exportStickerbook({
         stickerImage.naturalWidth,
         stickerImage.naturalHeight
       );
-      const scale = (sticker.scale * outputWidth) / Math.min(d.x, d.y) / 0.5;
+      const scale =
+        (sticker.scale * outputWidth) /
+        Math.min(dimensions.x, dimensions.y) /
+        0.5;
       const scaledDimensions = dimensions.scaleNew(scale);
 
       cvs.width = scaledDimensions.width;
