@@ -569,13 +569,15 @@ export default function Sticker({
           onPointerDown={onPinPointerDown}
           onPointerUp={onPinPointerUp}
         />
-        <button
-          tabIndex="-1"
-          aria-hidden="true"
-          className={styles["Sticker__controll-delete"]}
-          style={controlsDeleteStyle}
-          onClick={onDeletePointerDown}
-        />
+        {onDelete && (
+          <button
+            tabIndex="-1"
+            aria-hidden="true"
+            className={styles["Sticker__controll-delete"]}
+            style={controlsDeleteStyle}
+            onClick={onDeletePointerDown}
+          />
+        )}
       </div>
     </div>
   );
