@@ -1,27 +1,43 @@
 import { reorderSticker, addSticker, deleteSticker } from "./helpers";
 
+const revokeAndUpdate = function (previous, next) {
+  if (previous && previous.image.includes("blob:"))
+    window.URL.revokeObjectURL(previous.image);
+  return next;
+};
+
+const matchAndUpdate = function ({ stickers, index, prop, value }) {
+  return stickers.map((item, i) => {
+    if (i === index) item[prop] = value;
+    return item;
+  });
+};
+
 export default function useStickerbook({
-  stickers: [stickers, setStickers],
   background: [background, setBackground],
+  frame: [frame, setFrame],
+  stickers: [stickers, setStickers],
   foreground: [foreground, setForeground],
 }) {
-  const onChangeForeground = function (item) {
-    setForeground((cur) => {
-      if (cur && cur.image.includes("blob:"))
-        window.URL.revokeObjectURL(cur.image);
-      return item;
-    });
+  const onChangeBackground = function (item) {
+    setBackground((cur) => revokeAndUpdate(cur, item));
   };
 
-  const onChangeBackground = function (item) {
-    setBackground((cur) => {
-      if (cur && cur.image.includes("blob:"))
-        window.URL.revokeObjectURL(cur.image);
-      return item;
-    });
+  const onChangeFrame = function (item) {
+    setFrame((cur) => revokeAndUpdate(cur, item));
+  };
+
+  const onChangeForeground = function (item) {
+    setForeground((cur) => revokeAndUpdate(cur, item));
   };
 
   // Sticker actions
+  const _onPropUpdate = function (prop, value, index) {
+    if (stickers[index][prop] === value) return;
+
+    setStickers((stickers) => matchAndUpdate({ stickers, value, index, prop }));
+  };
+
   const onAddSticker = function (item) {
     setStickers((cur) => addSticker(cur, item));
   };
@@ -35,40 +51,20 @@ export default function useStickerbook({
   };
 
   const onPositionSticker = function (value, index) {
-    if (stickers[index].position === value) return;
-
-    setStickers((cur) =>
-      cur.map((item, i) => {
-        if (i === index) item.position = value;
-        return item;
-      })
-    );
+    _onPropUpdate("position", value, index);
   };
 
   const onScaleSticker = function (value, index) {
-    if (stickers[index].scale === value) return;
-
-    setStickers((cur) =>
-      cur.map((item, i) => {
-        if (i === index) item.scale = value;
-        return item;
-      })
-    );
+    _onPropUpdate("scale", value, index);
   };
 
   const onRotateSticker = function (value, index) {
-    if (stickers[index].rotation === value) return;
-
-    setStickers((cur) =>
-      cur.map((item, i) => {
-        if (i === index) item.rotation = value;
-        return item;
-      })
-    );
+    _onPropUpdate("rotation", value, index);
   };
 
   return {
     onChangeBackground,
+    onChangeFrame,
     onChangeForeground,
     onAddSticker,
     onDeleteSticker,

@@ -3,6 +3,7 @@
   position: relative;
 }
 
+.Stickerbook__frame,
 .Stickerbook__foreground,
 .Stickerbook__background {
   height: 100%;
@@ -18,7 +19,11 @@
   background-size: cover;
 }
 
+.Stickerbook__frame,
 .Stickerbook__foreground {
   object-fit: cover;
+}
+
+.Stickerbook__foreground {
   pointer-events: none;
 }

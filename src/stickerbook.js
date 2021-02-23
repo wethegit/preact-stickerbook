@@ -19,11 +19,12 @@ export const StickerbookContext = createContext();
 
 export default function Stickerbook({
   background = {},
-  children,
-  className,
   height = 500,
   foreground = {},
+  frame = {},
   width = 500,
+  children,
+  className,
   ...props
 }) {
   const [dimensions, setDimensions] = useState({
@@ -147,6 +148,14 @@ export default function Stickerbook({
             ...backgroundStyles,
           }}
           aria-label={background.alt || ""}
+        />
+      )}
+
+      {frame && frame.image && (
+        <img
+          src={frame.image}
+          alt={frame.alt || ""}
+          className={styles.Stickerbook__frame}
         />
       )}
 

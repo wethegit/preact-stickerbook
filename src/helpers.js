@@ -7,8 +7,8 @@ export function classnames(namesArray) {
     .trim();
 }
 
-export function stickerbookToJson({ background, stickers, foreground }) {
-  if (!background && !stickers && !foreground) {
+export function stickerbookToJson({ background, frame, stickers, foreground }) {
+  if (!background && !stickers && !foreground && !frame) {
     console.log("No data provided");
     return;
   }
@@ -110,8 +110,9 @@ export async function drawFromCenter({
 
 export async function exportStickerbook({
   canvas,
-  stickers = [],
   background,
+  frame,
+  stickers = [],
   foreground,
   outputWidth = 500,
   outputHeight = 500,
@@ -139,6 +140,15 @@ export async function exportStickerbook({
     await drawFromCenter({
       ctx: outputCtx,
       img: background.image,
+      w: outputWidth,
+      h: outputHeight,
+    });
+
+  // draw background
+  if (frame && frame.image)
+    await drawFromCenter({
+      ctx: outputCtx,
+      img: frame.image,
       w: outputWidth,
       h: outputHeight,
     });
