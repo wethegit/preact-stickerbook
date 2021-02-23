@@ -539,9 +539,7 @@ export default function Sticker({
         />
       </div>
       <div className={styles.Sticker__controls} style={controlsStyle}>
-        <button
-          tabIndex="-1"
-          aria-hidden="true"
+        <div
           className={styles["Sticker__controll-pin"]}
           style={controlsPinStyle}
           onPointerDown={onPinPointerDown}
@@ -552,7 +550,7 @@ export default function Sticker({
           aria-hidden="true"
           className={styles["Sticker__controll-delete"]}
           style={controlsDeleteStyle}
-          onPointerDown={onDeletePointerDown}
+          onClick={onDeletePointerDown}
         />
       </div>
     </div>
