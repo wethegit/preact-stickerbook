@@ -412,7 +412,8 @@ export default function Sticker({
 
   // effects for the hooks provided by the component
   const updatePosition = function (value) {
-    if (value.x === position.x && value.y === position.y) return;
+    if (value && position && value.x === position.x && value.y === position.y)
+      return;
 
     setPosition(value);
 
