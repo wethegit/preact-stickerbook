@@ -14,39 +14,63 @@ const matchAndUpdate = function ({ stickers, index, prop, value }) {
 };
 
 export default function useStickerbook({
-  background: [background, setBackground],
-  frame: [frame, setFrame],
-  stickers: [stickers, setStickers],
-  foreground: [foreground, setForeground],
+  background: backgroundState,
+  frame: frameState,
+  stickers: stickersState,
+  foreground: foregroundState,
 }) {
+  if (!backgroundState && !frameState && !stickersState && !foregroundState)
+    return {};
+
+  const setBackground = backgroundState && backgroundState[1];
+  const setFrame = frameState && frameState[1];
+  const [stickers, setStickers] = stickersState || [];
+  const setForeground = foregroundState && foregroundState[1];
+
   const onChangeBackground = function (item) {
+    if (!setBackground) return;
+
     setBackground((cur) => revokeAndUpdate(cur, item));
   };
 
   const onChangeFrame = function (item) {
+    if (!setFrame) return;
+
     setFrame((cur) => revokeAndUpdate(cur, item));
   };
 
   const onChangeForeground = function (item) {
+    if (!setForeground) return;
+
     setForeground((cur) => revokeAndUpdate(cur, item));
   };
 
   // Sticker actions
   const _onPropUpdate = function (prop, value, index) {
-    if (stickers[index] && stickers[index][prop] === value) return;
+    if (
+      !setStickers ||
+      !stickers ||
+      !stickers[index] ||
+      stickers[index][prop] === value
+    )
+      return;
 
     setStickers((stickers) => matchAndUpdate({ stickers, value, index, prop }));
   };
 
   const onAddSticker = function (item) {
+    if (!setStickers) return;
     setStickers((cur) => addSticker(cur || [], item));
   };
 
   const onDeleteSticker = function (index) {
+    if (!setStickers) return;
     setStickers((cur) => deleteSticker(cur, index));
   };
 
   const onReorderSticker = function (opts) {
+    if (!setStickers) return;
+
     setStickers((stickers) =>
       reorderSticker({ ...opts, stickers: stickers || [] })
     );
