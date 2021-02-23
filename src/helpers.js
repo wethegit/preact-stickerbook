@@ -144,49 +144,56 @@ export async function exportStickerbook({
       // allows me to think through the problem logically, however I
       // think that this can be greatly simplified in practice by
       // combining these 2 steps into a single canvas.
-      let cvs = document.createElement("canvas");
-      let scvs = document.createElement("canvas");
-      let ctx = cvs.getContext("2d");
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
       // adapted to unit sizing
-      let dimensions = new Vec2(
-        stickerImage.naturalWidth,
-        stickerImage.naturalHeight
-      );
+      // first, scale it
+      let dimensions = new Vec2(stickerImage.width, stickerImage.height);
       let scale =
         (sticker.scale * outputWidth) /
         Math.min(dimensions.x, dimensions.y) /
         0.5;
-      let scaledDimensions = dimensions.scaleNew(scale);
 
-      cvs.width = scaledDimensions.width;
-      cvs.height = scaledDimensions.height;
+      const scaledDimensions = dimensions.scaleNew(scale);
+
+      canvas.width = scaledDimensions.width;
+      canvas.height = scaledDimensions.height;
 
       ctx.drawImage(stickerImage, 0, 0, scaledDimensions.x, scaledDimensions.y);
 
-      let sin = Math.sin(sticker.rotation);
-      let cos = Math.cos(sticker.rotation);
+      // then rotate
+      const rotatedCanvas = document.createElement("canvas");
+      const rotatedCanvasCtx = rotatedCanvas.getContext("2d");
+      const sin = Math.sin(sticker.rotation);
+      const cos = Math.cos(sticker.rotation);
       let rotatedSize = new Vec2(
         Math.abs(scaledDimensions.y * sin) + Math.abs(scaledDimensions.x * cos),
         Math.abs(scaledDimensions.y * cos) + Math.abs(scaledDimensions.x * sin)
       );
-      let rotatedSizeHalf = rotatedSize.scaleNew(0.5);
+      const rotatedSizeHalf = rotatedSize.scaleNew(0.5);
 
-      scvs.width = rotatedSize.x;
-      scvs.height = rotatedSize.y;
+      rotatedCanvas.width = rotatedSize.x;
+      rotatedCanvas.height = rotatedSize.y;
 
-      ctx = scvs.getContext("2d");
+      rotatedCanvasCtx.translate(rotatedSizeHalf.x, rotatedSizeHalf.y);
+      rotatedCanvasCtx.rotate(sticker.rotation);
+      rotatedCanvasCtx.drawImage(
+        canvas,
+        -scaledDimensions.x * 0.5,
+        -scaledDimensions.y * 0.5
+      );
 
-      ctx.translate(rotatedSizeHalf.x, rotatedSizeHalf.y);
-      ctx.rotate(sticker.rotation);
-      ctx.drawImage(cvs, -scaledDimensions.x * 0.5, -scaledDimensions.y * 0.5);
-
-      let hw = new Vec2(scvs.width * 0.5, scvs.height * 0.5);
+      const hw = new Vec2(
+        rotatedCanvas.width * 0.5,
+        rotatedCanvas.height * 0.5
+      );
 
       // adapting position to unit sizing
-      let pos = sticker.position.scaleNew(outputWidth);
+      const pos = sticker.position.scaleNew(outputWidth);
 
-      outputCtx.drawImage(scvs, pos.x - hw.x, pos.y - hw.y);
+      // final draw
+      outputCtx.drawImage(rotatedCanvas, pos.x - hw.x, pos.y - hw.y);
     }
   }
 
@@ -200,22 +207,20 @@ export async function exportStickerbook({
     });
 
   // download
-  if (format === "image" || format === "blob") {
-    const imageUrl = await new Promise((resolve, reject) => {
-      try {
-        outputCanvas.toBlob((blob) => {
-          if (format === "blob") resolve(blob);
-          else resolve(window.URL.createObjectURL(blob));
-        });
-      } catch (err) {
-        reject(err);
-      }
-    });
+  if (format === "canvas") return outputCanvas;
 
-    return imageUrl;
-  }
+  const imageUrl = await new Promise((resolve, reject) => {
+    try {
+      outputCanvas.toBlob((blob) => {
+        if (format === "blob") resolve(blob);
+        else resolve(window.URL.createObjectURL(blob));
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
 
-  return outputCanvas;
+  return imageUrl;
 }
 
 export function reorderSticker({
