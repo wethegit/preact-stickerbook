@@ -317,7 +317,7 @@ export function patchSticker({ stickers, prop, value, index }) {
 
   const PROPS = ["position", "scale", "rotation"];
 
-  if (!PROPS.includes(format))
+  if (!PROPS.includes(prop))
     throw Error(`Invalid 'prop'. 'prop' must be one of: ${PROPS.join(",")}`);
 
   if (stickers[index][prop] && stickers[index][prop] === value) return stickers;
