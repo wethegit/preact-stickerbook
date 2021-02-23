@@ -71,8 +71,7 @@ export async function drawFromCenter({
   offsetX = 0.5,
   offsetY = 0.5,
 }) {
-  const loadedImage =
-    typeof img === "string" ? await loadUrlAsImage(image) : image;
+  const loadedImage = typeof img === "string" ? await loadUrlAsImage(img) : img;
 
   var iw = loadedImage.width,
     ih = loadedImage.height,
