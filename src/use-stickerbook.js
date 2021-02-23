@@ -33,7 +33,7 @@ export default function useStickerbook({
 
   // Sticker actions
   const _onPropUpdate = function (prop, value, index) {
-    if (stickers[index][prop] === value) return;
+    if (stickers[index] && stickers[index][prop] === value) return;
 
     setStickers((stickers) => matchAndUpdate({ stickers, value, index, prop }));
   };
