@@ -52,15 +52,15 @@ export default function useStickerbook({
     );
   };
 
-  const onPositionSticker = function (value, index) {
+  const onPositionSticker = function (index, value) {
     _onPropUpdate("position", value, index);
   };
 
-  const onScaleSticker = function (value, index) {
+  const onScaleSticker = function (index, value) {
     _onPropUpdate("scale", value, index);
   };
 
-  const onRotateSticker = function (value, index) {
+  const onRotateSticker = function (index, value) {
     _onPropUpdate("rotation", value, index);
   };
 
