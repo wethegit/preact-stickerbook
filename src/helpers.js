@@ -162,6 +162,19 @@ export async function exportStickerbook({
 
       ctx.drawImage(stickerImage, 0, 0, scaledDimensions.x, scaledDimensions.y);
 
+      // adapting position to unit sizing
+      const pos = sticker.position.scaleNew(outputWidth);
+
+      // continue if there is no rotation
+      if (!sticker.rotation) {
+        outputCtx.drawImage(
+          canvas,
+          pos.x - canvas.width * 0.5,
+          pos.y - canvas.height * 0.5
+        );
+        continue;
+      }
+
       // then rotate
       const rotatedCanvas = document.createElement("canvas");
       const rotatedCanvasCtx = rotatedCanvas.getContext("2d");
@@ -184,16 +197,12 @@ export async function exportStickerbook({
         -scaledDimensions.y * 0.5
       );
 
-      const hw = new Vec2(
-        rotatedCanvas.width * 0.5,
-        rotatedCanvas.height * 0.5
-      );
-
-      // adapting position to unit sizing
-      const pos = sticker.position.scaleNew(outputWidth);
-
       // final draw
-      outputCtx.drawImage(rotatedCanvas, pos.x - hw.x, pos.y - hw.y);
+      outputCtx.drawImage(
+        rotatedCanvas || canvas,
+        pos.x - rotatedCanvas.width * 0.5,
+        pos.y - rotatedCanvas.height * 0.5
+      );
     }
   }
 
