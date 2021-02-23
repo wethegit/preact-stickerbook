@@ -20,14 +20,14 @@ const ROTATION_BUTTON_OFFSET = 0.785;
 export default function Sticker({
   image,
   alt = "",
-  order = 1,
-  onDelete,
-  onReorder,
   // optional
   initialScale = null,
   initialRotation = null,
   initialPosition = null,
+  initialOrder = null,
   // hooks
+  onDelete,
+  onReorder,
   onPosition,
   onScale,
   onRotate,
@@ -53,6 +53,7 @@ export default function Sticker({
   const [position, setPosition] = useState();
   const [rotation, setRotation] = useState(0);
   const [scale, setScale] = useState(1);
+  const [order, setOrder] = useState(0);
   // control scale is a state for now, we can explore how this
   // will scale based on size, it might become a prop
   const [controlsScale, setControlScale] = useState(0.8);
@@ -63,6 +64,7 @@ export default function Sticker({
   const onPositionTimer = useRef();
   const onScaleTimer = useRef();
   const onRotateTimer = useRef();
+  const onReorderTimer = useRef();
 
   // Composed variables
   const radius = useMemo(() => {
@@ -410,6 +412,8 @@ export default function Sticker({
 
   // effects for the hooks provided by the component
   const updatePosition = function (value) {
+    if (value.x === position.x && value.y === position.y) return;
+
     setPosition(value);
 
     if (onPosition) {
@@ -425,7 +429,22 @@ export default function Sticker({
     }
   };
 
+  const updateOrder = function (value) {
+    if (value === order) return;
+
+    setOrder(value);
+
+    if (onReorder) {
+      clearTimeout(onReorderTimer.current);
+      onReorderTimer.current = setTimeout(() => {
+        onReorder(value);
+      }, 500);
+    }
+  };
+
   const updateRotation = function (value) {
+    if (value === rotation) return;
+
     setRotation(value);
 
     if (onRotate) {
@@ -437,6 +456,8 @@ export default function Sticker({
   };
 
   const updateScale = function (value, imageSize) {
+    if (value === scale) return;
+
     setScale(value);
 
     if (onScale) {
@@ -490,6 +511,9 @@ export default function Sticker({
 
     if (initialRotation !== null) setRotation(initialRotation);
     else updateRotation(0);
+
+    if (initialOrder !== null) setOrder(initialRotation);
+    else updateOrder(0);
 
     setState(STATES.IDLE);
   };
