@@ -21,15 +21,15 @@ export default function Stickerbook({
   background = {},
   foreground = {},
   frame = {},
+  outputHeight = 500,
   outputWidth = 500,
   children,
   className,
   ...props
 }) {
   const [dimensions, setDimensions] = useState({
-    // only 1:1 for now
     width: outputWidth,
-    height: outputWidth,
+    height: outputHeight,
     percentageShift: 1,
     rendered: false,
   });
@@ -130,49 +130,56 @@ export default function Stickerbook({
   }, [background.image]);
 
   return (
+    // this first div is fluid and will help us get the dimensions
+    // for the stickerbook itself
     <div
-      ref={mainRef}
+      role="region"
+      aria-label="Stickerbook"
       className={classnames([styles.Stickerbook, className])}
-      style={{
-        width: `${dimensions.width}px`,
-        height: `${dimensions.height}px`,
-      }}
       {...props}
     >
-      {background && background.image && (
-        <div
-          role="img"
-          className={styles.Stickerbook__background}
-          style={{
-            backgroundImage: `url(${background.image})`,
-            ...backgroundStyles,
-          }}
-          aria-label={background.alt || ""}
-        />
-      )}
-
-      {frame && frame.image && (
-        <img
-          src={frame.image}
-          alt={frame.alt || ""}
-          className={styles.Stickerbook__frame}
-        />
-      )}
-
-      <StickerbookContext.Provider
-        value={{ parentRef: mainRef.current, position, dimensions }}
+      <div
+        ref={mainRef}
+        style={{
+          width: `${dimensions.width}px`,
+          height: `${dimensions.height}px`,
+        }}
       >
-        {dimensions.rendered && children}
-      </StickerbookContext.Provider>
+        {background && background.image && (
+          <div
+            role="img"
+            className={styles.Stickerbook__background}
+            style={{
+              backgroundImage: `url(${background.image})`,
+              ...backgroundStyles,
+            }}
+            aria-label={background.alt || ""}
+          />
+        )}
 
-      {foreground && foreground.image && (
-        <img
-          src={foreground.image}
-          alt={foreground.alt || ""}
-          className={styles.Stickerbook__foreground}
-          style={{ zIndex: foregroundIndex }}
-        />
-      )}
+        {frame && frame.image && (
+          <img
+            src={frame.image}
+            alt={frame.alt || ""}
+            className={styles.Stickerbook__frame}
+          />
+        )}
+
+        <StickerbookContext.Provider
+          value={{ parentRef: mainRef.current, position, dimensions }}
+        >
+          {dimensions.rendered && children}
+        </StickerbookContext.Provider>
+
+        {foreground && foreground.image && (
+          <img
+            src={foreground.image}
+            alt={foreground.alt || ""}
+            className={styles.Stickerbook__foreground}
+            style={{ zIndex: foregroundIndex }}
+          />
+        )}
+      </div>
     </div>
   );
 }
