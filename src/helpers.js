@@ -27,10 +27,18 @@ export async function drawFromCenter({
   offsetX = 0.5,
   offsetY = 0.5,
 }) {
+  if (!ctx || !ctx instanceof CanvasRenderingContext2D)
+    throw Error("`ctx` is required and must be a valid canvas context");
+  if (!img) throw Error("`img` is required");
+
   const loadedImage = typeof img === "string" ? await loadUrlAsImage(img) : img;
 
-  let imageWidth = loadedImage.width,
-    imageHeight = loadedImage.height,
+  let imageWidth =
+      loadedImage.width || loadedImage.naturalWidth || loadedImage.offsetWidth,
+    imageHeight =
+      loadedImage.height ||
+      loadedImage.naturalHeight ||
+      loadedImage.offsetHeight,
     ratio = Math.min(width / imageWidth, height / imageHeight),
     newWidth = imageWidth * ratio, // new prop. width
     newHeight = imageHeight * ratio, // new prop. height
