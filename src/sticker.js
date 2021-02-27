@@ -295,7 +295,7 @@ export default function Sticker({
     parentRef.scrollTo(0, 0);
   };
 
-  const onDeletePointerDown = function () {
+  const onDeleteClick = function () {
     if (onDelete) onDelete();
   };
 
@@ -558,7 +558,7 @@ export default function Sticker({
             aria-hidden="true"
             className={styles["Sticker__controll-delete"]}
             style={controlsDeleteStyle}
-            onClick={onDeletePointerDown}
+            onClick={onDeleteClick}
           />
         )}
       </div>
