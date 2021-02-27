@@ -14,15 +14,15 @@
     .Sticker__img {
       background: var(--image-focus-background);
     }
-
-    .Sticker__container {
-      left: 0px;
-      pointer-events: none;
-      position: absolute;
-      top: 0px;
-      transform: translate(-50%, -50%);
-    }
   }
+}
+
+.Sticker__container {
+  left: 0px;
+  pointer-events: none;
+  position: absolute;
+  top: 0px;
+  transform: translate(-50%, -50%);
 }
 
 .Sticker__img,
