@@ -17,7 +17,7 @@ export function loadUrlAsImage(item) {
   });
 }
 
-export async function drawFromCenter({
+export async function coverCanvas({
   ctx,
   img,
   width,
@@ -112,7 +112,7 @@ export async function exportStickerbook({
 
   // draw background
   if (background && background.image)
-    await drawFromCenter({
+    await coverCanvas({
       ctx: outputCtx,
       img: background.image,
       width: outputWidth,
@@ -121,7 +121,7 @@ export async function exportStickerbook({
 
   // draw background
   if (frame && frame.image)
-    await drawFromCenter({
+    await coverCanvas({
       ctx: outputCtx,
       img: frame.image,
       width: outputWidth,
@@ -216,7 +216,7 @@ export async function exportStickerbook({
 
   // draw foreground
   if (foreground && foreground.image)
-    await drawFromCenter({
+    await coverCanvas({
       ctx: outputCtx,
       img: foreground.image,
       width: outputWidth,

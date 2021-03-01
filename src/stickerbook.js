@@ -36,6 +36,7 @@ export default function Stickerbook({
   const [position, setPosition] = useState();
   const [backgroundDetails, setBackgroundDetails] = useState({});
   const mainRef = useRef();
+  const parentRef = useRef();
   const foregroundIndex = useMemo(
     () => (children ? children.flat().length + 2 : 2),
     [children]
@@ -58,6 +59,7 @@ export default function Stickerbook({
   // when the node renders and also when we force resize
   useLayoutEffect(() => {
     const element = mainRef.current;
+    const parent = parentRef.current;
     let resizeTimer, scrollTimer;
 
     const getPosition = function () {
@@ -71,7 +73,7 @@ export default function Stickerbook({
       clearTimeout(resizeTimer);
 
       resizeTimer = setTimeout(() => {
-        const newWidth = element.parentNode.offsetWidth;
+        const newWidth = parent.offsetWidth;
         const curWidth = element.offsetWidth;
 
         setPosition(getPosition());
@@ -136,6 +138,7 @@ export default function Stickerbook({
       role="region"
       aria-label="Stickerbook"
       className={classnames([styles.Stickerbook, className])}
+      ref={parentRef}
       {...props}
     >
       <div
@@ -166,7 +169,12 @@ export default function Stickerbook({
         )}
 
         <StickerbookContext.Provider
-          value={{ parentRef: mainRef.current, position, dimensions }}
+          value={{
+            parentRef: parentRef.current,
+            mainRef: mainRef.current,
+            position,
+            dimensions,
+          }}
         >
           {dimensions.rendered && children}
         </StickerbookContext.Provider>
