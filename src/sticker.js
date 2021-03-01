@@ -410,9 +410,6 @@ export default function Sticker({
 
   // effects for the hooks provided by the component
   const updatePosition = function (value) {
-    if (value && position && value.x === position.x && value.y === position.y)
-      return;
-
     setPosition(value);
 
     if (onPosition) {
@@ -429,8 +426,6 @@ export default function Sticker({
   };
 
   const updateRotation = function (value) {
-    if (value === rotation) return;
-
     setRotation(value);
 
     if (onRotate) {
@@ -442,8 +437,6 @@ export default function Sticker({
   };
 
   const updateScale = function (value, imageSize) {
-    if (value === scale) return;
-
     setScale(value);
 
     if (onScale) {
