@@ -342,8 +342,6 @@ export function patchSticker({ stickers, prop, value, index }) {
   if (!PROPS.includes(prop))
     throw Error(`Invalid 'prop'. 'prop' must be one of: ${PROPS.join(",")}`);
 
-  if (stickers[index][prop] && stickers[index][prop] === value) return stickers;
-
   return stickers.map((item, i) => {
     if (i === index) item[prop] = value;
     return item;
