@@ -116,27 +116,6 @@ export default function Sticker({
     return bounds;
   }, [imageDetails, rotation, scale, position]);
 
-  // Component styles
-  const stickerStyles = useMemo(() => {
-    if (!position) return {};
-    return { left: `${position.x}px`, top: `${position.y}px`, zIndex: order };
-  }, [position, order]);
-
-  const containerStyles = useMemo(() => {
-    if (!imageDetails) return {};
-
-    return {
-      width: `${imageDetails.x}px`,
-      height: `${imageDetails.y}px`,
-    };
-  }, [imageDetails]);
-
-  const imageStyles = useMemo(() => {
-    return {
-      transform: `scale(${scale}) rotate(${rotation + rotationOffset}rad)`,
-    };
-  }, [scale, rotation, rotationOffset]);
-
   const controlsStyle = useMemo(() => {
     const dimension = radius * 2 * controlsScale;
 
@@ -193,55 +172,65 @@ export default function Sticker({
 
       if ((key === "Delete" || key === "Backspace") && onDelete) onDelete();
 
+      // move left
       if (key === "ArrowLeft")
-        updatePosition(new Vec2(position.x - 1 * multiplier, position.y));
+        setPosition((cur) => new Vec2(cur.x - 1 * multiplier, cur.y));
+      // move right
       else if (key === "ArrowRight")
-        updatePosition(new Vec2(position.x + 1 * multiplier, position.y));
+        setPosition((cur) => new Vec2(cur.x + 1 * multiplier, cur.y));
 
+      // move up
       if (key === "ArrowUp")
-        updatePosition(new Vec2(position.x, position.y - 1 * multiplier));
+        setPosition((cur) => new Vec2(cur.x, cur.y - 1 * multiplier));
+      // move down
       else if (key === "ArrowDown")
-        updatePosition(new Vec2(position.x, position.y + 1 * multiplier));
+        setPosition((cur) => new Vec2(cur.x, cur.y + 1 * multiplier));
 
-      if (key === "-" || key === "_") updateScale(scale - 0.01 * multiplier);
+      // scale down
+      if (key === "-" || key === "_")
+        setScale((cur) => Math.max(0.05, cur - 0.01 * multiplier));
+      // scale up
       else if (key === "+" || key === "=")
-        updateScale(scale + 0.01 * multiplier);
+        setScale((cur) => cur + 0.01 * multiplier);
 
+      // rotate left
       if (key === "<" || key === ",")
-        updateRotation(rotation - 0.01 * multiplier);
+        setRotation((cur) => cur - 0.01 * multiplier);
+      // rotate right
       else if (key === ">" || key === ".")
-        updateRotation(rotation + 0.01 * multiplier);
+        setRotation((cur) => cur + 0.01 * multiplier);
 
-      // Align top or bottom
+      // Align top
       if (key === "w")
-        updatePosition(new Vec2(position.x, position.y - bounds.top));
+        setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top));
+      // align bottom
       else if (key === "s")
-        updatePosition(
-          new Vec2(
-            position.x,
-            parentDimensions.height - (bounds.bottom - position.y)
-          )
+        setPosition(
+          (cur) =>
+            new Vec2(cur.x, parentDimensions.height - (bounds.bottom - cur.y))
         );
 
-      // Align left or right
+      // Align left
       if (key === "a")
-        updatePosition(new Vec2(position.x - bounds.left, position.y));
+        setPosition((cur) => new Vec2(cur.x - bounds.left, cur.y));
+      // align right
       else if (key === "d")
-        updatePosition(
-          new Vec2(
-            parentDimensions.width - (bounds.right - position.x),
-            position.y
-          )
+        setPosition(
+          (cur) =>
+            new Vec2(parentDimensions.width - (bounds.right - cur.x), cur.y)
         );
 
-      // Align vertically or horizontally center
+      // center align vertically
       if (key === "v")
-        updatePosition(new Vec2(position.x, parentDimensions.height * 0.5));
+        setPosition((cur) => new Vec2(cur.x, parentDimensions.height * 0.5));
+      // center align horizontally
       else if (key === "c")
-        updatePosition(new Vec2(parentDimensions.width * 0.5, position.y));
+        setPosition((cur) => new Vec2(parentDimensions.width * 0.5, cur.y));
 
       if (onReorder) {
+        // bring forwards
         if (key === "[" || key === "{") onReorder("up", multiplier > 1);
+        // bring backwards
         else if (key === "]" || key === "}") onReorder("down", multiplier > 1);
       }
     }
@@ -267,7 +256,7 @@ export default function Sticker({
 
       // Update the rotation / scale of the sticker
       setRotationOffset(mousePosition.angle - ROTATION_BUTTON_OFFSET);
-      updateScale(
+      setScale(
         (mousePosition.length + (radius - radius * controlsScale)) /
           (initalradius * 0.5)
       );
@@ -283,7 +272,7 @@ export default function Sticker({
         .subtract(mousePositionRef.current)
         .subtract(parentPosition);
 
-      updatePosition(pos);
+      setPosition(pos);
     }
   };
 
@@ -304,7 +293,7 @@ export default function Sticker({
   };
 
   const onPinPointerUp = function () {
-    updateRotation(rotation + rotationOffset);
+    setRotation((cur) => cur + rotationOffset);
     setRotationOffset(0);
     setState(STATES.IDLE);
   };
@@ -409,9 +398,7 @@ export default function Sticker({
   };
 
   // effects for the hooks provided by the component
-  const updatePosition = function (value) {
-    setPosition(value);
-
+  useEffect(() => {
     if (onPosition) {
       clearTimeout(onPositionTimer.current);
       onPositionTimer.current = setTimeout(() => {
@@ -420,25 +407,21 @@ export default function Sticker({
         // model into the preact/funcional model
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
-        onPosition(value.divideScalarNew(parentDimensions.width));
+        onPosition(position.divideScalarNew(parentDimensions.width));
       }, 500);
     }
-  };
+  }, [position]);
 
-  const updateRotation = function (value) {
-    setRotation(value);
-
+  useEffect(() => {
     if (onRotate) {
       clearTimeout(onRotateTimer.current);
       onRotateTimer.current = setTimeout(() => {
-        onRotate(value);
+        onRotate(rotation);
       }, 500);
     }
-  };
+  }, [rotation]);
 
-  const updateScale = function (value, imageSize) {
-    setScale(value);
-
+  useEffect(() => {
     if (onScale) {
       clearTimeout(onScaleTimer.current);
       onScaleTimer.current = setTimeout(() => {
@@ -447,14 +430,10 @@ export default function Sticker({
         // model into the preact/funcional model
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
-        const rad = imageSize
-          ? Math.min(imageSize.x, imageSize.y) * value * 0.5
-          : radius;
-
-        onScale(rad / parentDimensions.width);
+        onScale(radius / parentDimensions.width);
       }, 500);
     }
-  };
+  }, [scale]);
 
   // start it all after image loads
   const init = async function (e) {
@@ -478,7 +457,7 @@ export default function Sticker({
 
       setPosition(initialPosition.scaleNew(parentDimensions.width));
     } else
-      updatePosition(
+      setPosition(
         new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
       );
 
@@ -486,10 +465,10 @@ export default function Sticker({
       setScale(
         (initialScale * parentDimensions.width) / Math.min(width, height) / 0.5
       );
-    else updateScale(0.3, imageSize);
+    else setScale(0.3);
 
     if (initialRotation !== null) setRotation(initialRotation);
-    else updateRotation(0);
+    else setRotation(0);
 
     setState(STATES.IDLE);
   };
@@ -499,8 +478,8 @@ export default function Sticker({
     if (!imageDetails) return;
 
     const percentageShift = parentDimensions.percentageShift;
-    updatePosition(position.scaleNew(percentageShift));
-    updateScale(scale * percentageShift);
+    setPosition((cur) => cur.scaleNew(percentageShift));
+    setScale((cur) => cur * percentageShift);
   }, [parentDimensions.percentageShift]);
 
   // if image change we need to reload details
@@ -520,7 +499,10 @@ export default function Sticker({
       ref={elementRef}
       className={classnames([styles.Sticker, className])}
       tabindex="0"
-      style={stickerStyles}
+      style={{
+        ...(position && { left: `${position.x}px`, top: `${position.y}px` }),
+        zIndex: order,
+      }}
       onFocus={onStickerFocus}
       onKeyDown={onStickerKeyDown}
       onPointerMove={onStickerPointerMove}
@@ -528,11 +510,23 @@ export default function Sticker({
       onPointerCancel={onStickerPointerLeave}
       {...props}
     >
-      <div className={styles.Sticker__container} style={containerStyles}>
+      <div
+        className={styles.Sticker__container}
+        style={{
+          ...(imageDetails && {
+            width: `${imageDetails.x}px`,
+            height: `${imageDetails.y}px`,
+          }),
+        }}
+      >
         <img
           className={styles.Sticker__img}
           src={image}
-          style={imageStyles}
+          style={{
+            transform: `scale(${scale}) rotate(${
+              rotation + rotationOffset
+            }rad)`,
+          }}
           alt={alt}
           onPointerDown={onImagePointerDown}
           onPointerUp={onImagePointerUp}
