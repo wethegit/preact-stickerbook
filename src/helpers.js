@@ -22,8 +22,6 @@ export async function coverCanvas({
   img,
   width,
   height,
-  x = 0,
-  y = 0,
   offsetX = 0.5,
   offsetY = 0.5,
 }) {
@@ -33,51 +31,39 @@ export async function coverCanvas({
 
   const loadedImage = typeof img === "string" ? await loadUrlAsImage(img) : img;
 
-  let imageWidth =
-      loadedImage.width || loadedImage.naturalWidth || loadedImage.offsetWidth,
-    imageHeight =
-      loadedImage.height ||
-      loadedImage.naturalHeight ||
-      loadedImage.offsetHeight,
-    ratio = Math.min(width / imageWidth, height / imageHeight),
-    newWidth = imageWidth * ratio, // new prop. width
-    newHeight = imageHeight * ratio, // new prop. height
-    sourceX,
-    sourceY,
-    sourceWidth,
-    sourceHeight,
-    scaledRatio = 1;
+  const imageWidth =
+    loadedImage.width || loadedImage.naturalWidth || loadedImage.offsetWidth;
+  const imageHeight =
+    loadedImage.height || loadedImage.naturalHeight || loadedImage.offsetHeight;
 
-  // decide which gap to fill
-  if (newWidth < width) scaledRatio = width / newWidth;
-  if (Math.abs(scaledRatio - 1) < 1e-14 && newHeight < height)
-    scaledRatio = height / newHeight; // updated
+  const imageRatio = imageWidth / imageHeight;
+  const outputRatio = width / height;
 
-  newWidth *= scaledRatio;
-  newHeight *= scaledRatio;
+  let outputWidth = width;
+  let outputHeight = height;
 
-  // calc source rectangle
-  sourceWidth = imageWidth / (newWidth / width);
-  sourceHeight = imageHeight / (newHeight / height);
+  if (imageRatio > outputRatio) outputWidth = outputHeight * imageRatio;
+  else if (imageRatio < outputRatio)
+    outputHeight = outputWidth * (imageHeight / imageWidth);
 
-  sourceX = (imageWidth - sourceWidth) * offsetX;
-  sourceY = (imageHeight - sourceHeight) * offsetY;
+  // first we our image/source onto a canvas resized
+  // to the output size we want and with the correct ratio
+  const resizedCanvas = document.createElement("canvas");
+  const resizedCanvasCtx = resizedCanvas.getContext("2d");
 
-  // make sure source rectangle is valid
-  if (sourceX < 0) sourceX = 0;
-  if (sourceY < 0) sourceY = 0;
-  if (sourceWidth > imageWidth) sourceWidth = imageWidth;
-  if (sourceHeight > imageHeight) sourceHeight = imageHeight;
+  resizedCanvas.width = outputWidth;
+  resizedCanvas.height = outputHeight;
+  resizedCanvasCtx.drawImage(loadedImage, 0, 0, outputWidth, outputHeight);
 
-  // fill image in dest. rectangle
+  // now we draw the scaled canvas onto the original context passed
   ctx.drawImage(
-    loadedImage,
-    sourceX,
-    sourceY,
-    sourceWidth,
-    sourceHeight,
-    x,
-    y,
+    resizedCanvas,
+    (outputWidth - width) * offsetX,
+    (outputHeight - height) * offsetY,
+    width,
+    height,
+    0,
+    0,
     width,
     height
   );
