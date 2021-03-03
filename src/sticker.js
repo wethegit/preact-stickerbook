@@ -173,18 +173,30 @@ export default function Sticker({
       if ((key === "Delete" || key === "Backspace") && onDelete) onDelete();
 
       // move left
-      if (key === "ArrowLeft")
+      if (key === "ArrowLeft") {
+        e.preventDefault();
+        e.stopPropagation();
         setPosition((cur) => new Vec2(cur.x - 1 * multiplier, cur.y));
+      }
       // move right
-      else if (key === "ArrowRight")
+      else if (key === "ArrowRight") {
+        e.preventDefault();
+        e.stopPropagation();
         setPosition((cur) => new Vec2(cur.x + 1 * multiplier, cur.y));
+      }
 
       // move up
-      if (key === "ArrowUp")
+      if (key === "ArrowUp") {
+        e.preventDefault();
+        e.stopPropagation();
         setPosition((cur) => new Vec2(cur.x, cur.y - 1 * multiplier));
+      }
       // move down
-      else if (key === "ArrowDown")
+      else if (key === "ArrowDown") {
+        e.preventDefault();
+        e.stopPropagation();
         setPosition((cur) => new Vec2(cur.x, cur.y + 1 * multiplier));
+      }
 
       // scale down
       if (key === "-" || key === "_")
