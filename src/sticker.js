@@ -6,8 +6,6 @@ import { StickerbookContext } from "./stickerbook";
 
 import { classnames } from "./helpers";
 
-import styles from "./sticker.module.scss";
-
 const STATES = {
   LOADING: 0,
   IDLE: 1,
@@ -349,8 +347,8 @@ export default function Sticker({
     // I couldn't find an elegant and non hacky way of doing this in a more react/preact manner. 😥
     // If the alpha of the clicked pixel is less than 5%, we want to click *through* the sticker
     if (imageData.data[3] < 15) {
-      // Add the checking class to the image. This just ensures that we don't check this sticker again and get stuck in an infinite loop
-      e.currentTarget.classList.add("checking");
+      // Add the Sticker--checking class to the image. This just ensures that we don't check this sticker again and get stuck in an infinite loop
+      e.currentTarget.classList.add("Sticker--checking");
 
       // Find all the elements in the document at the clicked point
       let elements = Array.from(
@@ -361,8 +359,8 @@ export default function Sticker({
       // This makes sure that when we click *through* the sticker we get the next one below instead of some random one in the stack.
       elements.sort((a, b) => {
         if (
-          a.classList.contains(styles.Sticker__img) &&
-          b.classList.contains(styles.Sticker__img)
+          a.classList.contains("Sticker__img") &&
+          b.classList.contains("Sticker__img")
         ) {
           let as = window.getComputedStyle(a.parentNode.parentNode);
           let bs = window.getComputedStyle(b.parentNode.parentNode);
@@ -377,8 +375,8 @@ export default function Sticker({
       // Loop through the elements. If it belongs to a sticker then create a pointer event and "click" that sticker
       elements.forEach((element) => {
         if (
-          element.classList.contains(styles.Sticker__img) &&
-          !element.classList.contains("checking")
+          element.classList.contains("Sticker__img") &&
+          !element.classList.contains("Sticker--checking")
         ) {
           // create a specific "pointerdown" event
           const details = {
@@ -395,8 +393,8 @@ export default function Sticker({
         }
       });
 
-      // Remove the "checking class"
-      e.currentTarget.classList.remove("checking");
+      // Remove the "Sticker--checking class"
+      e.currentTarget.classList.remove("Sticker--checking");
     } else {
       // If, instead, this sticker has been clicked then focus it, set it to moving and add the pointer move event
       element.focus();
@@ -509,7 +507,7 @@ export default function Sticker({
   return (
     <div
       ref={elementRef}
-      className={classnames([styles.Sticker, className])}
+      className={classnames(["Sticker", className])}
       tabindex="0"
       style={{
         ...(position && { left: `${position.x}px`, top: `${position.y}px` }),
@@ -523,7 +521,7 @@ export default function Sticker({
       {...props}
     >
       <div
-        className={styles.Sticker__container}
+        className="Sticker__container"
         style={{
           ...(imageDetails && {
             width: `${imageDetails.x}px`,
@@ -532,7 +530,7 @@ export default function Sticker({
         }}
       >
         <img
-          className={styles.Sticker__img}
+          className="Sticker__img"
           src={image}
           style={{
             transform: `scale(${scale}) rotate(${
@@ -544,9 +542,9 @@ export default function Sticker({
           onPointerUp={onImagePointerUp}
         />
       </div>
-      <div className={styles.Sticker__controls} style={controlsStyle}>
+      <div className="Sticker__controls" style={controlsStyle}>
         <div
-          className={styles["Sticker__controll-pin"]}
+          className="Sticker__controll-pin"
           style={controlsPinStyle}
           onPointerDown={onPinPointerDown}
           onPointerUp={onPinPointerUp}
@@ -555,7 +553,7 @@ export default function Sticker({
           <button
             tabIndex="-1"
             aria-hidden="true"
-            className={styles["Sticker__controll-delete"]}
+            className="Sticker__controll-delete"
             style={controlsDeleteStyle}
             onClick={onDeleteClick}
           />

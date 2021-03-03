@@ -10,8 +10,6 @@ import { Vec2 } from "wtc-math";
 
 import { classnames } from "./helpers";
 
-import styles from "./stickerbook.module.scss";
-
 // if in the future we have the need to have two
 // stickerbook components rendering, I think
 // we might be able to make this a scoped function
@@ -137,7 +135,7 @@ export default function Stickerbook({
     <div
       role="region"
       aria-label="Stickerbook"
-      className={classnames([styles.Stickerbook, className])}
+      className={classnames(["Stickerbook", className])}
       ref={parentRef}
       {...props}
     >
@@ -151,7 +149,7 @@ export default function Stickerbook({
         {background && background.image && (
           <div
             role="img"
-            className={styles.Stickerbook__background}
+            className="Stickerbook__background"
             style={{
               backgroundImage: `url(${background.image})`,
               ...backgroundStyles,
@@ -164,7 +162,7 @@ export default function Stickerbook({
           <img
             src={frame.image}
             alt={frame.alt || ""}
-            className={styles.Stickerbook__frame}
+            className="Stickerbook__frame"
           />
         )}
 
@@ -183,7 +181,7 @@ export default function Stickerbook({
           <img
             src={foreground.image}
             alt={foreground.alt || ""}
-            className={styles.Stickerbook__foreground}
+            className="Stickerbook__foreground"
             style={{ zIndex: foregroundIndex }}
           />
         )}
