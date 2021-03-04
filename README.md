@@ -15,7 +15,7 @@ Easily create collage apps that are accessible by default.
     - [foreground](#foreground)
     - [frame](#frame)
 - [Sticker](#sticker)
-  - [Props](#props)
+  - [Props](#props-1)
     - [image](#image)
     - [alt](#alt)
     - [order](#order)
