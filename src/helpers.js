@@ -11,6 +11,7 @@ export function classnames(namesArray) {
 export function loadUrlAsImage(item) {
   return new Promise(function (resolve, reject) {
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
     img.onerror = (err) => reject(err);
     img.src = item;

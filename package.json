@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "src/index.js",
   "main": "dist/preact-stickerbook.js",
