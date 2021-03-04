@@ -470,8 +470,8 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 `Function`
 
 **options** | `Object`  
-**options.stickers** | `Array` - An array of valid [`sticker`](#sticker)
-**options.index** | `Integer` - The index of the sticker on the array that will be reordered.
+**options.stickers** | `Array` - An array of valid [`sticker`](#sticker)  
+**options.index** | `Integer` - The index of the sticker on the array that will be reordered.  
 **options.value** | **optional** - The new value.  
 **options.prop** | `String` - The prop to be updated. Can be one of the folllwing:
 
