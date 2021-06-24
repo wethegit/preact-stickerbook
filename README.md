@@ -193,6 +193,12 @@ The value needs to be a `Vec2` instance from the [wtc-math](https://github.com/w
 
 `Vec2|null` | **optional**
 
+#### defaultScale
+
+If no `initialScale` is provided `defaultScale` will be used.
+
+`number` default `0.3` | **optional**
+
 #### onDelete
 
 A callback function to be called when the delete button is clicked.  

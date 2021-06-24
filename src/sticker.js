@@ -23,6 +23,7 @@ export default function Sticker({
   initialScale = null,
   initialRotation = null,
   initialPosition = null,
+  defaultScale = 0.3,
   // hooks
   onDelete,
   onReorder,
@@ -42,9 +43,10 @@ export default function Sticker({
   // main refs
   const elementRef = useRef();
   const canvasRef = useRef(document.createElement("canvas"));
-  const ctx = useMemo(() => canvasRef.current.getContext("2d"), [
-    canvasRef.current,
-  ]);
+  const ctx = useMemo(
+    () => canvasRef.current.getContext("2d"),
+    [canvasRef.current]
+  );
   const mousePositionRef = useRef();
   // main states
   const [state, setState] = useState(STATES.LOADING);
@@ -475,7 +477,7 @@ export default function Sticker({
       setScale(
         (initialScale * parentDimensions.width) / Math.min(width, height) / 0.5
       );
-    else setScale(0.3);
+    else setScale(defaultScale || 0.3);
 
     if (initialRotation !== null) setRotation(initialRotation);
     else setRotation(0);
