@@ -324,7 +324,7 @@ export function patchSticker({ stickers, prop, value, index }) {
   if (typeof index !== "number" || !stickers[index])
     throw Error("`index` needs to be a valid `stickers` array index");
 
-  const PROPS = ["position", "scale", "rotation"];
+  const PROPS = ["position", "scale", "rotation", "image"];
 
   if (!PROPS.includes(prop))
     throw Error(`Invalid 'prop'. 'prop' must be one of: ${PROPS.join(",")}`);

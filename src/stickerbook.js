@@ -21,6 +21,7 @@ export default function Stickerbook({
   frame = {},
   outputHeight = 500,
   outputWidth = 500,
+  stickerModifiers = null,
   children,
   className,
   ...props
@@ -33,6 +34,7 @@ export default function Stickerbook({
   });
   const [position, setPosition] = useState();
   const [backgroundDetails, setBackgroundDetails] = useState({});
+  const [modifierIndex, setModifierIndex] = useState(0);
   const mainRef = useRef();
   const parentRef = useRef();
   const foregroundIndex = useMemo(
@@ -172,6 +174,9 @@ export default function Stickerbook({
             mainRef: mainRef.current,
             position,
             dimensions,
+            stickerModifiers,
+            modifierIndex,
+            setModifierIndex,
           }}
         >
           {dimensions.rendered && children}

@@ -30,6 +30,7 @@ export default function Sticker({
   onPosition,
   onScale,
   onRotate,
+  onModifierSelect,
   // others
   className,
   ...props
@@ -39,6 +40,9 @@ export default function Sticker({
     position: parentPosition,
     parentRef,
     dimensions: parentDimensions,
+    stickerModifiers,
+    modifierIndex,
+    setModifierIndex,
   } = useContext(StickerbookContext);
   // main refs
   const elementRef = useRef();
@@ -156,6 +160,25 @@ export default function Sticker({
       top: `${
         radius * controlsScale -
         Math.sin(rotationOffset + ROTATION_BUTTON_OFFSET) *
+          radius *
+          controlsScale -
+        3 // 3 is for the border
+      }px`,
+    };
+  }, [radius, controlsScale, rotationOffset, ROTATION_BUTTON_OFFSET]);
+
+  const controlsModifierStyle = useMemo(() => {
+    return {
+      left: `${
+        radius * controlsScale +
+        Math.sin(rotationOffset + ROTATION_BUTTON_OFFSET) *
+          radius *
+          controlsScale -
+        3 // 3 is for the border
+      }px`,
+      top: `${
+        radius * controlsScale -
+        Math.cos(rotationOffset + ROTATION_BUTTON_OFFSET) *
           radius *
           controlsScale -
         3 // 3 is for the border
@@ -298,6 +321,19 @@ export default function Sticker({
 
   const onDeleteClick = function () {
     if (onDelete) onDelete();
+  };
+
+  const onModifierClick = function () {
+    if (!stickerModifiers) return;
+
+    const newModIndex = stickerModifiers[modifierIndex + 1]
+      ? modifierIndex + 1
+      : 0;
+    // update our internal sticker modifier state:
+    setModifierIndex(newModIndex);
+    // run whatever function the user has passed to the sticker, passing the new state:
+    if (onModifierSelect && typeof onModifierSelect === "function")
+      onModifierSelect(newModIndex);
   };
 
   const onPinPointerDown = function () {
@@ -546,7 +582,7 @@ export default function Sticker({
       </div>
       <div className="Sticker__controls" style={controlsStyle}>
         <div
-          className="Sticker__controll-pin"
+          className="Sticker__control Sticker__control--pin"
           style={controlsPinStyle}
           onPointerDown={onPinPointerDown}
           onPointerUp={onPinPointerUp}
@@ -555,9 +591,19 @@ export default function Sticker({
           <button
             tabIndex="-1"
             aria-hidden="true"
-            className="Sticker__controll-delete"
+            className="Sticker__control Sticker__control--delete"
             style={controlsDeleteStyle}
             onClick={onDeleteClick}
+          />
+        )}
+        {stickerModifiers && (
+          <button
+            className="Sticker__control Sticker__control--modifier"
+            style={{
+              ...controlsModifierStyle,
+              "--modifier": stickerModifiers[modifierIndex],
+            }}
+            onClick={() => onModifierClick()}
           />
         )}
       </div>
