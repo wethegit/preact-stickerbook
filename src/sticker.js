@@ -30,6 +30,7 @@ export default function Sticker({
   onPosition,
   onScale,
   onRotate,
+  onModifierChange,
   // others
   className,
   ...props
@@ -346,6 +347,8 @@ export default function Sticker({
 
     // update our "local" sticker modifier, which will actually have an effect on the sticker:
     setLocalModifier(stickerModifiers[localModIndexNew]);
+
+    if (onModifierChange) onModifierChange(localModIndexNew);
   };
 
   const onPinPointerDown = function () {
@@ -554,10 +557,8 @@ export default function Sticker({
 
   // if the localModifier changes, we'll need to update the sticker itself
   useEffect(() => {
-    console.clear();
-    console.log("local:", localModifier && localModifier.fileSuffix);
-    console.log("global:", stickerModifiers[defaultModifierIndex].fileSuffix);
-
+    // console.log("local:", localModifier && localModifier.fileSuffix);
+    // console.log("global:", stickerModifiers[defaultModifierIndex].fileSuffix);
     // TODO: Update the sticker image
   }, [localModifier]);
 
