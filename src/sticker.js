@@ -30,7 +30,6 @@ export default function Sticker({
   onPosition,
   onScale,
   onRotate,
-  onModifierSelect,
   // others
   className,
   ...props
@@ -41,8 +40,8 @@ export default function Sticker({
     parentRef,
     dimensions: parentDimensions,
     stickerModifiers,
-    modifierIndex,
-    setModifierIndex,
+    defaultModifierIndex,
+    setDefaultModifierIndex,
   } = useContext(StickerbookContext);
   // main refs
   const elementRef = useRef();
@@ -57,6 +56,9 @@ export default function Sticker({
   const [position, setPosition] = useState();
   const [rotation, setRotation] = useState(0);
   const [scale, setScale] = useState(1);
+  const [localModifier, setLocalModifier] = useState(() =>
+    stickerModifiers ? stickerModifiers[defaultModifierIndex] : null
+  );
   // control scale is a state for now, we can explore how this
   // will scale based on size, it might become a prop
   const [controlsScale, setControlScale] = useState(0.8);
@@ -183,8 +185,15 @@ export default function Sticker({
           controlsScale -
         3 // 3 is for the border
       }px`,
+      "--modifier": localModifier.cssValue,
     };
-  }, [radius, controlsScale, rotationOffset, ROTATION_BUTTON_OFFSET]);
+  }, [
+    radius,
+    controlsScale,
+    rotationOffset,
+    ROTATION_BUTTON_OFFSET,
+    localModifier,
+  ]);
 
   // event listeners
 
@@ -323,17 +332,20 @@ export default function Sticker({
     if (onDelete) onDelete();
   };
 
-  const onModifierClick = function () {
-    if (!stickerModifiers) return;
-
-    const newModIndex = stickerModifiers[modifierIndex + 1]
-      ? modifierIndex + 1
+  const onModifierClick = function (event) {
+    const localModIndex = stickerModifiers.findIndex(
+      (mod) => mod === localModifier
+    );
+    const localModIndexNew = stickerModifiers[localModIndex + 1]
+      ? localModIndex + 1
       : 0;
-    // update our internal sticker modifier state:
-    setModifierIndex(newModIndex);
-    // run whatever function the user has passed to the sticker, passing the new state:
-    if (onModifierSelect && typeof onModifierSelect === "function")
-      onModifierSelect(newModIndex);
+
+    // update our "global" sticker modifier.
+    // this is just so the <StickerBook> can keep track of the last-used modifier:
+    setDefaultModifierIndex(localModIndexNew);
+
+    // update our "local" sticker modifier, which will actually have an effect on the sticker:
+    setLocalModifier(stickerModifiers[localModIndexNew]);
   };
 
   const onPinPointerDown = function () {
@@ -540,6 +552,15 @@ export default function Sticker({
     img.src = image;
   }, [image]);
 
+  // if the localModifier changes, we'll need to update the sticker itself
+  useEffect(() => {
+    console.clear();
+    console.log("local:", localModifier && localModifier.fileSuffix);
+    console.log("global:", stickerModifiers[defaultModifierIndex].fileSuffix);
+
+    // TODO: Update the sticker image
+  }, [localModifier]);
+
   if (state === STATES.LOADING) return;
 
   return (
@@ -599,11 +620,8 @@ export default function Sticker({
         {stickerModifiers && (
           <button
             className="Sticker__control Sticker__control--modifier"
-            style={{
-              ...controlsModifierStyle,
-              "--modifier": stickerModifiers[modifierIndex],
-            }}
-            onClick={() => onModifierClick()}
+            style={controlsModifierStyle}
+            onClick={onModifierClick}
           />
         )}
       </div>
