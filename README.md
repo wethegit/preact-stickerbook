@@ -136,6 +136,24 @@ The width of your artboard.
 }
 ```
 
+#### stickerModifiers
+
+`stickerModifiers` allows you to pass an Array of variants ("modifiers") for your image-based sticker assets. This will append a control button to the sticker, which will allow the user to cycle through the available modifiers.
+
+`Array` | **optional**
+
+Each Array item must be an `Object` containing the following properties:  
+**controlStyle** | `Object` - the values with which to style to the Sticker's modifier control button.  
+**fileSuffix** | `String` - the specific filename suffix for this modifier item's image asset. For example, if your image's filename is `my-sticker-blue.png`, the suffix should be `-blue`.
+
+```js
+[
+  { controlStyle: { backgroundColor: "#ff0000" }, fileSuffix: "-red" },
+  { controlStyle: { backgroundColor: "#ffc700" }, fileSuffix: "-yellow" },
+  { controlStyle: { backgroundColor: "#00ffff" }, fileSuffix: "-blue" },
+];
+```
+
 ## Sticker
 
 All of the elements that form the collage. At the very minimum a sticker element MUST have:

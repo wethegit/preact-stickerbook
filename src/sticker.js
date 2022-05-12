@@ -185,7 +185,7 @@ export default function Sticker({
           controlsScale -
         3 // 3 is for the border
       }px`,
-      "--modifier": localModifier.cssValue,
+      ...localModifier.controlStyle,
     };
   }, [
     radius,
