@@ -334,3 +334,27 @@ export function patchSticker({ stickers, prop, value, index }) {
     return item;
   });
 }
+
+// Use this to update the sticker image via a "modifier",
+// without affecting the sticker's rotation, placement, etc.
+export function modifyStickerImageInPlace({
+  stickers,
+  id,
+  modifiers,
+  modifierIndex,
+  newModifierIndex,
+}) {
+  const oldFilenameSuffix = modifiers[modifierIndex].fileSuffix;
+  const stickerIndex = stickers.findIndex((sticker) => sticker.id === id);
+
+  // update the existing sticker image value with the new file suffix
+  patchSticker({
+    stickers,
+    prop: "image",
+    value: stickers[stickerIndex].image.replace(
+      oldFilenameSuffix,
+      modifiers[newModifierIndex].fileSuffix
+    ),
+    index: stickerIndex,
+  });
+}
