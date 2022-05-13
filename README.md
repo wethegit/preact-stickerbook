@@ -14,6 +14,7 @@ Easily create collage apps that are accessible by default.
     - [background](#background)
     - [foreground](#foreground)
     - [frame](#frame)
+    - [stickerModifiers](#stickerModifiers)
 - [Sticker](#sticker)
   - [Props](#props-1)
     - [image](#image)
@@ -27,12 +28,14 @@ Easily create collage apps that are accessible by default.
     - [onPosition](#onPosition)
     - [onScale](#onScale)
     - [onRotate](#onRotate)
+    - [onModifierChange](#onModifierChange)
 - [Helpers](#helpers)
   - [exportStickerbook](#exportStickerbook)
   - [reorderSticker](#reorderSticker)
   - [addSticker](#addSticker)
   - [deleteSticker](#deleteSticker)
   - [patchSticker](#patchSticker)
+  - [modifyStickerImageInPlace](#modifyStickerImageInPlace)
 
 <!-- tocstop -->
 
@@ -383,6 +386,52 @@ const App = () => {
 };
 ```
 
+#### onModifierChange
+
+A callback function to be called when the `Sticker` modifier is updated (clicked). The callback receives the sticker's local _modifier index_ value, as well as its unique `id`.  
+**Note:** use the [modifyStickerImageInPlace](#modifyStickerImageInPlace) helper function.
+
+`Function` | **optional**
+
+```jsx
+import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
+import { modifyStickerImageInPlace } from "@wethegit/preact-stickerbook/helpers";
+
+const MODIFIERS = [
+  { controlStyle: { backgroundColor: "#ff0000" }, fileSuffix: "-red" },
+  { controlStyle: { backgroundColor: "#ffc700" }, fileSuffix: "-yellow" },
+  { controlStyle: { backgroundColor: "#00ffff" }, fileSuffix: "-blue" },
+];
+
+const App = () => {
+  const [stickers, setStickers] = useState([
+    /* your stickers */
+  ]);
+  const [modifierIndex, setModifierIndex] = useState(0);
+
+  const onModifierChange = (newModifierIndex, id) => {
+    modifyStickerImageInPlace({
+      stickers,
+      id,
+      modifiers: MODIFIERS,
+      modifierIndex,
+      newModifierIndex,
+    });
+
+    // update our global default modifier
+    setModifierIndex(newModifierIndex);
+  };
+
+  return (
+    <Stickerbook>
+      {stickers.map((sticker, index) => (
+        <Sticker {...sticker} onModifierChange={onModifierChange} />
+      ))}
+    </Stickerbook>
+  );
+};
+```
+
 ## Helpers
 
 ### exportStickerbook
@@ -489,16 +538,30 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 
 ### patchSticker
 
-Returns a copy of the provided `stickers` array without the selected sticker.
+Returns a copy of the provided `stickers` array, with the specified prop of a given sticker updated.
 
 `Function`
 
 **options** | `Object`  
 **options.stickers** | `Array` - An array of valid [`sticker`](#sticker)  
-**options.index** | `Integer` - The index of the sticker on the array that will be reordered.  
+**options.index** | `Integer` - The index of the sticker on the array that will be updated.  
 **options.value** | **optional** - The new value.  
 **options.prop** | `String` - The prop to be updated. Can be one of the folllwing:
 
 - position
 - scale
 - rotation
+- image
+
+### modifyStickerImageInPlace
+
+Returns a copy of the provided `stickers` array, with the given sticker image modifier applied. Maintains position, scale, rotation, etc.
+
+`Function`
+
+**options** | `Object`  
+**options.stickers** | `Array` - An array of valid [`sticker`](#sticker)  
+**options.id** | `String|Number` - The unique sticker identifier.  
+**options.modifiers** | `Array` - A valid [`stickerModifiers`](#stickerModifiers) array.  
+**options.modifierIndex** | `Number` - The currently selected modifier array index.  
+**options.newModifierIndex** | `Number` - The newly updated modifier array index.
