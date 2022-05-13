@@ -24,6 +24,7 @@ export default function Sticker({
   initialRotation = null,
   initialPosition = null,
   defaultScale = 0.3,
+  id = null,
   // hooks
   onDelete,
   onReorder,
@@ -348,7 +349,7 @@ export default function Sticker({
     // update our "local" sticker modifier, which will actually have an effect on the sticker:
     setLocalModifier(stickerModifiers[localModIndexNew]);
 
-    if (onModifierChange) onModifierChange(localModIndexNew);
+    if (onModifierChange) onModifierChange(localModIndexNew, id);
   };
 
   const onPinPointerDown = function () {
@@ -511,27 +512,31 @@ export default function Sticker({
 
     ctx.drawImage(img, 0, 0);
 
-    const imageSize = new Vec2(width, height);
-    setImageDetails(imageSize);
+    if (!imageDetails) {
+      const imageSize = new Vec2(width, height);
+      setImageDetails(imageSize);
 
-    if (initialPosition !== null) {
-      if (!(initialPosition instanceof Vec2))
-        initialPosition = new Vec2(initialPosition.x, initialPosition.y);
+      if (initialPosition !== null) {
+        if (!(initialPosition instanceof Vec2))
+          initialPosition = new Vec2(initialPosition.x, initialPosition.y);
 
-      setPosition(initialPosition.scaleNew(parentDimensions.width));
-    } else
-      setPosition(
-        new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
-      );
+        setPosition(initialPosition.scaleNew(parentDimensions.width));
+      } else
+        setPosition(
+          new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
+        );
 
-    if (initialScale !== null)
-      setScale(
-        (initialScale * parentDimensions.width) / Math.min(width, height) / 0.5
-      );
-    else setScale(defaultScale || 0.3);
+      if (initialScale !== null)
+        setScale(
+          (initialScale * parentDimensions.width) /
+            Math.min(width, height) /
+            0.5
+        );
+      else setScale(defaultScale || 0.3);
 
-    if (initialRotation !== null) setRotation(initialRotation);
-    else setRotation(0);
+      if (initialRotation !== null) setRotation(initialRotation);
+      else setRotation(0);
+    }
 
     setState(STATES.IDLE);
   };
@@ -557,9 +562,7 @@ export default function Sticker({
 
   // if the localModifier changes, we'll need to update the sticker itself
   useEffect(() => {
-    // console.log("local:", localModifier && localModifier.fileSuffix);
-    // console.log("global:", stickerModifiers[defaultModifierIndex].fileSuffix);
-    // TODO: Update the sticker image
+    image = stickerModifiers[localModifier];
   }, [localModifier]);
 
   if (state === STATES.LOADING) return;
