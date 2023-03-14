@@ -1,4 +1,5 @@
 import { Vec2 } from "wtc-math";
+import { renderSticker } from "../../renderSticker";
 
 export function classnames(namesArray) {
   return namesArray
@@ -124,80 +125,17 @@ export async function exportStickerbook({
       sortedStickers.map(({ image }) => loadUrlAsImage(image))
     );
 
+    console.log('------------')
+    window.loadedStickers = loadedStickers;
+
     for (let i = 0; i < loadedStickers.length; i++) {
       const sticker = sortedStickers[i];
-      const stickerImage = loadedStickers[i];
 
-      // @marlonmarcello Thanks to Liam for all this magic bellow.
-      // It was just slightly adapted for this use case, but
-      // all the logic and math was him. Love you man.
-      // what this does is, convert the unit size of the sticker
-      // to the correct size in relation to the output
-      // -----
-      // @liamegan I need to clean this whole function up. Currently it uses two
-      // different canvases for scale and rotation - mainly because this
-      // allows me to think through the problem logically, however I
-      // think that this can be greatly simplified in practice by
-      // combining these 2 steps into a single canvas.
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      // adapted to unit sizing
-      // first, scale it
-      let dimensions = new Vec2(stickerImage.width, stickerImage.height);
-      let scale =
-        (sticker.scale * outputWidth) /
-        Math.min(dimensions.x, dimensions.y) /
-        0.5;
-
-      const scaledDimensions = dimensions.scaleNew(scale);
-
-      canvas.width = scaledDimensions.width;
-      canvas.height = scaledDimensions.height;
-
-      ctx.drawImage(stickerImage, 0, 0, scaledDimensions.x, scaledDimensions.y);
-
-      // adapting position to unit sizing
-      const pos = sticker.position.scaleNew(outputWidth);
-
-      // continue if there is no rotation
-      if (!sticker.rotation) {
-        outputCtx.drawImage(
-          canvas,
-          pos.x - canvas.width * 0.5,
-          pos.y - canvas.height * 0.5
-        );
-        continue;
-      }
-
-      // then rotate
-      const rotatedCanvas = document.createElement("canvas");
-      const rotatedCanvasCtx = rotatedCanvas.getContext("2d");
-      const sin = Math.sin(sticker.rotation);
-      const cos = Math.cos(sticker.rotation);
-      let rotatedSize = new Vec2(
-        Math.abs(scaledDimensions.y * sin) + Math.abs(scaledDimensions.x * cos),
-        Math.abs(scaledDimensions.y * cos) + Math.abs(scaledDimensions.x * sin)
-      );
-      const rotatedSizeHalf = rotatedSize.scaleNew(0.5);
-
-      rotatedCanvas.width = rotatedSize.x;
-      rotatedCanvas.height = rotatedSize.y;
-
-      rotatedCanvasCtx.translate(rotatedSizeHalf.x, rotatedSizeHalf.y);
-      rotatedCanvasCtx.rotate(sticker.rotation);
-      rotatedCanvasCtx.drawImage(
-        canvas,
-        -scaledDimensions.x * 0.5,
-        -scaledDimensions.y * 0.5
-      );
+      // Render the sticker as a stamp
+      const stamp = renderSticker(sticker, [outputWidth, outputHeight]);
 
       // final draw
-      outputCtx.drawImage(
-        rotatedCanvas || canvas,
-        pos.x - rotatedCanvas.width * 0.5,
-        pos.y - rotatedCanvas.height * 0.5
-      );
+      outputCtx.drawImage(stamp, 0, 0);
     }
   }
 
