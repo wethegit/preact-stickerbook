@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "./index.js",
   "repository": {
@@ -26,7 +26,7 @@
   "devDependencies": {
   },
   "dependencies": {
-    "wtc-math": "^0.0.4",
-    "wtc-simplegl": "^0.0.2"
+    "wtc-math": "^1.0.17",
+    "wtc-simplegl": "^0.0.4"
   }
 }
