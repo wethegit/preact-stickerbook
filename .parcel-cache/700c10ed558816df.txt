@@ -1,9 +1,10 @@
-14958
+14961
 57/home/liamegan/projects/wtc/preact-stickerbook/.npmignore1669241085583966421 0
 83/home/liamegan/projects/wtc/preact-stickerbook/.github/workflows/gh-npm-publish.yml1679506608504626794 0
 84/home/liamegan/projects/wtc/preact-stickerbook/.github/workflows/codeql-analysis.yml1669241085583966421 0
 64/home/liamegan/projects/wtc/preact-stickerbook/.github/workflows1669241085583966421 1
-63/home/liamegan/projects/wtc/preact-stickerbook/dist/main.js.map1679507926884627705 0
+63/home/liamegan/projects/wtc/preact-stickerbook/dist/main.js.map1679508201834626690 0
+65/home/liamegan/projects/wtc/preact-stickerbook/dist/style.css.map1679508253544627213 0
 64/home/liamegan/projects/wtc/preact-stickerbook/package copy.json1679351067025041375 0
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/b91679503338854630489 1
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/b71679503338854630489 1
@@ -139,9 +140,10 @@
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/271679503338664630488 1
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/6d1679503339114630489 1
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/491679503338754630489 1
-59/home/liamegan/projects/wtc/preact-stickerbook/package.json1679507996094625658 0
+59/home/liamegan/projects/wtc/preact-stickerbook/package.json1679508267754627643 0
 57/home/liamegan/projects/wtc/preact-stickerbook/.gitignore1669241085583966421 0
 61/home/liamegan/projects/wtc/preact-stickerbook/src/helpers.js1679507910624626954 0
+61/home/liamegan/projects/wtc/preact-stickerbook/src/index.scss1679508248364627162 0
 63/home/liamegan/projects/wtc/preact-stickerbook/src/sticker.scss1679351095125028186 0
 78/home/liamegan/projects/wtc/preact-stickerbook/node_modules/nullthrows/LICENSE1679507796844630089 0
 83/home/liamegan/projects/wtc/preact-stickerbook/node_modules/nullthrows/package.json1679507796784630088 0
@@ -562,7 +564,7 @@
 111/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/features/css-image-orientation.js1679503120654627997 0
 105/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/features/resource-timing.js1679503121444628083 0
 103/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/features/server-timing.js1679503121464628085 0
-59/home/liamegan/projects/wtc/preact-stickerbook/dist/main.js1679507926884627705 0
+59/home/liamegan/projects/wtc/preact-stickerbook/dist/main.js1679508201834626690 0
 100/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/features/es6-module.js1679503120964628031 0
 91/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/regions/TM.js1679503121524628092 0
 108/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/features/css-cascade-layers.js1679503120504627980 0
@@ -2833,6 +2835,7 @@
 81/home/liamegan/projects/wtc/preact-stickerbook/node_modules/har-validator/LICENSE1679503117604627742 0
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/781679503339114630489 1
 86/home/liamegan/projects/wtc/preact-stickerbook/node_modules/har-validator/package.json1679503118264627796 0
+61/home/liamegan/projects/wtc/preact-stickerbook/dist/style.css1679508253534627213 0
 73/home/liamegan/projects/wtc/preact-stickerbook/node_modules/har-validator1679503118264627796 1
 81/home/liamegan/projects/wtc/preact-stickerbook/node_modules/mime-types/HISTORY.md1679503118154627787 0
 79/home/liamegan/projects/wtc/preact-stickerbook/node_modules/mime-types/index.js1679503117724627751 0
@@ -3098,7 +3101,7 @@
 160/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/packager-svg/node_modules/dom-serializer/node_modules/entities/lib/decode_codepoint.d.ts.map1679507797574630110 0
 76/home/liamegan/projects/wtc/preact-stickerbook/node_modules/lodash/fp/ary.js1679503120864628020 0
 136/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/optimizer-htmlnano/node_modules/css-what/lib/commonjs/types.d.ts.map1679507797834630117 0
-50/home/liamegan/projects/wtc/preact-stickerbook/src1679443188919287995 1
+50/home/liamegan/projects/wtc/preact-stickerbook/src1679508218234626717 1
 144/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/packager-svg/node_modules/dom-serializer/node_modules/entities/lib/encode.js1679507797114630097 0
 74/home/liamegan/projects/wtc/preact-stickerbook/node_modules/uniq/README.md1679503117874627764 0
 139/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/transformer-svg/node_modules/posthtml-parser/dist/location-tracker.d.ts1679507797494630107 0
@@ -11435,7 +11438,7 @@
 91/home/liamegan/projects/wtc/preact-stickerbook/node_modules/caniuse-lite/data/regions/WF.js1679503121574628097 0
 168/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/transformer-react-refresh-wrap/node_modules/@parcel/utils/test/input/sourcemap/referenced-min.js.map1679507799124630152 0
 103/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/optimizer-svgo/src/SVGOOptimizer.js1679507797084630096 0
-51/home/liamegan/projects/wtc/preact-stickerbook/dist1679507926884627705 1
+51/home/liamegan/projects/wtc/preact-stickerbook/dist1679508253544627213 1
 123/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/core/node_modules/@parcel/utils/test/DefaultMap.test.js1679507797724630114 0
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/091679503338434630488 1
 149/home/liamegan/projects/wtc/preact-stickerbook/node_modules/@parcel/optimizer-htmlnano/node_modules/postcss-normalize-display-values/types/index.d.ts1679507797344630103 0

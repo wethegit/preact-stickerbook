@@ -140,7 +140,7 @@
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/271679503338664630488 1
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/6d1679503339114630489 1
 56/home/liamegan/projects/wtc/preact-stickerbook/.cache/491679503338754630489 1
-59/home/liamegan/projects/wtc/preact-stickerbook/package.json1679508212044626696 0
+59/home/liamegan/projects/wtc/preact-stickerbook/package.json1679508267754627643 0
 57/home/liamegan/projects/wtc/preact-stickerbook/.gitignore1669241085583966421 0
 61/home/liamegan/projects/wtc/preact-stickerbook/src/helpers.js1679507910624626954 0
 61/home/liamegan/projects/wtc/preact-stickerbook/src/index.scss1679508248364627162 0
