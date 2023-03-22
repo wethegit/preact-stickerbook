@@ -15,7 +15,7 @@ const STATES = {
 
 const ROTATION_BUTTON_OFFSET = 0.785;
 
-export default function Sticker({
+const Sticker = function({
   image,
   alt = "",
   order = 0,
@@ -564,3 +564,5 @@ export default function Sticker({
     </div>
   );
 }
+
+export { Sticker };

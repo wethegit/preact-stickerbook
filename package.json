@@ -1,10 +1,19 @@
 {
   "name": "@wethegit/preact-stickerbook",
   "amdName": "WTCPreactStickerbook",
-  "version": "2.0.0-beta.6",
+  "version": "2.0.0-beta.7",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "./src/index.js",
-  "main": "./dist/index.js",
+  "main": "./dist/main.js",
+  "css": "./dist/style.css",
+  "targets": {
+    "main": {
+      "source": "src/index.js"
+    },
+    "css": {
+      "source": "src/index.scss"
+    }
+  },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "type": "module",
   "repository": {
@@ -19,7 +28,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build src/index.js src/sticker.scss src/stickerbook.scss"
+    "build": "parcel build && parcel build src/sticker.scss src/stickerbook.scss"
   },
   "author": "",
   "license": "ISC",
@@ -32,12 +41,13 @@
     "react-dom": "preact-compat"
   },
   "dependencies": {
+    "parcel": "^2.8.3",
     "preact": "^10.13.1",
     "wtc-math": "^1.0.17",
     "wtc-simplegl": "^0.0.4"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.5",
+    "@parcel/transformer-sass": "^2.8.3",
     "sass": "^1.59.3"
   }
 }

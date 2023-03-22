@@ -15,7 +15,7 @@ import { classnames } from "./helpers";
 // we might be able to make this a scoped function
 export const StickerbookContext = createContext();
 
-export default function Stickerbook({
+const Stickerbook = function({
   background = {},
   foreground = {},
   frame = {},
@@ -189,3 +189,5 @@ export default function Stickerbook({
     </div>
   );
 }
+
+export { Stickerbook };
