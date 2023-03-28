@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, createContext } from "preact";
 import {
   useEffect,
@@ -15,7 +16,7 @@ import { classnames } from "./helpers";
 // we might be able to make this a scoped function
 export const StickerbookContext = createContext();
 
-const Stickerbook = function({
+const Stickerbook = function ({
   background = {},
   foreground = {},
   frame = {},
@@ -188,6 +189,6 @@ const Stickerbook = function({
       </div>
     </div>
   );
-}
+};
 
 export { Stickerbook };

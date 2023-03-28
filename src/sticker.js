@@ -1,7 +1,7 @@
+/** @jsx h */
 import { h } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Vec2, Mat2 } from "wtc-math";
-
 
 import { StickerbookContext } from "./stickerbook";
 
@@ -16,7 +16,7 @@ const STATES = {
 
 const ROTATION_BUTTON_OFFSET = 0.785;
 
-const Sticker = function({
+const Sticker = function ({
   image,
   alt = "",
   order = 0,
@@ -564,6 +564,6 @@ const Sticker = function({
       </div>
     </div>
   );
-}
+};
 
 export { Sticker };
