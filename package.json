@@ -1,7 +1,7 @@
 {
   "name": "@wethegit/preact-stickerbook",
   "amdName": "WTCPreactStickerbook",
-  "version": "2.0.0-beta.16",
+  "version": "2.0.0-beta.17",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "./src/index.js",
   "main": "./dist/main.js",
@@ -36,6 +36,7 @@
     "url": "https://github.com/wethegit/preact-stickerbook/issues"
   },
   "homepage": "https://github.com/wethegit/preact-stickerbook#readme",
+
   "alias": {
     "react": "preact-compat",
     "react-dom": "preact-compat"

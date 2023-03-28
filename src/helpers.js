@@ -1,5 +1,4 @@
-/** @jsx h */
-import { h } from "preact";
+
 import { Vec2 } from "wtc-math";
 import { renderSticker } from "./renderSticker";
 
