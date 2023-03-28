@@ -2,6 +2,9 @@ import { h } from "preact";
 import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Vec2, Mat2 } from "wtc-math";
 
+/** @jsx h */
+
+
 import { StickerbookContext } from "./stickerbook";
 
 import { classnames } from "./helpers";
