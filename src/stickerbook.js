@@ -15,8 +15,6 @@ import { classnames } from "./helpers";
 // we might be able to make this a scoped function
 export const StickerbookContext = createContext();
 
-/** @jsx h */
-
 const Stickerbook = function({
   background = {},
   foreground = {},
