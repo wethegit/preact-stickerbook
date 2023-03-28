@@ -1,5 +1,4 @@
-/** @jsx h */
-import { h, createContext } from "preact";
+import { createContext } from "preact";
 import {
   useEffect,
   useLayoutEffect,
