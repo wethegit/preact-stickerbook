@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "preact/hooks";
+import { Vec2, Mat2 } from "wtc-math";
 
 import { classnames } from "./helpers";
 
