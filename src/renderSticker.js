@@ -70,7 +70,7 @@ const renderSticker = (sticker, canvasSize) => {
   const gl = components.gl;
   const c = components.canvas;
 
-  const texture = createTexture(gl, { img: sticker.image });
+  const texture = createTexture(gl, { img: sticker.img });
 
   const d = new Vec2(sticker.image.width, sticker.image.height);
   const size = new Mat3(d.width, 0, 0, 0, d.height, 0, 0, 0, 1);
