@@ -45,7 +45,6 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "parcel": "^2.8.3",
     "preact": "^10.13.1",
-    "preact-compat": "^3.19.0",
     "wtc-math": "^1.0.17",
     "wtc-simplegl": "^0.0.4"
   },
