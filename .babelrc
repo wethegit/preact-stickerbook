@@ -1,3 +1,1 @@
-{
-	"presets": [["@babel/preset-react", {"jsxPragma": "h"}]]
-}
+{ "plugins": [["@babel/transform-react-jsx", { "pragma": "h" }]] }

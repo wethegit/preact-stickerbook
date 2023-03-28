@@ -1,3 +1,5 @@
+/** @jsx h */
+import { h } from "preact";
 import { Vec2 } from "wtc-math";
 import { renderSticker } from "./renderSticker";
 
@@ -125,7 +127,7 @@ export async function exportStickerbook({
       sortedStickers.map(({ image }) => loadUrlAsImage(image))
     );
 
-    console.log('------------')
+    console.log("------------");
     window.loadedStickers = loadedStickers;
 
     for (let i = 0; i < loadedStickers.length; i++) {
