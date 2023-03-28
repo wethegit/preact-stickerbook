@@ -67,6 +67,9 @@ const initApplication = (size) => {
 const renderSticker = (sticker, canvasSize) => {
   initApplication(canvasSize);
 
+  window.canvasSize = canvasSize;
+  window.components = components;
+
   const gl = components.gl;
   const c = components.canvas;
 
