@@ -1,7 +1,7 @@
 {
   "name": "@wethegit/preact-stickerbook",
   "amdName": "WTCPreactStickerbook",
-  "version": "2.0.0-beta.13",
+  "version": "2.0.0-beta.14",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "./src/index.js",
   "main": "./dist/main.js",
@@ -43,6 +43,7 @@
   "dependencies": {
     "@babel/core": "^7.21.3",
     "@babel/plugin-transform-react-jsx": "^7.21.0",
+    "@babel/preset-react": "^7.18.6",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "parcel": "^2.8.3",
     "preact": "^10.13.1",
