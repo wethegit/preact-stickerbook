@@ -10,6 +10,9 @@
     "main": {
       "source": "src/index.js"
     },
+    "helpers": {
+      "source": "src/helpers.js"
+    },
     "css": {
       "source": "src/index.scss"
     }
@@ -36,7 +39,6 @@
     "url": "https://github.com/wethegit/preact-stickerbook/issues"
   },
   "homepage": "https://github.com/wethegit/preact-stickerbook#readme",
-
   "alias": {
     "react": "preact-compat",
     "react-dom": "preact-compat"
