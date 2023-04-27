@@ -1,7 +1,7 @@
 {
   "name": "@wethegit/preact-stickerbook",
   "amdName": "WTCPreactStickerbook",
-  "version": "2.0.0-beta.22",
+  "version": "2.0.0-beta.23",
   "description": "Easily create collage apps that are accessible by default.",
   "source": "./src/index.js",
   "main": "./dist/main.js",
