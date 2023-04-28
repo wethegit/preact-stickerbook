@@ -1,21 +1,24 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "amdName": "WTCPreactStickerbook",
-  "version": "2.0.0-beta.23",
+  "version": "2.0.0-beta.24",
   "description": "Easily create collage apps that are accessible by default.",
-  "source": "./src/index.js",
-  "main": "./dist/main.js",
-  "css": "./dist/style.css",
-  "targets": {
-    "main": {
-      "source": "src/index.js"
-    },
-    "helpers": {
-      "source": "src/helpers.js"
-    },
-    "css": {
-      "source": "src/index.scss"
-    }
+  "source": "src/index.js",
+  "main": "dist/preact-stickerbook.js",
+  "umd:main": "dist/preact-stickerbook.umd.js",
+  "unpkg": "dist/preact-stickerbook.umd.js",
+  "module": "dist/preact-stickerbook.module.js",
+  "exports": {
+    ".": "./dist/preact-stickerbook.modern.js",
+    "./helpers": "./dist/preact-stickerbook-helpers.modern.js"
+  },
+  "style": "dist/preact-stickerbook.css",
+  "css": "dist/preact-stickerbook.css",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && microbundle build && microbundle build -i src/helpers.js -o dist/preact-stickerbook-helpers.js && microbundle build -i src/use-stickerbook.js -o dist/preact-use-stickerbook.js",
+    "prepare": "npm run build"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "type": "module",
@@ -30,9 +33,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "build": "parcel build && parcel build src/sticker.scss src/stickerbook.scss"
-  },
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -44,17 +44,11 @@
     "react-dom": "preact-compat"
   },
   "dependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/plugin-transform-react-jsx": "^7.21.0",
-    "@babel/preset-react": "^7.18.6",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "parcel": "^2.8.3",
-    "preact": "^10.13.1",
     "wtc-math": "^1.0.17",
     "wtc-simplegl": "^0.0.4"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.8.3",
-    "sass": "^1.59.3"
+    "microbundle": "^0.13.0",
+    "sass": "^1.32.7"
   }
 }
