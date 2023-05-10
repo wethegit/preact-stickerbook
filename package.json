@@ -2,29 +2,53 @@
   "name": "@wethegit/preact-stickerbook",
   "version": "2.0.0-beta.24",
   "description": "Easily create collage apps that are accessible by default.",
-  "source": "src/index.js",
-  "main": "dist/preact-stickerbook.js",
-  "umd:main": "dist/preact-stickerbook.umd.js",
-  "unpkg": "dist/preact-stickerbook.umd.js",
-  "module": "dist/preact-stickerbook.module.js",
-  "exports": {
-    ".": "./dist/preact-stickerbook.modern.js",
-    "./helpers": "./dist/preact-stickerbook-helpers.modern.js"
-  },
-  "style": "dist/preact-stickerbook.css",
-  "css": "dist/preact-stickerbook.css",
+  "type": "module",
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "rm -rf dist && microbundle build && microbundle build -i src/helpers.js -o dist/preact-stickerbook-helpers.js && microbundle build -i src/use-stickerbook.js -o dist/preact-use-stickerbook.js",
-    "prepare": "npm run build"
+  "style": "dist/style.css",
+  "css": "dist/style.css",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./helpers": {
+      "import": "./dist/helpers.js",
+      "require": "./dist/helpers.cjs"
+    }
   },
-  "browserslist": "> 0.5%, last 2 versions, not dead",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wethegit/preact-stickerbook.git"
+  "scripts": {
+    "prepare": "husky install",
+    "dev": "vite",
+    "build": "npm run lint:scripts && npm run lint:styles && vite build",
+    "preview": "vite preview",
+    "lint:scripts": "eslint --fix --ext .jsx,js --ignore-path .gitignore .",
+    "lint:styles": "stylelint src/**/*.{css,scss}"
+  },
+  "dependencies": {
+    "preact": "^10.13.1",
+    "wtc-math": "^1.0.17",
+    "wtc-simplegl": "^0.0.4"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.5.0",
+    "eslint": "^8.40.0",
+    "eslint-config-preact": "^1.3.0",
+    "eslint-config-prettier": "^8.8.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "postcss": "^8.4.23",
+    "postcss-scss": "^4.0.6",
+    "prettier": "^2.8.8",
+    "sass": "^1.62.1",
+    "stylelint": "^15.6.1",
+    "stylelint-config-recommended": "^12.0.0",
+    "stylelint-config-standard": "^33.0.0",
+    "stylelint-selector-bem-pattern": "^2.1.1",
+    "vite": "^4.3.2"
   },
   "keywords": [
     "preact",
@@ -33,22 +57,23 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wethegit/preact-stickerbook.git"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/wethegit/preact-stickerbook/issues"
   },
   "homepage": "https://github.com/wethegit/preact-stickerbook#readme",
-  "alias": {
-    "react": "preact-compat",
-    "react-dom": "preact-compat"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
-  "dependencies": {
-    "wtc-math": "^1.0.17",
-    "wtc-simplegl": "^0.0.4"
-  },
-  "devDependencies": {
-    "microbundle": "^0.13.0",
-    "sass": "^1.32.7"
+  "lint-staged": {
+    "*.{js,jsx}": "eslint --fix",
+    "*.{css,scss}": "stylelint --fix",
+    "*": "prettier -w -u"
   }
 }
