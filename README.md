@@ -471,7 +471,7 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 
 ### patchSticker
 
-Returns a copy of the provided `stickers` array without the selected sticker.
+Returns a copy of the provided `stickers` array with the updated ("patched") sticker in place.
 
 `Function`
 
