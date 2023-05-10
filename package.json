@@ -24,7 +24,6 @@
     "prepare": "husky install",
     "dev": "vite",
     "build": "npm run lint:scripts && npm run lint:styles && vite build",
-    "preview": "vite preview",
     "lint:scripts": "eslint --fix --ext .jsx,js --ignore-path .gitignore .",
     "lint:styles": "stylelint src/**/*.{css,scss}"
   },
