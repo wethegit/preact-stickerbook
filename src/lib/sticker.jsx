@@ -422,7 +422,7 @@ export default function Sticker({
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
         onPosition(position.divideScalarNew(parentDimensions.width))
-      }, 500)
+      }, 100)
     }
   }, [onPosition, parentDimensions.width, position])
 
@@ -472,10 +472,18 @@ export default function Sticker({
           : initialPosition
 
         setPosition(position.scaleNew(parentDimensions.width))
-      } else
+      } else {
+        const l = new Vec2(
+          parentDimensions.width / 2,
+          parentDimensions.height / 2
+        )
+        console.log('init pos', l.clone())
         setPosition(
           new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
         )
+      }
+
+      console.log('init 2')
 
       if (initialScale !== null)
         setScale(
