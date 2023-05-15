@@ -472,18 +472,10 @@ export default function Sticker({
           : initialPosition
 
         setPosition(position.scaleNew(parentDimensions.width))
-      } else {
-        const l = new Vec2(
-          parentDimensions.width / 2,
-          parentDimensions.height / 2
-        )
-        console.log('init pos', l.clone())
+      } else
         setPosition(
           new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
         )
-      }
-
-      console.log('init 2')
 
       if (initialScale !== null)
         setScale(

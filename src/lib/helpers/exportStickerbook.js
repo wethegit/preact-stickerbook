@@ -54,9 +54,6 @@ export async function exportStickerbook({
       sortedStickers.map(({ image }) => loadUrlAsImage(image))
     )
 
-    console.log('------------')
-    window.loadedStickers = loadedStickers
-
     for (let i = 0; i < loadedStickers.length; i++) {
       const sticker = sortedStickers[i]
       sticker.img = loadedStickers[i]
