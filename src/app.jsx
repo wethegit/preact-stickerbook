@@ -9,6 +9,11 @@ import {
   exportStickerbook,
 } from './lib/helpers'
 
+import backgroundImage from './background.jpg'
+import frameImage from './frame.png'
+import foregroundImage from './foreground.png'
+import stickerImage from './sticker.png'
+
 const CANVAS_SIZE = {
   width: 500,
   height: 500,
@@ -24,13 +29,8 @@ export function App() {
   const [stickers, setStickers] = useState([
     {
       key: 'my-id-1',
-      image: 'https://media.giphy.com/media/10mgrhuEWNasNO/giphy.gif',
+      image: stickerImage,
       order: 0,
-    },
-    {
-      key: 'my-id-2',
-      image: 'https://media.giphy.com/media/ao9DUiTKH60XS/giphy.gif',
-      order: 1,
     },
   ])
   const downloadRef = useRef()
@@ -87,6 +87,15 @@ export function App() {
       outputWidth: CANVAS_SIZE.width,
       outputHeight: CANVAS_SIZE.height,
       stickers,
+      background: {
+        image: backgroundImage,
+      },
+      frame: {
+        image: frameImage,
+      },
+      foreground: {
+        image: foregroundImage,
+      },
     })
 
     downloadLink.href = newUrl
@@ -106,6 +115,15 @@ export function App() {
         <Stickerbook
           outputWidth={CANVAS_SIZE.width}
           outputHeight={CANVAS_SIZE.height}
+          background={{
+            image: backgroundImage,
+          }}
+          frame={{
+            image: frameImage,
+          }}
+          foreground={{
+            image: foregroundImage,
+          }}
         >
           {stickers.map((sticker, index) => (
             <Sticker

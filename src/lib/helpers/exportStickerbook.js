@@ -36,7 +36,7 @@ export async function exportStickerbook({
       height: outputHeight,
     })
 
-  // draw background
+  // draw frame
   if (frame && frame.image)
     await coverCanvas({
       ctx: outputCtx,
@@ -45,6 +45,7 @@ export async function exportStickerbook({
       height: outputHeight,
     })
 
+  console.log(stickers.length)
   if (stickers && stickers.length > 0) {
     // sort by order
     const sortedStickers = [...stickers].sort((a, b) => a.order - b.order)
@@ -54,10 +55,13 @@ export async function exportStickerbook({
       sortedStickers.map(({ image }) => loadUrlAsImage(image))
     )
 
+    console.log(1)
+
     for (let i = 0; i < loadedStickers.length; i++) {
       const sticker = sortedStickers[i]
       sticker.img = loadedStickers[i]
 
+      document.body.appendChild(sticker.img)
       // Render the sticker as a stamp
       const stamp = renderSticker(sticker, [outputWidth, outputHeight])
 
@@ -65,7 +69,6 @@ export async function exportStickerbook({
       outputCtx.drawImage(stamp, 0, 0)
     }
   }
-
   // draw foreground
   if (foreground && foreground.image)
     await coverCanvas({
