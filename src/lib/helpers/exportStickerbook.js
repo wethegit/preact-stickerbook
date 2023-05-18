@@ -55,13 +55,10 @@ export async function exportStickerbook({
       sortedStickers.map(({ image }) => loadUrlAsImage(image))
     )
 
-    console.log(1)
-
     for (let i = 0; i < loadedStickers.length; i++) {
       const sticker = sortedStickers[i]
       sticker.img = loadedStickers[i]
 
-      document.body.appendChild(sticker.img)
       // Render the sticker as a stamp
       const stamp = renderSticker(sticker, [outputWidth, outputHeight])
 
