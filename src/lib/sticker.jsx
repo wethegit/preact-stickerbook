@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'preact/hooks'
+import { useEffect, useContext, useMemo, useRef, useState } from 'preact/hooks'
 import { Vec2, Mat2 } from 'wtc-math'
 
 import { StickerbookContext } from './stickerbook-context'
@@ -424,7 +417,7 @@ export default function Sticker({
         onPosition(position.divideScalarNew(parentDimensions.width))
       }, 100)
     }
-  }, [onPosition, parentDimensions.width, position])
+  }, [position])
 
   useEffect(() => {
     if (onRotate) {
@@ -433,7 +426,7 @@ export default function Sticker({
         onRotate(rotation)
       }, 500)
     }
-  }, [onRotate, rotation])
+  }, [rotation])
 
   useEffect(() => {
     if (onScale) {
@@ -447,59 +440,46 @@ export default function Sticker({
         onScale(radius / parentDimensions.width)
       }, 500)
     }
-  }, [onScale, parentDimensions.width, radius, scale])
+  }, [onScale])
 
   // start it all after image loads
-  const init = useCallback(
-    async (e) => {
-      const img = e.target
-      const width = img.width
-      const height = img.height
-      // canvas is used to check for click on the transparent area of the image
-      const canvas = canvasRef.current
+  const init = async function (e) {
+    const img = e.target
+    const width = img.width
+    const height = img.height
+    // canvas is used to check for click on the transparent area of the image
+    const canvas = canvasRef.current
 
-      canvas.width = width
-      canvas.height = height
+    canvas.width = width
+    canvas.height = height
 
-      ctx.drawImage(img, 0, 0)
+    ctx.drawImage(img, 0, 0)
 
-      const imageSize = new Vec2(width, height)
-      setImageDetails(imageSize)
+    const imageSize = new Vec2(width, height)
+    setImageDetails(imageSize)
 
-      if (initialPosition !== null) {
-        const position = !(initialPosition instanceof Vec2)
-          ? new Vec2(initialPosition.x, initialPosition.y)
-          : initialPosition
+    if (initialPosition !== null) {
+      const position = !(initialPosition instanceof Vec2)
+        ? new Vec2(initialPosition.x, initialPosition.y)
+        : initialPosition
 
-        setPosition(position.scaleNew(parentDimensions.width))
-      } else
-        setPosition(
-          new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
-        )
+      setPosition(position.scaleNew(parentDimensions.width))
+    } else
+      setPosition(
+        new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
+      )
 
-      if (initialScale !== null)
-        setScale(
-          (initialScale * parentDimensions.width) /
-            Math.min(width, height) /
-            0.5
-        )
-      else setScale(defaultScale || 0.3)
+    if (initialScale !== null)
+      setScale(
+        (initialScale * parentDimensions.width) / Math.min(width, height) / 0.5
+      )
+    else setScale(defaultScale || 0.3)
 
-      if (initialRotation !== null) setRotation(initialRotation)
-      else setRotation(0)
+    if (initialRotation !== null) setRotation(initialRotation)
+    else setRotation(0)
 
-      setState(STATES.IDLE)
-    },
-    [
-      ctx,
-      defaultScale,
-      initialPosition,
-      initialRotation,
-      initialScale,
-      parentDimensions.height,
-      parentDimensions.width,
-    ]
-  )
+    setState(STATES.IDLE)
+  }
 
   // if the parent stickerbook changes size we need to respond
   useEffect(() => {
@@ -508,7 +488,7 @@ export default function Sticker({
     const percentageShift = parentDimensions.percentageShift
     setPosition((cur) => cur.scaleNew(percentageShift))
     setScale((cur) => cur * percentageShift)
-  }, [imageDetails, parentDimensions.percentageShift])
+  }, [parentDimensions.percentageShift])
 
   // if image change we need to reload details
   useEffect(() => {
@@ -518,7 +498,7 @@ export default function Sticker({
     img.onload = init
     img.crossOrigin = 'anonymous'
     img.src = image
-  }, [image, init])
+  }, [image])
 
   if (state === STATES.LOADING) return
 
