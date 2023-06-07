@@ -70,7 +70,7 @@ const renderSticker = (sticker, canvasSize) => {
 
   const texture = createTexture(gl, { img: sticker.img })
 
-  const d = new Vec2(sticker.image.width, sticker.image.height)
+  const d = new Vec2(sticker.img.width, sticker.img.height)
   const size = new Mat3(d.width, 0, 0, 0, d.height, 0, 0, 0, 1)
   // const position = sticker.position.subtractNew(new Vec2(0.5)).scale(c.width);
   const position = sticker.position.clone()
@@ -105,6 +105,14 @@ const renderSticker = (sticker, canvasSize) => {
     .multiply(rotation)
     .multiplyNew(transform)
   // const sizeTransformationMatrix = rotation;
+
+  window.sizeTransformationMatrix = sizeTransformationMatrix
+  window.size = size
+  window.rotation = rotation
+  window.transform = transform
+  window.scale = scale
+  window.c = c
+  window.sticker = sticker
 
   renderProgram(gl, 0, texture, {
     u_transform: sizeTransformationMatrix.array,
