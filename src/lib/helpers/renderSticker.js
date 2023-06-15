@@ -45,8 +45,6 @@ const initApplication = (size) => {
     components.canvas = c
     components.gl = gl
 
-    document.body.appendChild(c)
-
     initProgram(gl)
     components.renderer.bindVAOs()
 

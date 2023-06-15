@@ -45,7 +45,6 @@ export async function exportStickerbook({
       height: outputHeight,
     })
 
-  console.log(stickers.length)
   if (stickers && stickers.length > 0) {
     // sort by order
     const sortedStickers = [...stickers].sort((a, b) => a.order - b.order)
