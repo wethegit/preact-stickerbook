@@ -12,8 +12,11 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: {
-        index: resolve(__dirname, 'src/lib/index.js'),
-        helpers: resolve(__dirname, 'src/lib/helpers/index.js'),
+        'preact-stickerbook': resolve(__dirname, 'src/lib/index.js'),
+        'preact-stickerbook-helpers': resolve(
+          __dirname,
+          'src/lib/helpers/index.js'
+        ),
       },
       name: 'preactStickerbook',
     },
