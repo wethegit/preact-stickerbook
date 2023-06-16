@@ -1,0 +1,95 @@
+.Sticker {
+  --image-focus-background: rgb(43 178 241 / 36%);
+  --controls-shadow-color: #000;
+  --controls-hover-background: #e8e8e8;
+
+  position: absolute;
+
+  &:focus,
+  &:focus-within {
+    .Sticker__controls {
+      display: block;
+    }
+
+    .Sticker__img {
+      background: var(--image-focus-background);
+    }
+  }
+}
+
+.Sticker__container {
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.Sticker__img,
+.Sticker__canvas {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.Sticker__img {
+  cursor: grab;
+  pointer-events: all;
+  user-select: none;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.Sticker__controls {
+  border: 3px solid white;
+  box-shadow: 0 0 0 3px var(--controls-shadow-color);
+  border-radius: 50%;
+  display: none;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.Sticker__controll-delete,
+.Sticker__controll-pin {
+  background: white
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cg fill='%23111921' fill-rule='evenodd' transform='translate(7 7)'%3E%3Cpolygon points='11 2 11 13 0 13' transform='rotate(90 5.5 7.5)'/%3E%3Cpolygon points='13 0 13 11 2 11' transform='rotate(-90 7.5 5.5)'/%3E%3C/g%3E%3C/svg%3E")
+    center center/cover no-repeat;
+  border: solid 3px white;
+  box-shadow: 0 0 0 3px var(--controls-shadow-color);
+  border-radius: 50%;
+  height: 28px;
+  padding: 0;
+  pointer-events: all;
+  position: absolute;
+  touch-action: none;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  width: 28px;
+
+  &:hover {
+    background-color: var(--controls-hover-background);
+  }
+}
+
+.Sticker__controll-pin {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.Sticker__controll-delete {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath fill='%23111921' fill-rule='evenodd' d='M21.7960938,19.1280583 L15.6460937,12.9578345 L21.8101562,6.86725664 C22.0632812,6.6142634 22.0632812,6.20197814 21.8101562,5.9489849 L20.0570313,4.18740239 C19.9351562,4.06559084 19.7710937,4 19.5976562,4 C19.4242188,4 19.2601563,4.0702759 19.1382812,4.18740239 L13.0023437,10.25924 L6.85703125,4.19208745 C6.73515625,4.0702759 6.57109375,4.00468506 6.39765625,4.00468506 C6.22421875,4.00468506 6.06015625,4.07496096 5.93828125,4.19208745 L4.18984375,5.95366996 C3.93671875,6.2066632 3.93671875,6.61894846 4.18984375,6.8719417 L10.3539063,12.9625195 L4.20859375,19.1280583 C4.08671875,19.2498699 4.01640625,19.413847 4.01640625,19.5871942 C4.01640625,19.7605414 4.08203125,19.9245185 4.20859375,20.04633 L5.96171875,21.8079125 C6.08828125,21.9344092 6.25234375,22 6.42109375,22 C6.58515625,22 6.75390625,21.9390942 6.88046875,21.8079125 L13.0023437,15.661114 L19.1289062,21.8032275 C19.2554687,21.9297241 19.4195312,21.9953149 19.5882813,21.9953149 C19.7523438,21.9953149 19.9210938,21.9344092 20.0476563,21.8032275 L21.8007812,20.041645 C21.9226562,19.9198334 21.9929687,19.7558563 21.9929687,19.5825091 C21.9882812,19.413847 21.9179688,19.2498699 21.7960938,19.1280583 L21.7960938,19.1280583 Z'/%3E%3C/svg%3E");
+}

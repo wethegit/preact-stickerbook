@@ -4,6 +4,14 @@ Easily create collage apps that are accessible by default.
 
 ### [Demo](https://codepen.io/team/wtc/pen/KKNvWdo)
 
+### Local development
+
+To run and test the library localy, simply:
+
+1. Clone the repo: `git clone git@github.com:wethegit/preact-stickerbook.git`
+2. Install dependencies: `npm i`
+3. Start the dev server: `npm run dev`
+
 <!-- toc -->
 
 - [Basic usage](#basic-usage)
@@ -42,17 +50,17 @@ This is the most simplistic way of using it, it's an artboard with the stickers.
 Most likely you will want more control, you will want to generate downloads, add and remove stickers, and more. Check out the full demo on [Codepen](https://codepen.io/team/wtc/pen/KKNvWdo).
 
 ```jsx
-import { h, render } from "preact";
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
+import { h, render } from 'preact'
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
 
 const App = () => {
   const stickers = [
     {
-      key: "my-id-1",
-      image: "https://media.giphy.com/media/10mgrhuEWNasNO/giphy.gif",
+      key: 'my-id-1',
+      image: 'https://media.giphy.com/media/10mgrhuEWNasNO/giphy.gif',
       order: 0,
     },
-  ];
+  ]
 
   return (
     <Stickerbook outputWidth={500} outputHeight={500}>
@@ -60,10 +68,10 @@ const App = () => {
         <Sticker {...sticker} />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 
-render(<App />, document.body);
+render(<App />, document.body)
 ```
 
 ## Stickerbook
@@ -146,10 +154,10 @@ All of the elements that form the collage. At the very minimum a sticker element
 
 ```js
 const sticker = {
-  key: "sticker-d47s7@##s",
-  image: "path-to/image.png",
+  key: 'sticker-d47s7@##s',
+  image: 'path-to/image.png',
   order: 0,
-};
+}
 ```
 
 ### Props
@@ -208,13 +216,13 @@ It's importante to note that if no function is provided, then there _delete_ but
 `Function` | **optional**
 
 ```jsx
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
-import { deleteSticker } from "@wethegit/preact-stickerbook/helpers";
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { deleteSticker } from '@wethegit/preact-stickerbook/helpers'
 
 const App = () => {
   const [stickers, setStickers] = useState([
     /* your stickers */
-  ]);
+  ])
 
   return (
     <Stickerbook>
@@ -222,13 +230,13 @@ const App = () => {
         <Sticker
           {...sticker}
           onDelete={() => {
-            setStickers((stickers) => deleteSticker(stickers, index));
+            setStickers((stickers) => deleteSticker(stickers, index))
           }}
         />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 ```
 
 #### onReorder
@@ -241,13 +249,13 @@ Leaving this empty won't reorder the stickers when they are focused.
 `Function` | **optional**
 
 ```jsx
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
-import { reorderSticker } from "@wethegit/preact-stickerbook/helpers";
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { reorderSticker } from '@wethegit/preact-stickerbook/helpers'
 
 const App = () => {
   const [stickers, setStickers] = useState([
     /* your stickers */
-  ]);
+  ])
 
   return (
     <Stickerbook>
@@ -257,13 +265,13 @@ const App = () => {
           onDelete={(direction, extreme) => {
             setStickers((stickers) =>
               reorderSticker({ direction, extreme, stickers, index })
-            );
+            )
           }}
         />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 ```
 
 #### onPosition
@@ -274,13 +282,13 @@ A callback function to be called when the _position_ of the `Sticker` changed.
 `Function` | **optional**
 
 ```jsx
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
-import { patchSticker } from "@wethegit/preact-stickerbook/helpers";
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { patchSticker } from '@wethegit/preact-stickerbook/helpers'
 
 const App = () => {
   const [stickers, setStickers] = useState([
     /* your stickers */
-  ]);
+  ])
 
   return (
     <Stickerbook>
@@ -289,14 +297,14 @@ const App = () => {
           {...sticker}
           onPosition={(value) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: "position", value, index })
-            );
+              patchSticker({ stickers, prop: 'position', value, index })
+            )
           }}
         />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 ```
 
 #### onScale
@@ -307,13 +315,13 @@ A callback function to be called when the _scale_ of the `Sticker` changed.
 `Function` | **optional**
 
 ```jsx
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
-import { patchSticker } from "@wethegit/preact-stickerbook/helpers";
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { patchSticker } from '@wethegit/preact-stickerbook/helpers'
 
 const App = () => {
   const [stickers, setStickers] = useState([
     /* your stickers */
-  ]);
+  ])
 
   return (
     <Stickerbook>
@@ -322,14 +330,14 @@ const App = () => {
           {...sticker}
           onScale={(value) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: "scale", value, index })
-            );
+              patchSticker({ stickers, prop: 'scale', value, index })
+            )
           }}
         />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 ```
 
 #### onRotate
@@ -340,13 +348,13 @@ A callback function to be called when the _rotation_ of the `Sticker` changed.
 `Function` | **optional**
 
 ```jsx
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
-import { patchSticker } from "@wethegit/preact-stickerbook/helpers";
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { patchSticker } from '@wethegit/preact-stickerbook/helpers'
 
 const App = () => {
   const [stickers, setStickers] = useState([
     /* your stickers */
-  ]);
+  ])
 
   return (
     <Stickerbook>
@@ -355,14 +363,14 @@ const App = () => {
           {...sticker}
           onRotate={(value) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: "rotation", value, index })
-            );
+              patchSticker({ stickers, prop: 'rotation', value, index })
+            )
           }}
         />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 ```
 
 ## Helpers
@@ -426,13 +434,13 @@ Returns a reordered copy of the provided `stickers` array.
 **options.stickers** | `Array` default `[]` - An array of valid [`sticker`](#sticker) objects.
 
 ```jsx
-import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook";
-import { reorderSticker } from "@wethegit/preact-stickerbook/helpers";
+import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { reorderSticker } from '@wethegit/preact-stickerbook/helpers'
 
 const App = () => {
   const [stickers, setStickers] = useState([
     /* your stickers */
-  ]);
+  ])
 
   return (
     <Stickerbook>
@@ -442,13 +450,13 @@ const App = () => {
           onDelete={(direction, extreme) => {
             setStickers((stickers) =>
               reorderSticker({ direction, extreme, stickers, index })
-            );
+            )
           }}
         />
       ))}
     </Stickerbook>
-  );
-};
+  )
+}
 ```
 
 ### addSticker
@@ -471,7 +479,7 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 
 ### patchSticker
 
-Returns a copy of the provided `stickers` array without the selected sticker.
+Returns a copy of the provided `stickers` array with the updated ("patched") sticker in place.
 
 `Function`
 
