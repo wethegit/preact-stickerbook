@@ -1,4 +1,4 @@
-import { useState, useRef } from 'preact/hooks'
+import { useState, useRef, useCallback } from 'preact/hooks'
 
 import { Sticker, Stickerbook } from './lib'
 import {
@@ -10,6 +10,7 @@ import {
 } from './lib/helpers'
 
 import backgroundImage from './background.jpg'
+import backgroundImage2 from './background-2.png'
 import frameImage from './frame.png'
 import foregroundImage from './foreground.png'
 import stickerImage from './sticker.png'
@@ -25,6 +26,23 @@ GIPHY_API_URL.search = new URLSearchParams({
   api_key: 'a8s5d1Dw5bitDbTPHgVHVfaYv0cRAQf8',
 }).toString()
 
+const BACKGROUNDS = [
+  {
+    image: backgroundImage,
+  },
+  {
+    image: backgroundImage2,
+  },
+]
+
+const FRAME = {
+  image: frameImage,
+}
+
+const FOREGROUND = {
+  image: foregroundImage,
+}
+
 export function App() {
   const [stickers, setStickers] = useState([
     {
@@ -36,31 +54,33 @@ export function App() {
   const downloadRef = useRef()
 
   // Sticker hooks
-  const onReorderSticker = (opts) => {
-    setStickers((stickers) => reorderSticker({ ...opts, stickers }))
-  }
-
-  const onDeleteSticker = (index) => {
-    setStickers((stickers) => deleteSticker(stickers, index))
-  }
-
-  const onPositionSticker = (index, value) => {
+  const onReorderSticker = useCallback((direction, extreme, key) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'position', value, index })
+      reorderSticker({ key, direction, extreme, stickers })
     )
-  }
+  }, [])
 
-  const onScaleSticker = (index, value) => {
-    setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'scale', value, index })
-    )
-  }
+  const onDeleteSticker = useCallback((key) => {
+    setStickers((stickers) => deleteSticker(stickers, key))
+  }, [])
 
-  const onRotateSticker = (index, value) => {
+  const onPositionSticker = useCallback((value, key) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'rotation', value, index })
+      patchSticker({ stickers, prop: 'position', value, key })
     )
-  }
+  }, [])
+
+  const onScaleSticker = useCallback((value, key) => {
+    setStickers((stickers) =>
+      patchSticker({ stickers, prop: 'scale', value, key })
+    )
+  }, [])
+
+  const onRotateSticker = useCallback((value, key) => {
+    setStickers((stickers) =>
+      patchSticker({ stickers, prop: 'rotation', value, key })
+    )
+  }, [])
 
   const onAddSticker = async () => {
     const res = await fetch(GIPHY_API_URL).then((res) => res.json())
@@ -87,21 +107,15 @@ export function App() {
       outputWidth: CANVAS_SIZE.width,
       outputHeight: CANVAS_SIZE.height,
       stickers,
-      background: {
-        image: backgroundImage,
-      },
-      frame: {
-        image: frameImage,
-      },
-      foreground: {
-        image: foregroundImage,
-      },
+      background: BACKGROUNDS,
+      frame: FRAME,
+      foreground: FOREGROUND,
     })
 
     downloadLink.href = newUrl
     downloadLink.click()
   }
-
+  console.log(stickers)
   return (
     <>
       <button onClick={onAddSticker}>Add random sticker from GIPHY</button>
@@ -115,26 +129,18 @@ export function App() {
         <Stickerbook
           outputWidth={CANVAS_SIZE.width}
           outputHeight={CANVAS_SIZE.height}
-          background={{
-            image: backgroundImage,
-          }}
-          frame={{
-            image: frameImage,
-          }}
-          foreground={{
-            image: foregroundImage,
-          }}
+          background={BACKGROUNDS}
+          frame={FRAME}
+          foreground={FOREGROUND}
         >
-          {stickers.map((sticker, index) => (
+          {stickers.map((sticker) => (
             <Sticker
               key={sticker.key}
-              onReorder={(direction, extreme) =>
-                onReorderSticker({ index, direction, extreme })
-              }
-              onDelete={() => onDeleteSticker(index)}
-              onPosition={(value) => onPositionSticker(index, value)}
-              onScale={(value) => onScaleSticker(index, value)}
-              onRotate={(value) => onRotateSticker(index, value)}
+              onReorder={onReorderSticker}
+              onDelete={onDeleteSticker}
+              onPosition={onPositionSticker}
+              onScale={onScaleSticker}
+              onRotate={onRotateSticker}
               {...sticker}
             />
           ))}
