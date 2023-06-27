@@ -15,6 +15,7 @@ const STATES = {
 const ROTATION_BUTTON_OFFSET = 0.785
 
 export default function Sticker({
+  key,
   image,
   alt = '',
   order = 0,
@@ -163,82 +164,86 @@ export default function Sticker({
 
   const onStickerKeyDown = function (e) {
     if (state === STATES.IDLE) {
-      const { shiftKey, key } = e
+      const { shiftKey, key: eventKey } = e
       const multiplier = shiftKey ? 10 : 1
 
-      if ((key === 'Delete' || key === 'Backspace') && onDelete) onDelete()
+      if ((eventKey === 'Delete' || eventKey === 'Backspace') && onDelete)
+        onDelete(key)
 
       // move left
-      if (key === 'ArrowLeft') {
+      if (eventKey === 'ArrowLeft') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x - 1 * multiplier, cur.y))
       }
       // move right
-      else if (key === 'ArrowRight') {
+      else if (eventKey === 'ArrowRight') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x + 1 * multiplier, cur.y))
       }
 
       // move up
-      if (key === 'ArrowUp') {
+      if (eventKey === 'ArrowUp') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x, cur.y - 1 * multiplier))
       }
       // move down
-      else if (key === 'ArrowDown') {
+      else if (eventKey === 'ArrowDown') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x, cur.y + 1 * multiplier))
       }
 
       // scale down
-      if (key === '-' || key === '_')
+      if (eventKey === '-' || eventKey === '_')
         setScale((cur) => Math.max(0.05, cur - 0.01 * multiplier))
       // scale up
-      else if (key === '+' || key === '=')
+      else if (eventKey === '+' || eventKey === '=')
         setScale((cur) => cur + 0.01 * multiplier)
 
       // rotate left
-      if (key === '<' || key === ',')
+      if (eventKey === '<' || eventKey === ',')
         setRotation((cur) => cur - 0.01 * multiplier)
       // rotate right
-      else if (key === '>' || key === '.')
+      else if (eventKey === '>' || eventKey === '.')
         setRotation((cur) => cur + 0.01 * multiplier)
 
       // Align top
-      if (key === 'w') setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
+      if (eventKey === 'w')
+        setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
       // align bottom
-      else if (key === 's')
+      else if (eventKey === 's')
         setPosition(
           (cur) =>
             new Vec2(cur.x, parentDimensions.height - (bounds.bottom - cur.y))
         )
 
       // Align left
-      if (key === 'a')
+      if (eventKey === 'a')
         setPosition((cur) => new Vec2(cur.x - bounds.left, cur.y))
       // align right
-      else if (key === 'd')
+      else if (eventKey === 'd')
         setPosition(
           (cur) =>
             new Vec2(parentDimensions.width - (bounds.right - cur.x), cur.y)
         )
 
       // center align vertically
-      if (key === 'v')
+      if (eventKey === 'v')
         setPosition((cur) => new Vec2(cur.x, parentDimensions.height * 0.5))
       // center align horizontally
-      else if (key === 'c')
+      else if (eventKey === 'c')
         setPosition((cur) => new Vec2(parentDimensions.width * 0.5, cur.y))
 
       if (onReorder) {
         // bring forwards
-        if (key === '[' || key === '{') onReorder('up', multiplier > 1)
+        if (eventKey === '[' || eventKey === '{')
+          onReorder('up', multiplier > 1, key)
         // bring backwards
-        else if (key === ']' || key === '}') onReorder('down', multiplier > 1)
+        else if (eventKey === ']' || eventKey === '}')
+          onReorder('down', multiplier > 1, key)
       }
     }
   }
@@ -292,7 +297,7 @@ export default function Sticker({
   }
 
   const onDeleteClick = function () {
-    if (onDelete) onDelete()
+    if (onDelete) onDelete(key)
   }
 
   const onPinPointerDown = function () {
@@ -395,7 +400,7 @@ export default function Sticker({
     } else {
       // If, instead, this sticker has been clicked then focus it, set it to moving and add the pointer move event
       element.focus()
-      if (onReorder) onReorder('up', true)
+      if (onReorder) onReorder('up', true, key)
       setState(STATES.MOVE)
     }
   }
@@ -414,19 +419,24 @@ export default function Sticker({
         // model into the preact/funcional model
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
-        onPosition(position.divideScalarNew(parentDimensions.width))
+        if (position)
+          onPosition(position.divideScalarNew(parentDimensions.width), key)
       }, 100)
     }
-  }, [position])
+  }, [onPosition, position, parentDimensions.width, key])
 
   useEffect(() => {
     if (onRotate) {
       clearTimeout(onRotateTimer.current)
       onRotateTimer.current = setTimeout(() => {
-        onRotate(rotation)
+        onRotate(rotation, key)
       }, 500)
     }
-  }, [rotation])
+
+    return () => {
+      clearTimeout(onRotateTimer.current)
+    }
+  }, [onRotate, rotation, key])
 
   useEffect(() => {
     if (onScale) {
@@ -437,10 +447,14 @@ export default function Sticker({
         // model into the preact/funcional model
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
-        onScale(radius / parentDimensions.width)
+        onScale(radius / parentDimensions.width, key)
       }, 500)
     }
-  }, [onScale])
+
+    return () => {
+      clearTimeout(onScaleTimer.current)
+    }
+  }, [onScale, radius, parentDimensions.width, key])
 
   // start it all after image loads
   const init = async function (e) {
@@ -482,13 +496,18 @@ export default function Sticker({
   }
 
   // if the parent stickerbook changes size we need to respond
+  const currentPercentageShift = useRef()
   useEffect(() => {
     if (!imageDetails) return
 
     const percentageShift = parentDimensions.percentageShift
-    setPosition((cur) => cur.scaleNew(percentageShift))
-    setScale((cur) => cur * percentageShift)
-  }, [parentDimensions.percentageShift])
+
+    if (currentPercentageShift.current !== percentageShift) {
+      currentPercentageShift.current = percentageShift
+      setPosition((cur) => cur.scaleNew(percentageShift))
+      setScale((cur) => cur * percentageShift)
+    }
+  }, [imageDetails, parentDimensions.percentageShift])
 
   // if image change we need to reload details
   useEffect(() => {

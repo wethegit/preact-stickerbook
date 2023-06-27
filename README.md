@@ -93,9 +93,11 @@ The width of your artboard.
 
 `Integer` default `500`
 
-#### background
+#### backgrounds
 
-`Object` | **optional**
+`Array` | **optional**
+
+The `backgrounds` prop accepts an array of background objects. Each background object contains:
 
 **image** | `String` - Path to an image, can also be a `base64` string or `blob` url.  
 **alt** | `String` default `""` - Alternate text.  
@@ -105,27 +107,31 @@ The width of your artboard.
 - `pattern`: repeats until it fills the artboard.
 
 ```js
-{
-  image: "path-to/background.jpg",
-  type: "scene",
-  alt: "A paper crumble texture"
-}
+backgrounds={[
+  {
+    image: 'path-to/background.jpg',
+    type: 'scene',
+    alt: 'A paper crumble texture',
+  },
+]}
 ```
 
-#### foreground
+#### foregrounds
 
-`foreground` will appear be on top of all `Sticker`s.
+`Array` | **optional**
 
-`Object` | **optional**
+`foregrounds` will appear on top of all `Sticker`s. The `foregrounds` prop accepts an array of foreground objects:
 
 **image** | `String` - Path to an image, can also be a `base64` string or `blob` url.  
 **alt** | `String` default `""` - Alternate text.
 
 ```js
-{
-  image: "path-to/foreground.png",
-  alt: "My company's logo"
-}
+foregrounds={[
+  {
+    image: "path-to/foreground.png",
+    alt: "My company's logo"
+  },
+]}
 ```
 
 #### frame
@@ -229,8 +235,8 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onDelete={() => {
-            setStickers((stickers) => deleteSticker(stickers, index))
+          onDelete={(key) => {
+            setStickers((stickers) => deleteSticker(stickers, key))
           }}
         />
       ))}
@@ -262,9 +268,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onDelete={(direction, extreme) => {
+          onReorder={(direction, extreme, key) => {
             setStickers((stickers) =>
-              reorderSticker({ direction, extreme, stickers, index })
+              reorderSticker({ key, direction, extreme, stickers })
             )
           }}
         />
@@ -295,9 +301,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onPosition={(value) => {
+          onPosition={(value, key) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'position', value, index })
+              patchSticker({ stickers, prop: 'position', value, key })
             )
           }}
         />
@@ -328,9 +334,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onScale={(value) => {
+          onScale={(value, key) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'scale', value, index })
+              patchSticker({ stickers, prop: 'scale', value, key })
             )
           }}
         />
@@ -361,9 +367,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onRotate={(value) => {
+          onRotate={(value, key) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'rotation', value, index })
+              patchSticker({ stickers, prop: 'rotation', value, key })
             )
           }}
         />
@@ -383,9 +389,9 @@ Returns a representation of the stickerbook in the chosen `format`.
 
 **options** | `Object`  
 **options.canvas** | `HTMLCanvasElement` | **optional** - A canvas element to draw to.  
-**options.background** | `Object` | **optional** - A valid [`background`](#background) object.  
+**options.backgrounds** | `Array` | **optional** - An array of valid [`background`](#backgrounds) objects.  
 **options. frame** | `Object` | **optional** - A valid [`frame`](#frame) object.  
-**options. foreground** | `Object` | **optional** - A valid [`foreground`](#foreground) object.  
+**options. foregrounds** | `Object` | **optional** - An array of valid [`foreground`](#foregrounds) objects.  
 **options.stickers** | `Array` | **optional** - An array of valid [`sticker`](#sticker) objects.  
 **options.outputWidth** | `Integer` default `500` - Output width.  
 **options.outputHeight** | `Integer` default `500` - Output height.  
@@ -428,7 +434,7 @@ Returns a reordered copy of the provided `stickers` array.
 `Function`
 
 **options** | `Object`  
-**options.index** | `Integer` - The index of the sticker on the array that will be reordered.  
+**options.key** | `String|Number` - The key of the sticker that will be reordered within the stickers array.  
 **options.direction** | `String` default `"up"` - The order in which to move the sticker.  
 **options.extreme** | `Boolean` default `false` - If it should be brought to the edges of the array.  
 **options.stickers** | `Array` default `[]` - An array of valid [`sticker`](#sticker) objects.
@@ -447,9 +453,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onDelete={(direction, extreme) => {
+          onReorder={(direction, extreme, key) => {
             setStickers((stickers) =>
-              reorderSticker({ direction, extreme, stickers, index })
+              reorderSticker({ key, direction, extreme, stickers })
             )
           }}
         />
@@ -475,7 +481,7 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 `Function`
 
 **stickers** | `Array` - An array of valid [`sticker`](#sticker) objects.  
-**index** | `Integer` - The index of the sticker on the array that will be reordered.
+**key** | `String|Number` - The key of the sticker that will be deleted from the stickers array.
 
 ### patchSticker
 
@@ -485,7 +491,7 @@ Returns a copy of the provided `stickers` array with the updated ("patched") sti
 
 **options** | `Object`  
 **options.stickers** | `Array` - An array of valid [`sticker`](#sticker)  
-**options.index** | `Integer` - The index of the sticker on the array that will be reordered.  
+**options.key** | `String|Number` - The key of the sticker that will be amended within the stickers array.
 **options.value** | **optional** - The new value.  
 **options.prop** | `String` - The prop to be updated. Can be one of the folllwing:
 

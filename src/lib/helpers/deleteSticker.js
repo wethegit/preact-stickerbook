@@ -1,17 +1,22 @@
-export function deleteSticker(stickers, index) {
+export function deleteSticker(stickers, key) {
   if (!stickers || !(stickers instanceof Array) || stickers.length <= 0)
     throw Error('`stickers` array is empty')
 
-  if (typeof index !== 'number' || !stickers[index])
-    throw Error('`index` needs to be a valid `stickers` array index')
+  const [filteredStickers, deletedSticker] = stickers.reduce(
+    (acc, s) => {
+      if (s.key !== key) acc[0].push(s)
+      else acc[1] = s
 
-  const order = stickers[index].order
+      return acc
+    },
+    [[], null]
+  )
+  if (!key || !deletedSticker)
+    throw Error('`key` needs to be a valid `sticker` key')
 
-  return stickers
-    .filter((_, i) => i !== index)
-    .map((item) => {
-      // fix the order
-      if (item.order > order) item.order -= 1
-      return item
-    })
+  return filteredStickers.map((item) => {
+    // fix the order
+    if (item.order > deletedSticker.order) item.order -= 1
+    return item
+  })
 }

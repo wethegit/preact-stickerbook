@@ -4,10 +4,10 @@ import { renderSticker } from './renderSticker'
 
 export async function exportStickerbook({
   canvas,
-  background,
+  backgrounds = [],
   frame,
   stickers = [],
-  foreground,
+  foregrounds = [],
   outputWidth = 500,
   outputHeight = 500,
   format = 'image',
@@ -27,14 +27,19 @@ export async function exportStickerbook({
   outputCanvas.width = outputWidth
   outputCanvas.height = outputHeight
 
-  // draw background
-  if (background && background.image)
-    await coverCanvas({
-      ctx: outputCtx,
-      img: background.image,
-      width: outputWidth,
-      height: outputHeight,
-    })
+  // draw backgrounds
+  if (backgrounds && backgrounds.length) {
+    for (let background of backgrounds) {
+      if (!background.image) continue
+
+      await coverCanvas({
+        ctx: outputCtx,
+        img: background.image,
+        width: outputWidth,
+        height: outputHeight,
+      })
+    }
+  }
 
   // draw frame
   if (frame && frame.image)
@@ -65,14 +70,19 @@ export async function exportStickerbook({
       outputCtx.drawImage(stamp, 0, 0)
     }
   }
-  // draw foreground
-  if (foreground && foreground.image)
-    await coverCanvas({
-      ctx: outputCtx,
-      img: foreground.image,
-      width: outputWidth,
-      height: outputHeight,
-    })
+  // draw foregrounds
+  if (foregrounds && foregrounds.length) {
+    for (let foreground of foregrounds) {
+      if (!foreground.image) continue
+
+      await coverCanvas({
+        ctx: outputCtx,
+        img: foreground.image,
+        width: outputWidth,
+        height: outputHeight,
+      })
+    }
+  }
 
   // download
   if (format === 'canvas') return outputCanvas
