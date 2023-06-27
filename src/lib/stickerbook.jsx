@@ -22,7 +22,7 @@ const imageDetailsReducer = (state, { index, dimensions }) => {
 
 export default function Stickerbook({
   backgrounds = [],
-  foreground = {},
+  foregrounds = [],
   frame = {},
   outputHeight = 500,
   outputWidth = 500,
@@ -41,10 +41,6 @@ export default function Stickerbook({
     imageDetailsReducer,
     []
   )
-  // const [foregroundDetails, setForegroundDetails] = useReducer(
-  //   imageDetailsReducer,
-  //   []
-  // )
   const mainRef = useRef()
   const parentRef = useRef()
 
@@ -223,14 +219,20 @@ export default function Stickerbook({
           {dimensions.rendered && children}
         </StickerbookContext.Provider>
 
-        {foreground && foreground.image && (
-          <img
-            src={foreground.image}
-            alt={foreground.alt || ''}
-            className="Stickerbook__foreground"
-            style={{ zIndex: foregroundIndex }}
-          />
-        )}
+        {foregrounds.length &&
+          foregrounds.map((fg, i) => {
+            if (!fg.image) return null
+
+            return (
+              <img
+                key={i}
+                src={fg.image}
+                alt={fg.alt || ''}
+                className="Stickerbook__foreground"
+                style={{ zIndex: foregroundIndex + i }}
+              />
+            )
+          })}
       </div>
     </div>
   )

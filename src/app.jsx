@@ -13,6 +13,7 @@ import backgroundImage from './background.jpg'
 import backgroundImage2 from './background-2.png'
 import frameImage from './frame.png'
 import foregroundImage from './foreground.png'
+import foregroundImage2 from './foreground-2.png'
 import stickerImage from './sticker.png'
 
 const CANVAS_SIZE = {
@@ -39,9 +40,14 @@ const FRAME = {
   image: frameImage,
 }
 
-const FOREGROUND = {
-  image: foregroundImage,
-}
+const FOREGROUNDS = [
+  {
+    image: foregroundImage,
+  },
+  {
+    image: foregroundImage2,
+  },
+]
 
 export function App() {
   const [stickers, setStickers] = useState([
@@ -109,7 +115,7 @@ export function App() {
       stickers,
       backgrounds: BACKGROUNDS,
       frame: FRAME,
-      foreground: FOREGROUND,
+      foregrounds: FOREGROUNDS,
     })
 
     downloadLink.href = newUrl
@@ -131,7 +137,7 @@ export function App() {
           outputHeight={CANVAS_SIZE.height}
           backgrounds={BACKGROUNDS}
           frame={FRAME}
-          foreground={FOREGROUND}
+          foregrounds={FOREGROUNDS}
         >
           {stickers.map((sticker) => (
             <Sticker
