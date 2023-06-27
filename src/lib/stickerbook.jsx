@@ -21,7 +21,7 @@ const imageDetailsReducer = (state, { index, dimensions }) => {
 }
 
 export default function Stickerbook({
-  background = [],
+  backgrounds = [],
   foreground = {},
   frame = {},
   outputHeight = 500,
@@ -56,9 +56,9 @@ export default function Stickerbook({
   // Determine CSS styles for the Background image element,
   // based on the type of background ("scene" or "pattern")
   const backgroundStyles = useMemo(() => {
-    if (!background.length || !backgroundDetails.length) return {}
+    if (!backgrounds.length || !backgroundDetails.length) return {}
 
-    return background.map((bg, i) => {
+    return backgrounds.map((bg, i) => {
       if (bg.type === 'scene' || !backgroundDetails[i]) return {}
 
       // calculate new size based on generated image
@@ -70,9 +70,7 @@ export default function Stickerbook({
         backgroundSize: `${bgSize}px auto`,
       }
     })
-  }, [backgroundDetails, dimensions.width, background, outputWidth])
-
-  console.log({ backgroundStyles })
+  }, [backgroundDetails, dimensions.width, backgrounds, outputWidth])
 
   // when the node renders and also when we force resize
   useLayoutEffect(() => {
@@ -152,9 +150,9 @@ export default function Stickerbook({
   // when background array changes, load each image
   // and save the image's original size
   useEffect(() => {
-    if (!background.length) return
+    if (!backgrounds.length) return
 
-    background.forEach((bg, index) => {
+    backgrounds.forEach((bg, index) => {
       if (bg.image) {
         const img = new Image()
 
@@ -169,7 +167,7 @@ export default function Stickerbook({
         img.src = bg.image
       }
     })
-  }, [background])
+  }, [backgrounds])
 
   return (
     // this first div is fluid and will help us get the dimensions
@@ -188,8 +186,8 @@ export default function Stickerbook({
           height: `${dimensions.height}px`,
         }}
       >
-        {background.length &&
-          background.map((bg, i) => {
+        {backgrounds.length &&
+          backgrounds.map((bg, i) => {
             if (!bg.image) return null
 
             return (

@@ -107,7 +107,7 @@ export function App() {
       outputWidth: CANVAS_SIZE.width,
       outputHeight: CANVAS_SIZE.height,
       stickers,
-      background: BACKGROUNDS,
+      backgrounds: BACKGROUNDS,
       frame: FRAME,
       foreground: FOREGROUND,
     })
@@ -115,7 +115,7 @@ export function App() {
     downloadLink.href = newUrl
     downloadLink.click()
   }
-  console.log(stickers)
+
   return (
     <>
       <button onClick={onAddSticker}>Add random sticker from GIPHY</button>
@@ -129,7 +129,7 @@ export function App() {
         <Stickerbook
           outputWidth={CANVAS_SIZE.width}
           outputHeight={CANVAS_SIZE.height}
-          background={BACKGROUNDS}
+          backgrounds={BACKGROUNDS}
           frame={FRAME}
           foreground={FOREGROUND}
         >

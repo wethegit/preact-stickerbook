@@ -4,7 +4,7 @@ import { renderSticker } from './renderSticker'
 
 export async function exportStickerbook({
   canvas,
-  background,
+  backgrounds = [],
   frame,
   stickers = [],
   foreground,
@@ -28,13 +28,16 @@ export async function exportStickerbook({
   outputCanvas.height = outputHeight
 
   // draw background
-  if (background && background.image)
-    await coverCanvas({
-      ctx: outputCtx,
-      img: background.image,
-      width: outputWidth,
-      height: outputHeight,
-    })
+  if (backgrounds && backgrounds.length > 0) {
+    for (let background of backgrounds) {
+      await coverCanvas({
+        ctx: outputCtx,
+        img: background.image,
+        width: outputWidth,
+        height: outputHeight,
+      })
+    }
+  }
 
   // draw frame
   if (frame && frame.image)
