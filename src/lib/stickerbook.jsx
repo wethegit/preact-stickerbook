@@ -182,7 +182,7 @@ export default function Stickerbook({
           height: `${dimensions.height}px`,
         }}
       >
-        {backgrounds.length &&
+        {backgrounds.length > 0 &&
           backgrounds.map((bg, i) => {
             if (!bg.image) return null
 
@@ -219,7 +219,7 @@ export default function Stickerbook({
           {dimensions.rendered && children}
         </StickerbookContext.Provider>
 
-        {foregrounds.length &&
+        {foregrounds.length > 0 &&
           foregrounds.map((fg, i) => {
             if (!fg.image) return null
 
