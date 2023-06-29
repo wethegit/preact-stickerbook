@@ -493,7 +493,7 @@ export default function Sticker({
   }
 
   // if the parent stickerbook changes size we need to respond
-  const currentPercentageShift = useRef()
+  const currentPercentageShift = useRef(parentDimensions.percentageShift)
   useEffect(() => {
     if (!imageDetails) return
 

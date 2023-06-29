@@ -56,12 +56,19 @@ export function App() {
       image: stickerImage,
       order: 0,
     },
+    {
+      id: 'my-id-2',
+      position: { x: 0.3, y: 0.7 },
+      image: stickerImage,
+      order: 1,
+    },
   ])
   const downloadRef = useRef()
   const [hidden, setHidden] = useState(false)
 
   // Sticker hooks
   const onReorderSticker = useCallback((direction, extreme, id) => {
+    console.log(stickers)
     setStickers((stickers) =>
       reorderSticker({ id, direction, extreme, stickers })
     )
@@ -156,6 +163,8 @@ export function App() {
                 onPosition={onPositionSticker}
                 onScale={onScaleSticker}
                 onRotate={onRotateSticker}
+                initialPosition={sticker.position}
+                initialScale={sticker.scale}
                 {...sticker}
               />
             ))}
