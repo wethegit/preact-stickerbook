@@ -158,13 +158,14 @@ export function App() {
             {stickers.map((sticker) => (
               <Sticker
                 key={sticker.id}
+                initialPosition={sticker.position}
+                initialRotation={sticker.rotation}
+                initialScale={sticker.scale}
                 onReorder={onReorderSticker}
                 onDelete={onDeleteSticker}
                 onPosition={onPositionSticker}
                 onScale={onScaleSticker}
                 onRotate={onRotateSticker}
-                initialPosition={sticker.position}
-                initialScale={sticker.scale}
                 {...sticker}
               />
             ))}
