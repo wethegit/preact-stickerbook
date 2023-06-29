@@ -58,6 +58,7 @@ export function App() {
     },
   ])
   const downloadRef = useRef()
+  const [hidden, setHidden] = useState(false)
 
   // Sticker hooks
   const onReorderSticker = useCallback((direction, extreme, id) => {
@@ -127,31 +128,40 @@ export function App() {
       <button onClick={onAddSticker}>Add random sticker from GIPHY</button>
       <button onClick={onClickDownload}>Download</button>
       <a ref={downloadRef} hidden="true" href="#" download="Stickerbook.png" />
-      <div
-        style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
-          return { ...acc, [`max-${key}`]: `${val}px` }
-        }, {})}
+      <button
+        onClick={() => {
+          setHidden((state) => !state)
+        }}
       >
-        <Stickerbook
-          outputWidth={CANVAS_SIZE.width}
-          outputHeight={CANVAS_SIZE.height}
-          backgrounds={BACKGROUNDS}
-          frame={FRAME}
-          foregrounds={FOREGROUNDS}
+        {hidden ? 'show' : 'hide'} stickerbook
+      </button>
+      {!hidden && (
+        <div
+          style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
+            return { ...acc, [`max-${key}`]: `${val}px` }
+          }, {})}
         >
-          {stickers.map((sticker) => (
-            <Sticker
-              key={sticker.id}
-              onReorder={onReorderSticker}
-              onDelete={onDeleteSticker}
-              onPosition={onPositionSticker}
-              onScale={onScaleSticker}
-              onRotate={onRotateSticker}
-              {...sticker}
-            />
-          ))}
-        </Stickerbook>
-      </div>
+          <Stickerbook
+            outputWidth={CANVAS_SIZE.width}
+            outputHeight={CANVAS_SIZE.height}
+            backgrounds={BACKGROUNDS}
+            frame={FRAME}
+            foregrounds={FOREGROUNDS}
+          >
+            {stickers.map((sticker) => (
+              <Sticker
+                key={sticker.id}
+                onReorder={onReorderSticker}
+                onDelete={onDeleteSticker}
+                onPosition={onPositionSticker}
+                onScale={onScaleSticker}
+                onRotate={onRotateSticker}
+                {...sticker}
+              />
+            ))}
+          </Stickerbook>
+        </div>
+      )}
       <a href="https://giphy.com/" target="_blank" rel="noreferrer">
         <img
           src="https://media.giphy.com/media/3o6gbbuLW76jkt8vIc/giphy.gif"
