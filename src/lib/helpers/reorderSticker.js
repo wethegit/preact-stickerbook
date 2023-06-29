@@ -1,5 +1,5 @@
 export function reorderSticker({
-  key,
+  id,
   direction = 'up',
   extreme = false,
   stickers = [],
@@ -9,8 +9,8 @@ export function reorderSticker({
   if (!direction || !['up', 'down'].includes(direction))
     throw Error('`direction` needs to be either `up` or `down`')
 
-  const sticker = stickers.find((item) => item.key === key)
-  if (!sticker) throw Error('`key` needs to be a valid `sticker` key')
+  const sticker = stickers.find((item) => item.id === id)
+  if (!sticker) throw Error('`id` needs to be a valid `sticker` id')
 
   // First, we can't change the array itself otherwise
   // it will cause a re-render and the item will loose focus.
@@ -36,7 +36,7 @@ export function reorderSticker({
 
   return stickers.map((item) => {
     // if it's our item we update its order
-    if (item.key === key) item.order = newOrder
+    if (item.id === id) item.order = newOrder
     else if (direction === 'up') {
       // if we are going to the extreme edges, we gotta
       // move all stickers before/after the new order

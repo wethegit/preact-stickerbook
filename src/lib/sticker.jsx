@@ -15,7 +15,7 @@ const STATES = {
 const ROTATION_BUTTON_OFFSET = 0.785
 
 export default function Sticker({
-  key,
+  id,
   image,
   alt = '',
   order = 0,
@@ -164,86 +164,83 @@ export default function Sticker({
 
   const onStickerKeyDown = function (e) {
     if (state === STATES.IDLE) {
-      const { shiftKey, key: eventKey } = e
+      const { shiftKey, key } = e
       const multiplier = shiftKey ? 10 : 1
 
-      if ((eventKey === 'Delete' || eventKey === 'Backspace') && onDelete)
-        onDelete(key)
+      if ((key === 'Delete' || key === 'Backspace') && onDelete) onDelete(id)
 
       // move left
-      if (eventKey === 'ArrowLeft') {
+      if (key === 'ArrowLeft') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x - 1 * multiplier, cur.y))
       }
       // move right
-      else if (eventKey === 'ArrowRight') {
+      else if (key === 'ArrowRight') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x + 1 * multiplier, cur.y))
       }
 
       // move up
-      if (eventKey === 'ArrowUp') {
+      if (key === 'ArrowUp') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x, cur.y - 1 * multiplier))
       }
       // move down
-      else if (eventKey === 'ArrowDown') {
+      else if (key === 'ArrowDown') {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x, cur.y + 1 * multiplier))
       }
 
       // scale down
-      if (eventKey === '-' || eventKey === '_')
+      if (key === '-' || key === '_')
         setScale((cur) => Math.max(0.05, cur - 0.01 * multiplier))
       // scale up
-      else if (eventKey === '+' || eventKey === '=')
+      else if (key === '+' || key === '=')
         setScale((cur) => cur + 0.01 * multiplier)
 
       // rotate left
-      if (eventKey === '<' || eventKey === ',')
+      if (key === '<' || key === ',')
         setRotation((cur) => cur - 0.01 * multiplier)
       // rotate right
-      else if (eventKey === '>' || eventKey === '.')
+      else if (key === '>' || key === '.')
         setRotation((cur) => cur + 0.01 * multiplier)
 
       // Align top
-      if (eventKey === 'w')
-        setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
+      if (key === 'w') setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
       // align bottom
-      else if (eventKey === 's')
+      else if (key === 's')
         setPosition(
           (cur) =>
             new Vec2(cur.x, parentDimensions.height - (bounds.bottom - cur.y))
         )
 
       // Align left
-      if (eventKey === 'a')
+      if (key === 'a')
         setPosition((cur) => new Vec2(cur.x - bounds.left, cur.y))
       // align right
-      else if (eventKey === 'd')
+      else if (key === 'd')
         setPosition(
           (cur) =>
             new Vec2(parentDimensions.width - (bounds.right - cur.x), cur.y)
         )
 
       // center align vertically
-      if (eventKey === 'v')
+      if (key === 'v')
         setPosition((cur) => new Vec2(cur.x, parentDimensions.height * 0.5))
       // center align horizontally
-      else if (eventKey === 'c')
+      else if (key === 'c')
         setPosition((cur) => new Vec2(parentDimensions.width * 0.5, cur.y))
 
       if (onReorder) {
         // bring forwards
-        if (eventKey === '[' || eventKey === '{')
-          onReorder('up', multiplier > 1, key)
+        if (key === '[' || key === '{') onReorder('up', multiplier > 1, id)
         // bring backwards
-        else if (eventKey === ']' || eventKey === '}')
-          onReorder('down', multiplier > 1, key)
+        else if (key === ']' || key === '}')
+          onReorder('down', multiplier > 1, id)
       }
     }
   }
@@ -297,7 +294,7 @@ export default function Sticker({
   }
 
   const onDeleteClick = function () {
-    if (onDelete) onDelete(key)
+    if (onDelete) onDelete(id)
   }
 
   const onPinPointerDown = function () {
@@ -400,7 +397,7 @@ export default function Sticker({
     } else {
       // If, instead, this sticker has been clicked then focus it, set it to moving and add the pointer move event
       element.focus()
-      if (onReorder) onReorder('up', true, key)
+      if (onReorder) onReorder('up', true, id)
       setState(STATES.MOVE)
     }
   }
@@ -420,23 +417,23 @@ export default function Sticker({
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
         if (position)
-          onPosition(position.divideScalarNew(parentDimensions.width), key)
+          onPosition(position.divideScalarNew(parentDimensions.width), id)
       }, 100)
     }
-  }, [onPosition, position, parentDimensions.width, key])
+  }, [onPosition, position, parentDimensions.width, id])
 
   useEffect(() => {
     if (onRotate) {
       clearTimeout(onRotateTimer.current)
       onRotateTimer.current = setTimeout(() => {
-        onRotate(rotation, key)
+        onRotate(rotation, id)
       }, 500)
     }
 
     return () => {
       clearTimeout(onRotateTimer.current)
     }
-  }, [onRotate, rotation, key])
+  }, [onRotate, rotation, id])
 
   useEffect(() => {
     if (onScale) {
@@ -447,14 +444,14 @@ export default function Sticker({
         // model into the preact/funcional model
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
-        onScale(radius / parentDimensions.width, key)
+        onScale(radius / parentDimensions.width, id)
       }, 500)
     }
 
     return () => {
       clearTimeout(onScaleTimer.current)
     }
-  }, [onScale, radius, parentDimensions.width, key])
+  }, [onScale, radius, parentDimensions.width, id])
 
   // start it all after image loads
   const init = async function (e) {

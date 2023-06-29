@@ -52,7 +52,7 @@ const FOREGROUNDS = [
 export function App() {
   const [stickers, setStickers] = useState([
     {
-      key: 'my-id-1',
+      id: 'my-id-1',
       image: stickerImage,
       order: 0,
     },
@@ -60,31 +60,31 @@ export function App() {
   const downloadRef = useRef()
 
   // Sticker hooks
-  const onReorderSticker = useCallback((direction, extreme, key) => {
+  const onReorderSticker = useCallback((direction, extreme, id) => {
     setStickers((stickers) =>
-      reorderSticker({ key, direction, extreme, stickers })
+      reorderSticker({ id, direction, extreme, stickers })
     )
   }, [])
 
-  const onDeleteSticker = useCallback((key) => {
-    setStickers((stickers) => deleteSticker(stickers, key))
+  const onDeleteSticker = useCallback((id) => {
+    setStickers((stickers) => deleteSticker(stickers, id))
   }, [])
 
-  const onPositionSticker = useCallback((value, key) => {
+  const onPositionSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'position', value, key })
+      patchSticker({ stickers, prop: 'position', value, id })
     )
   }, [])
 
-  const onScaleSticker = useCallback((value, key) => {
+  const onScaleSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'scale', value, key })
+      patchSticker({ stickers, prop: 'scale', value, id })
     )
   }, [])
 
-  const onRotateSticker = useCallback((value, key) => {
+  const onRotateSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'rotation', value, key })
+      patchSticker({ stickers, prop: 'rotation', value, id })
     )
   }, [])
 
@@ -141,7 +141,7 @@ export function App() {
         >
           {stickers.map((sticker) => (
             <Sticker
-              key={sticker.key}
+              key={sticker.id}
               onReorder={onReorderSticker}
               onDelete={onDeleteSticker}
               onPosition={onPositionSticker}
