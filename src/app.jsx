@@ -54,6 +54,7 @@ export function App() {
     {
       id: 'my-id-1',
       image: stickerImage,
+      position: { x: 0.3, y: 0.7 },
       order: 0,
     },
     // {
@@ -68,7 +69,6 @@ export function App() {
 
   // Sticker hooks
   const onReorderSticker = useCallback((direction, extreme, id) => {
-    console.log(stickers)
     setStickers((stickers) =>
       reorderSticker({ id, direction, extreme, stickers })
     )

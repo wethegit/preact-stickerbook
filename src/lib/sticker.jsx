@@ -417,10 +417,21 @@ export default function Sticker({
         // Basically, this is a value that can be reverted
         // by multiplying it back to whatever size you need
         if (position)
-          onPosition(position.divideScalarNew(parentDimensions.width), id)
+          onPosition(
+            position.divideNew(
+              new Vec2(parentDimensions.width, parentDimensions.height)
+            ),
+            id
+          )
       }, 100)
     }
-  }, [onPosition, position, parentDimensions.width, id])
+  }, [
+    onPosition,
+    position,
+    parentDimensions.width,
+    parentDimensions.height,
+    id,
+  ])
 
   useEffect(() => {
     if (onRotate) {
@@ -474,7 +485,11 @@ export default function Sticker({
         ? new Vec2(initialPosition.x, initialPosition.y)
         : initialPosition
 
-      setPosition(position.scaleNew(parentDimensions.width))
+      setPosition(
+        position.multiplyNew(
+          new Vec2(parentDimensions.width, parentDimensions.height)
+        )
+      )
     } else
       setPosition(
         new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
