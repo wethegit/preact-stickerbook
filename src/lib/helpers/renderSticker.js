@@ -50,8 +50,8 @@ const initApplication = (size) => {
 
     components.initialized = true
   }
-  c.height = size[0]
-  c.width = size[1]
+  c.width = size[0]
+  c.height = size[1]
   dims = new Vec2(c.width, c.height)
 
   return c
