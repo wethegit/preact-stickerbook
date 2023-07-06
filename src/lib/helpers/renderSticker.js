@@ -54,8 +54,6 @@ const initApplication = (size) => {
   c.height = size[1]
   dims = new Vec2(c.width, c.height)
 
-  document.body.appendChild(c)
-
   return c
 }
 
