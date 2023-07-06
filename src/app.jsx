@@ -17,8 +17,8 @@ import foregroundImage2 from './foreground-2.png'
 import stickerImage from './sticker.png'
 
 const CANVAS_SIZE = {
-  width: 500,
-  height: 500,
+  width: 1200,
+  height: 680,
 }
 
 const GIPHY_API_URL = new URL('https://api.giphy.com/v1/stickers/random')
@@ -56,12 +56,12 @@ export function App() {
       image: stickerImage,
       order: 0,
     },
-    {
-      id: 'my-id-2',
-      position: { x: 0.3, y: 0.7 },
-      image: stickerImage,
-      order: 1,
-    },
+    // {
+    //   id: 'my-id-2',
+    //   position: { x: 0.3, y: 0.7 },
+    //   image: stickerImage,
+    //   order: 1,
+    // },
   ])
   const downloadRef = useRef()
   const [hidden, setHidden] = useState(false)
