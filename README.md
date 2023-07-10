@@ -19,8 +19,8 @@ To run and test the library localy, simply:
   - [Props](#props)
     - [outputHeight](#outputHeight)
     - [outputWidth](#outputWidth)
-    - [background](#background)
-    - [foreground](#foreground)
+    - [backgrounds](#backgrounds)
+    - [foregrounds](#foregrounds)
     - [frame](#frame)
 - [Sticker](#sticker)
   - [Props](#props-1)
@@ -235,8 +235,8 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onDelete={(key) => {
-            setStickers((stickers) => deleteSticker(stickers, key))
+          onDelete={(id) => {
+            setStickers((stickers) => deleteSticker(stickers, id))
           }}
         />
       ))}
@@ -268,9 +268,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onReorder={(direction, extreme, key) => {
+          onReorder={(direction, extreme, id) => {
             setStickers((stickers) =>
-              reorderSticker({ key, direction, extreme, stickers })
+              reorderSticker({ id, direction, extreme, stickers })
             )
           }}
         />
@@ -301,9 +301,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onPosition={(value, key) => {
+          onPosition={(value, id) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'position', value, key })
+              patchSticker({ stickers, prop: 'position', value, id })
             )
           }}
         />
@@ -334,9 +334,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onScale={(value, key) => {
+          onScale={(value, id) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'scale', value, key })
+              patchSticker({ stickers, prop: 'scale', value, id })
             )
           }}
         />
@@ -367,9 +367,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onRotate={(value, key) => {
+          onRotate={(value, id) => {
             setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'rotation', value, key })
+              patchSticker({ stickers, prop: 'rotation', value, id })
             )
           }}
         />
@@ -390,8 +390,8 @@ Returns a representation of the stickerbook in the chosen `format`.
 **options** | `Object`  
 **options.canvas** | `HTMLCanvasElement` | **optional** - A canvas element to draw to.  
 **options.backgrounds** | `Array` | **optional** - An array of valid [`background`](#backgrounds) objects.  
-**options. frame** | `Object` | **optional** - A valid [`frame`](#frame) object.  
-**options. foregrounds** | `Object` | **optional** - An array of valid [`foreground`](#foregrounds) objects.  
+**options.frame** | `Object` | **optional** - A valid [`frame`](#frame) object.  
+**options.foregrounds** | `Object` | **optional** - An array of valid [`foreground`](#foregrounds) objects.  
 **options.stickers** | `Array` | **optional** - An array of valid [`sticker`](#sticker) objects.  
 **options.outputWidth** | `Integer` default `500` - Output width.  
 **options.outputHeight** | `Integer` default `500` - Output height.  
@@ -434,7 +434,7 @@ Returns a reordered copy of the provided `stickers` array.
 `Function`
 
 **options** | `Object`  
-**options.key** | `String|Number` - The key of the sticker that will be reordered within the stickers array.  
+**options.id** | `String|Number` - The id of the sticker that will be reordered within the stickers array.  
 **options.direction** | `String` default `"up"` - The order in which to move the sticker.  
 **options.extreme** | `Boolean` default `false` - If it should be brought to the edges of the array.  
 **options.stickers** | `Array` default `[]` - An array of valid [`sticker`](#sticker) objects.
@@ -453,9 +453,9 @@ const App = () => {
       {stickers.map((sticker, index) => (
         <Sticker
           {...sticker}
-          onReorder={(direction, extreme, key) => {
+          onReorder={(direction, extreme, id) => {
             setStickers((stickers) =>
-              reorderSticker({ key, direction, extreme, stickers })
+              reorderSticker({ id, direction, extreme, stickers })
             )
           }}
         />
@@ -481,7 +481,7 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 `Function`
 
 **stickers** | `Array` - An array of valid [`sticker`](#sticker) objects.  
-**key** | `String|Number` - The key of the sticker that will be deleted from the stickers array.
+**id** | `String|Number` - The id of the sticker that will be deleted from the stickers array.
 
 ### patchSticker
 
@@ -491,7 +491,7 @@ Returns a copy of the provided `stickers` array with the updated ("patched") sti
 
 **options** | `Object`  
 **options.stickers** | `Array` - An array of valid [`sticker`](#sticker)  
-**options.key** | `String|Number` - The key of the sticker that will be amended within the stickers array.
+**options.id** | `String|Number` - The id of the sticker that will be amended within the stickers array.
 **options.value** | **optional** - The new value.  
 **options.prop** | `String` - The prop to be updated. Can be one of the folllwing:
 

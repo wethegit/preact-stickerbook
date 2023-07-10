@@ -30,9 +30,11 @@ GIPHY_API_URL.search = new URLSearchParams({
 const BACKGROUNDS = [
   {
     image: backgroundImage,
+    type: 'scene',
   },
   {
     image: backgroundImage2,
+    type: 'scene',
   },
 ]
 
@@ -52,39 +54,40 @@ const FOREGROUNDS = [
 export function App() {
   const [stickers, setStickers] = useState([
     {
-      key: 'my-id-1',
+      id: 'my-id-1',
       image: stickerImage,
       order: 0,
     },
   ])
   const downloadRef = useRef()
+  const [hidden, setHidden] = useState(false)
 
   // Sticker hooks
-  const onReorderSticker = useCallback((direction, extreme, key) => {
+  const onReorderSticker = useCallback((direction, extreme, id) => {
     setStickers((stickers) =>
-      reorderSticker({ key, direction, extreme, stickers })
+      reorderSticker({ id, direction, extreme, stickers })
     )
   }, [])
 
-  const onDeleteSticker = useCallback((key) => {
-    setStickers((stickers) => deleteSticker(stickers, key))
+  const onDeleteSticker = useCallback((id) => {
+    setStickers((stickers) => deleteSticker(stickers, id))
   }, [])
 
-  const onPositionSticker = useCallback((value, key) => {
+  const onPositionSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'position', value, key })
+      patchSticker({ stickers, prop: 'position', value, id })
     )
   }, [])
 
-  const onScaleSticker = useCallback((value, key) => {
+  const onScaleSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'scale', value, key })
+      patchSticker({ stickers, prop: 'scale', value, id })
     )
   }, [])
 
-  const onRotateSticker = useCallback((value, key) => {
+  const onRotateSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'rotation', value, key })
+      patchSticker({ stickers, prop: 'rotation', value, id })
     )
   }, [])
 
@@ -127,31 +130,42 @@ export function App() {
       <button onClick={onAddSticker}>Add random sticker from GIPHY</button>
       <button onClick={onClickDownload}>Download</button>
       <a ref={downloadRef} hidden="true" href="#" download="Stickerbook.png" />
-      <div
-        style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
-          return { ...acc, [`max-${key}`]: `${val}px` }
-        }, {})}
-      >
-        <Stickerbook
-          outputWidth={CANVAS_SIZE.width}
-          outputHeight={CANVAS_SIZE.height}
-          backgrounds={BACKGROUNDS}
-          frame={FRAME}
-          foregrounds={FOREGROUNDS}
+
+      {/* Toggle button for testing re-renders */}
+      <button onClick={() => setHidden((state) => !state)}>
+        {hidden ? 'show' : 'hide'} stickerbook
+      </button>
+
+      {!hidden && (
+        <div
+          style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
+            return { ...acc, [`max-${key}`]: `${val}px` }
+          }, {})}
         >
-          {stickers.map((sticker) => (
-            <Sticker
-              key={sticker.key}
-              onReorder={onReorderSticker}
-              onDelete={onDeleteSticker}
-              onPosition={onPositionSticker}
-              onScale={onScaleSticker}
-              onRotate={onRotateSticker}
-              {...sticker}
-            />
-          ))}
-        </Stickerbook>
-      </div>
+          <Stickerbook
+            outputWidth={CANVAS_SIZE.width}
+            outputHeight={CANVAS_SIZE.height}
+            backgrounds={BACKGROUNDS}
+            frame={FRAME}
+            foregrounds={FOREGROUNDS}
+          >
+            {stickers.map((sticker) => (
+              <Sticker
+                key={sticker.id}
+                initialPosition={sticker.position}
+                initialRotation={sticker.rotation}
+                initialScale={sticker.scale}
+                onReorder={onReorderSticker}
+                onDelete={onDeleteSticker}
+                onPosition={onPositionSticker}
+                onScale={onScaleSticker}
+                onRotate={onRotateSticker}
+                {...sticker}
+              />
+            ))}
+          </Stickerbook>
+        </div>
+      )}
       <a href="https://giphy.com/" target="_blank" rel="noreferrer">
         <img
           src="https://media.giphy.com/media/3o6gbbuLW76jkt8vIc/giphy.gif"

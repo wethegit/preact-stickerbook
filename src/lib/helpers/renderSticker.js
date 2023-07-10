@@ -50,8 +50,8 @@ const initApplication = (size) => {
 
     components.initialized = true
   }
-  c.height = size[0]
-  c.width = size[1]
+  c.width = size[0]
+  c.height = size[1]
   dims = new Vec2(c.width, c.height)
 
   return c
@@ -73,7 +73,7 @@ const renderSticker = (sticker, canvasSize) => {
   // const position = sticker.position.subtractNew(new Vec2(0.5)).scale(c.width);
   const position = sticker.position.clone()
   position.y = 1 - position.y
-  position.scale(c.width).subtract(dims.scaleNew(0.5))
+  position.multiply(dims).subtract(dims.scaleNew(0.5))
   const scale = (sticker.scale * c.width) / Math.min(d.x, d.y) / 0.5
   let a = sticker.rotation
   let rotation = new Mat3(
@@ -100,8 +100,8 @@ const renderSticker = (sticker, canvasSize) => {
     1
   )
   const sizeTransformationMatrix = size
-    .multiply(rotation)
-    .multiplyNew(transform)
+    .multiplyNew(rotation)
+    .multiply(transform)
   // const sizeTransformationMatrix = rotation;
 
   window.sizeTransformationMatrix = sizeTransformationMatrix

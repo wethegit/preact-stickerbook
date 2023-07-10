@@ -1,11 +1,11 @@
-export function patchSticker({ stickers, prop, value, key }) {
+export function patchSticker({ stickers, prop, value, id }) {
   if (!stickers || !(stickers instanceof Array) || stickers.length <= 0)
     throw Error('`stickers` array is empty')
 
-  const patchedSticker = stickers.find((sticker) => sticker.key === key)
+  const patchedSticker = stickers.find((sticker) => sticker.id === id)
 
-  if (!key || !patchedSticker)
-    throw Error('`key` needs to be a valid `sticker` key')
+  if (!id || !patchedSticker)
+    throw Error('`id` needs to be a valid `sticker` id')
 
   const PROPS = ['position', 'scale', 'rotation']
 
