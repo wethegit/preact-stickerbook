@@ -130,13 +130,12 @@ export function App() {
       <button onClick={onAddSticker}>Add random sticker from GIPHY</button>
       <button onClick={onClickDownload}>Download</button>
       <a ref={downloadRef} hidden="true" href="#" download="Stickerbook.png" />
-      <button
-        onClick={() => {
-          setHidden((state) => !state)
-        }}
-      >
+
+      {/* Toggle button for testing re-renders */}
+      <button onClick={() => setHidden((state) => !state)}>
         {hidden ? 'show' : 'hide'} stickerbook
       </button>
+
       {!hidden && (
         <div
           style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
