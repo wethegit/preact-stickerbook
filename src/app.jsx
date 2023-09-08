@@ -17,7 +17,7 @@ import foregroundImage2 from './foreground-2.png'
 import stickerImage from './sticker.png'
 
 const CANVAS_SIZE = {
-  width: 1400,
+  width: 500,
   height: 500,
 }
 
