@@ -213,6 +213,12 @@ If no `initialScale` is provided `defaultScale` will be used.
 
 `number` default `0.3` | **optional**
 
+#### disableRotation
+
+Disables rotation of a given sticker.
+
+`Boolean` default `false` | **optional**
+
 #### onDelete
 
 A callback function to be called when the delete button is clicked.  
