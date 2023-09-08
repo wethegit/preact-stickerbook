@@ -17,7 +17,7 @@ import foregroundImage2 from './foreground-2.png'
 import stickerImage from './sticker.png'
 
 const CANVAS_SIZE = {
-  width: 500,
+  width: 1400,
   height: 500,
 }
 
@@ -160,6 +160,7 @@ export function App() {
                 onPosition={onPositionSticker}
                 onScale={onScaleSticker}
                 onRotate={onRotateSticker}
+                disableRotation={sticker.disableRotation}
                 {...sticker}
               />
             ))}
