@@ -160,6 +160,7 @@ export function App() {
                 onPosition={onPositionSticker}
                 onScale={onScaleSticker}
                 onRotate={onRotateSticker}
+                disableRotation={sticker.disableRotation}
                 {...sticker}
               />
             ))}

@@ -24,6 +24,7 @@ export default function Sticker({
   initialRotation = null,
   initialPosition = null,
   defaultScale = 0.3,
+  disableRotation = false,
   // hooks
   onDelete,
   onReorder,
@@ -203,11 +204,15 @@ export default function Sticker({
         setScale((cur) => cur + 0.01 * multiplier)
 
       // rotate left
-      if (key === '<' || key === ',')
+      if (key === '<' || key === ',') {
+        if (disableRotation) return
         setRotation((cur) => cur - 0.01 * multiplier)
+      }
       // rotate right
-      else if (key === '>' || key === '.')
+      else if (key === '>' || key === '.') {
+        if (disableRotation) return
         setRotation((cur) => cur + 0.01 * multiplier)
+      }
 
       // Align top
       if (key === 'w') setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
@@ -264,7 +269,8 @@ export default function Sticker({
       let initalradius = Math.min(imageDetails.x, imageDetails.y)
 
       // Update the rotation / scale of the sticker
-      setRotationOffset(mousePosition.angle - ROTATION_BUTTON_OFFSET)
+      if (!disableRotation)
+        setRotationOffset(mousePosition.angle - ROTATION_BUTTON_OFFSET)
       setScale(
         (mousePosition.length + (radius - radius * controlsScale)) /
           (initalradius * 0.5)
