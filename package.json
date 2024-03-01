@@ -14,7 +14,6 @@
   "types": "./dist/main.d.ts",
   "exports": {
     ".": "./dist/preact-stickerbook.js",
-    "./helpers": "./dist/preact-stickerbook-helpers.js",
     "./style.css": "./dist/style.css"
   },
   "scripts": {
@@ -30,6 +29,9 @@
     "preact": "^10.13.1",
     "wtc-math": "^1.0.20",
     "wtc-simplegl": "^0.0.4"
+  },
+  "peerDependencies": {
+    "preact": "^10.13.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",

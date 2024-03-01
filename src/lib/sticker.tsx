@@ -6,7 +6,7 @@ import { StickerbookContext } from "./stickerbook-context"
 import { classnames } from "./helpers/classnames"
 import type { StickerProps, Timeout } from "./types"
 
-import "./sticker.scss"
+import styles from "./sticker.module.scss"
 
 interface Bounds {
   left: number
@@ -585,7 +585,7 @@ export function Sticker({
   return (
     <div
       ref={elementRef}
-      className={classnames(["Sticker", className])}
+      className={classnames([styles.Sticker, className])}
       tabindex={0}
       style={{
         ...(position && { left: `${position.x}px`, top: `${position.y}px` }),
@@ -599,16 +599,17 @@ export function Sticker({
       {...props}
     >
       <div
-        className="Sticker__container"
+        className={styles.Sticker__container}
         style={{
           ...(imageDetails && {
             width: `${imageDetails.x}px`,
             height: `${imageDetails.y}px`,
           }),
         }}
+        data-sticker-container
       >
         <img
-          className="Sticker__img"
+          className={styles.Sticker__img}
           src={image}
           style={{
             transform: `scale(${scale}) rotate(${
@@ -618,22 +619,29 @@ export function Sticker({
           alt={alt}
           onPointerDown={onImagePointerDown}
           onPointerUp={onImagePointerUp}
+          data-sticker-img
         />
       </div>
-      <div className="Sticker__controls" style={controlsStyle}>
+      <div
+        className={styles.Sticker__controls}
+        style={controlsStyle}
+        data-sticker-controls
+      >
         <div
-          className="Sticker__controll-pin"
+          className={styles["Sticker__controll-pin"]}
           style={controlsPinStyle}
           onPointerDown={onPinPointerDown}
           onPointerUp={onPinPointerUp}
+          data-sticker-control-pin
         />
         {onDelete && (
           <button
             tabIndex={-1}
             aria-hidden="true"
-            className="Sticker__controll-delete"
+            className={styles["Sticker__controll-delete"]}
             style={controlsDeleteStyle}
             onClick={onDeleteClick}
+            data-sticker-control-delete
           />
         )}
       </div>

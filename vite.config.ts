@@ -16,10 +16,6 @@ export default defineConfig({
       // Could also be a dictionary or array of multiple entry points
       entry: {
         "preact-stickerbook": resolve(__dirname, "src/lib/index.tsx"),
-        "preact-stickerbook-helpers": resolve(
-          __dirname,
-          "src/lib/helpers/index.ts"
-        ),
       },
       name: "PreactStickerbook",
       formats: ["es"],

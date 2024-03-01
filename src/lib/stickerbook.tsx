@@ -20,7 +20,7 @@ import type {
   Timeout,
 } from "./types"
 
-import "./stickerbook.scss"
+import styles from "./stickerbook.module.scss"
 
 export function Stickerbook({
   backgrounds = [],
@@ -182,7 +182,7 @@ export function Stickerbook({
     <div
       role="region"
       aria-label="Stickerbook"
-      className={classnames(["Stickerbook", className])}
+      className={classnames([styles.Stickerbook, className])}
       ref={parentRef}
       {...props}
     >
@@ -192,6 +192,7 @@ export function Stickerbook({
           width: `${dimensions.width}px`,
           height: `${dimensions.height}px`,
         }}
+        data-stickerbook-container
       >
         {backgrounds.length > 0 &&
           backgrounds.map((bg, i) => {
@@ -201,12 +202,13 @@ export function Stickerbook({
               <div
                 key={i}
                 role="img"
-                className="Stickerbook__background"
+                className={styles.Stickerbook__background}
                 style={{
                   backgroundImage: `url(${bg.image})`,
                   ...backgroundStyles[i],
                 }}
                 aria-label={bg.alt || ""}
+                data-stickerbook-background={i}
               />
             )
           })}
@@ -215,7 +217,8 @@ export function Stickerbook({
           <img
             src={frame.image}
             alt={frame.alt || ""}
-            className="Stickerbook__frame"
+            className={styles.Stickerbook__frame}
+            data-stickerbook-frame
           />
         )}
 
@@ -239,7 +242,8 @@ export function Stickerbook({
                 key={i}
                 src={fg.image}
                 alt={fg.alt || ""}
-                className="Stickerbook__foreground"
+                className={styles.Stickerbook__foreground}
+                data-stickerbook-foreground={i}
                 style={{ zIndex: foregroundIndex + i }}
               />
             )
