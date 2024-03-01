@@ -1,3 +1,5 @@
+import { h } from "preact"
+import { CSSProperties } from "preact/compat"
 import {
   useEffect,
   useLayoutEffect,
@@ -5,64 +7,65 @@ import {
   useRef,
   useReducer,
   useState,
-} from 'preact/hooks'
-import { Vec2 } from 'wtc-math'
+} from "preact/hooks"
+import { Vec2 } from "wtc-math"
 
-import { StickerbookContext } from './stickerbook-context'
-import { classnames } from './helpers/classnames'
-import './stickerbook.scss'
+import { StickerbookContext } from "./stickerbook-context"
+import { classnames } from "./helpers/classnames"
+import type {
+  BackgroundDetailsReducer,
+  BackgroundDimensions,
+  StickerbookDimensions,
+  StickerbookProps,
+  Timeout,
+} from "./types"
 
-const imageDetailsReducer = (state, { index, dimensions }) => {
-  if (isNaN(index) || !dimensions) return state
-  const newState = [...state]
-  newState[index] = dimensions
+import "./stickerbook.scss"
 
-  return newState
-}
-
-export default function Stickerbook({
+export function Stickerbook({
   backgrounds = [],
   foregrounds = [],
-  frame = {},
+  frame,
   outputHeight = 500,
   outputWidth = 500,
   children,
   className,
   ...props
-}) {
-  const [dimensions, setDimensions] = useState({
+}: StickerbookProps) {
+  const [dimensions, setDimensions] = useState<StickerbookDimensions>({
     width: outputWidth,
     height: outputHeight,
     percentageShift: 1,
     rendered: false,
   })
-  const [position, setPosition] = useState()
-  const [backgroundDetails, setBackgroundDetails] = useReducer(
-    imageDetailsReducer,
-    []
-  )
-  const mainRef = useRef()
-  const parentRef = useRef()
+  const [position, setPosition] = useState<Vec2>()
+  const [backgroundDetails, setBackgroundDetails] = useReducer<
+    BackgroundDimensions[],
+    BackgroundDetailsReducer
+  >(imageDetailsReducer, [])
+  const mainRef = useRef<HTMLDivElement | null>(null)
+  const parentRef = useRef<HTMLDivElement | null>(null)
 
   const foregroundIndex = useMemo(
-    () => (children ? children.flat().length + 2 : 2),
+    () =>
+      children && Array.isArray(children) ? children.flat().length + 2 : 2,
     [children]
   )
 
   // Determine CSS styles for the Background image element,
   // based on the type of background ("scene" or "pattern")
-  const backgroundStyles = useMemo(() => {
-    if (!backgrounds.length || !backgroundDetails.length) return {}
+  const backgroundStyles = useMemo<CSSProperties[]>(() => {
+    if (!backgrounds.length || !backgroundDetails.length) return [{}]
 
     return backgrounds.map((bg, i) => {
-      if (bg.type === 'scene' || !backgroundDetails[i]) return {}
+      if (bg.type === "scene" || !backgroundDetails[i]) return {}
 
       // calculate new size based on generated image
       // backgrounds should base themselves on the size of the stickerbook
       const bgSize =
         (backgroundDetails[i].width * dimensions.width) / outputWidth
       return {
-        backgroundRepeat: 'repeat',
+        backgroundRepeat: "repeat",
         backgroundSize: `${bgSize}px auto`,
       }
     })
@@ -72,24 +75,29 @@ export default function Stickerbook({
   useLayoutEffect(() => {
     const element = mainRef.current
     const parent = parentRef.current
-    let resizeTimer, scrollTimer, previousPosition
+    let resizeTimer: Timeout, scrollTimer: Timeout, previousPosition: Vec2
 
     const getPosition = function () {
+      if (!element) return
+
       const rect = element.getBoundingClientRect()
 
       return new Vec2(rect.left, rect.top)
     }
 
-    const onResize = function (init) {
+    const onResize = function (init: boolean) {
       if (!element) return
       clearTimeout(resizeTimer)
 
       resizeTimer = setTimeout(() => {
+        if (!parent || !element) return
+
         const newWidth = parent.offsetWidth
         const curWidth = element.offsetWidth
 
         // save position to variable and compare to current position
-        const newPosition = getPosition()
+        const newPosition = getPosition()!
+
         if (
           previousPosition?.x !== newPosition.x ||
           previousPosition?.y !== newPosition.y
@@ -114,11 +122,12 @@ export default function Stickerbook({
 
     const onScroll = function () {
       if (!element) return
+
       clearTimeout(scrollTimer)
 
       scrollTimer = setTimeout(() => {
         // save position to variable and compare to current position
-        const newPosition = getPosition()
+        const newPosition = getPosition()!
         if (
           previousPosition?.x !== newPosition.x ||
           previousPosition?.y !== newPosition.y
@@ -129,8 +138,10 @@ export default function Stickerbook({
       }, 300)
     }
 
-    window.addEventListener('resize', onResize)
-    window.addEventListener('scroll', onScroll)
+    const handleResize = () => onResize(false)
+
+    window.addEventListener("resize", handleResize)
+    window.addEventListener("scroll", onScroll)
 
     onResize(true)
 
@@ -138,8 +149,8 @@ export default function Stickerbook({
       clearTimeout(resizeTimer)
       clearTimeout(scrollTimer)
 
-      window.removeEventListener('resize', onResize)
-      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("scroll", onScroll)
     }
   }, [])
 
@@ -153,7 +164,7 @@ export default function Stickerbook({
         const img = new Image()
 
         img.onload = (e) => {
-          const img = e.target
+          const img = e.target as HTMLImageElement
           const width = img.width
           const height = img.height
 
@@ -171,7 +182,7 @@ export default function Stickerbook({
     <div
       role="region"
       aria-label="Stickerbook"
-      className={classnames(['Stickerbook', className])}
+      className={classnames(["Stickerbook", className])}
       ref={parentRef}
       {...props}
     >
@@ -195,7 +206,7 @@ export default function Stickerbook({
                   backgroundImage: `url(${bg.image})`,
                   ...backgroundStyles[i],
                 }}
-                aria-label={bg.alt || ''}
+                aria-label={bg.alt || ""}
               />
             )
           })}
@@ -203,7 +214,7 @@ export default function Stickerbook({
         {frame && frame.image && (
           <img
             src={frame.image}
-            alt={frame.alt || ''}
+            alt={frame.alt || ""}
             className="Stickerbook__frame"
           />
         )}
@@ -227,7 +238,7 @@ export default function Stickerbook({
               <img
                 key={i}
                 src={fg.image}
-                alt={fg.alt || ''}
+                alt={fg.alt || ""}
                 className="Stickerbook__foreground"
                 style={{ zIndex: foregroundIndex + i }}
               />
@@ -236,4 +247,15 @@ export default function Stickerbook({
       </div>
     </div>
   )
+}
+
+function imageDetailsReducer(
+  state: BackgroundDimensions[],
+  { index, dimensions }: BackgroundDetailsReducer
+): BackgroundDimensions[] {
+  if (isNaN(index) || !dimensions) return state
+  const newState = [...state]
+  newState[index] = dimensions
+
+  return newState
 }

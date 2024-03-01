@@ -1,16 +1,26 @@
+import type { OrderDirection, StickerItem } from "../types"
+
+interface ReorderStickerOptions {
+  id: string
+  direction: OrderDirection
+  extreme: boolean
+  stickers: StickerItem[]
+}
+
 export function reorderSticker({
   id,
-  direction = 'up',
+  direction = "up",
   extreme = false,
-  stickers = [],
-}) {
+  stickers,
+}: ReorderStickerOptions) {
   if (!stickers || stickers.length <= 0)
-    throw Error('`stickers` array is empty')
-  if (!direction || !['up', 'down'].includes(direction))
-    throw Error('`direction` needs to be either `up` or `down`')
+    throw Error("`stickers` array is empty")
+
+  if (!direction || !["up", "down"].includes(direction))
+    throw Error("`direction` needs to be either `up` or `down`")
 
   const sticker = stickers.find((item) => item.id === id)
-  if (!sticker) throw Error('`id` needs to be a valid `sticker` id')
+  if (!sticker) throw Error("`id` needs to be a valid `sticker` id")
 
   // First, we can't change the array itself otherwise
   // it will cause a re-render and the item will loose focus.
@@ -23,7 +33,7 @@ export function reorderSticker({
   // if we are going to the extreme, we max it up otherwise
   // we just make sure that we are not going over our max/min
   const newOrder =
-    direction === 'up'
+    direction === "up"
       ? extreme
         ? max
         : Math.min(max, currentOrder + 1)
@@ -37,7 +47,7 @@ export function reorderSticker({
   return stickers.map((item) => {
     // if it's our item we update its order
     if (item.id === id) item.order = newOrder
-    else if (direction === 'up') {
+    else if (direction === "up") {
       // if we are going to the extreme edges, we gotta
       // move all stickers before/after the new order
       // or

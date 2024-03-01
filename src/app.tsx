@@ -1,48 +1,50 @@
-import { useState, useRef, useCallback } from 'preact/hooks'
+import { h } from "preact"
+import { useState, useRef, useCallback } from "preact/hooks"
 
-import { Sticker, Stickerbook } from './lib'
+import { Sticker, Stickerbook } from "./lib"
+import type { Background, Overlay, StickerItem } from "./lib"
 import {
   addSticker,
   reorderSticker,
   deleteSticker,
   patchSticker,
   exportStickerbook,
-} from './lib/helpers'
+} from "./lib/helpers"
 
-import backgroundImage from './background.jpg'
-import backgroundImage2 from './background-2.png'
-import frameImage from './frame.png'
-import foregroundImage from './foreground.png'
-import foregroundImage2 from './foreground-2.png'
-import stickerImage from './sticker.png'
+import backgroundImage from "./background.jpg"
+import backgroundImage2 from "./background-2.png"
+import frameImage from "./frame.png"
+import foregroundImage from "./foreground.png"
+import foregroundImage2 from "./foreground-2.png"
+import stickerImage from "./sticker.png"
 
 const CANVAS_SIZE = {
   width: 500,
   height: 500,
 }
 
-const GIPHY_API_URL = new URL('https://api.giphy.com/v1/stickers/random')
+const GIPHY_API_URL = new URL("https://api.giphy.com/v1/stickers/random")
 
 GIPHY_API_URL.search = new URLSearchParams({
-  api_key: 'a8s5d1Dw5bitDbTPHgVHVfaYv0cRAQf8',
+  api_key: "a8s5d1Dw5bitDbTPHgVHVfaYv0cRAQf8",
 }).toString()
 
-const BACKGROUNDS = [
+const BACKGROUNDS: Background[] = [
   {
     image: backgroundImage,
-    type: 'scene',
+    type: "scene",
   },
   {
     image: backgroundImage2,
-    type: 'scene',
+    type: "scene",
   },
 ]
 
-const FRAME = {
+const FRAME: Overlay = {
   image: frameImage,
 }
 
-const FOREGROUNDS = [
+const FOREGROUNDS: Overlay[] = [
   {
     image: foregroundImage,
   },
@@ -52,9 +54,9 @@ const FOREGROUNDS = [
 ]
 
 export function App() {
-  const [stickers, setStickers] = useState([
+  const [stickers, setStickers] = useState<StickerItem[]>([
     {
-      id: 'my-id-1',
+      id: "my-id-1",
       image: stickerImage,
       order: 0,
     },
@@ -75,19 +77,19 @@ export function App() {
 
   const onPositionSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'position', value, id })
+      patchSticker({ stickers, prop: "position", value, id })
     )
   }, [])
 
   const onScaleSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'scale', value, id })
+      patchSticker({ stickers, prop: "scale", value, id })
     )
   }, [])
 
   const onRotateSticker = useCallback((value, id) => {
     setStickers((stickers) =>
-      patchSticker({ stickers, prop: 'rotation', value, id })
+      patchSticker({ stickers, prop: "rotation", value, id })
     )
   }, [])
 
@@ -133,7 +135,7 @@ export function App() {
 
       {/* Toggle button for testing re-renders */}
       <button onClick={() => setHidden((state) => !state)}>
-        {hidden ? 'show' : 'hide'} stickerbook
+        {hidden ? "show" : "hide"} stickerbook
       </button>
 
       {!hidden && (

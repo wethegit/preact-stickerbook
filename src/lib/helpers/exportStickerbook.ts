@@ -1,35 +1,55 @@
-import { coverCanvas } from './coverCanvas'
-import { loadUrlAsImage } from './loadUrlAsImage'
-import { renderSticker } from './renderSticker'
+import type {
+  BackgroundItem,
+  ExportFormat,
+  ForegroundItem,
+  Frame,
+  StickerItem,
+} from "../types"
+
+import { coverCanvas } from "./coverCanvas"
+import { loadUrlAsImage } from "./loadUrlAsImage"
+import { renderSticker } from "./renderSticker"
+import { EXPORT_FORMATS } from "./consts"
+
+interface ExportStickerbookOptions {
+  canvas?: HTMLCanvasElement
+  backgrounds?: BackgroundItem[]
+  frame?: Frame
+  stickers?: StickerItem[]
+  foregrounds?: ForegroundItem[]
+  outputWidth?: number
+  outputHeight?: number
+  format?: ExportFormat
+}
 
 export async function exportStickerbook({
   canvas,
-  backgrounds = [],
+  backgrounds,
   frame,
-  stickers = [],
-  foregrounds = [],
+  stickers,
+  foregrounds,
   outputWidth = 500,
   outputHeight = 500,
-  format = 'image',
-}) {
-  const TYPES = ['image', 'canvas', 'blob']
-
+  format = "image",
+}: ExportStickerbookOptions) {
   if (!outputWidth && !outputHeight)
     throw Error("'outputWidth' and 'outputHeight' needs to be bigger than 0")
 
-  if (!TYPES.includes(format))
-    throw Error(`Invalid 'format'. 'format' must be one of: ${TYPES.join(',')}`)
+  if (!EXPORT_FORMATS.includes(format))
+    throw Error(
+      `Invalid 'format'. 'format' must be one of: ${EXPORT_FORMATS.join(",")}`
+    )
 
   // output canvas
-  const outputCanvas = canvas || document.createElement('canvas')
-  const outputCtx = outputCanvas.getContext('2d')
+  const outputCanvas = canvas || document.createElement("canvas")
+  const outputCtx = outputCanvas.getContext("2d")!
 
   outputCanvas.width = outputWidth
   outputCanvas.height = outputHeight
 
   // draw backgrounds
   if (backgrounds && backgrounds.length) {
-    for (let background of backgrounds) {
+    for (const background of backgrounds) {
       if (!background.image) continue
 
       await coverCanvas({
@@ -72,7 +92,7 @@ export async function exportStickerbook({
   }
   // draw foregrounds
   if (foregrounds && foregrounds.length) {
-    for (let foreground of foregrounds) {
+    for (const foreground of foregrounds) {
       if (!foreground.image) continue
 
       await coverCanvas({
@@ -85,12 +105,13 @@ export async function exportStickerbook({
   }
 
   // download
-  if (format === 'canvas') return outputCanvas
+  if (format === "canvas") return outputCanvas
 
   const imageUrl = await new Promise((resolve, reject) => {
     try {
       outputCanvas.toBlob((blob) => {
-        if (format === 'blob') resolve(blob)
+        if (!blob) throw Error("Failed to create blob")
+        if (format === "blob") resolve(blob)
         else resolve(window.URL.createObjectURL(blob))
       })
     } catch (err) {

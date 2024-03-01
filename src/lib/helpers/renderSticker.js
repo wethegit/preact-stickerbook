@@ -1,5 +1,5 @@
-import { createTexture, createRenderer } from 'wtc-simplegl'
-import { Vec2, Mat3 } from 'wtc-math'
+import { createTexture, createRenderer } from "wtc-simplegl"
+import { Vec2, Mat3 } from "wtc-math"
 
 const vert = `#version 300 es
 
@@ -10,9 +10,9 @@ uniform vec2 u_resolution;
 uniform mat3 u_transform;
 void main() {
   v_uv = uv;
-  
+
   vec2 pos = (vec3(position, 1) * u_transform).xy;
-  
+
   // gl_Position = vec4(position, 0, 1);
   gl_Position = vec4(pos / u_resolution * 2., 0, 1);
 }`
@@ -23,7 +23,7 @@ out vec4 color;
 uniform sampler2D s_main;
 void main() {
   vec2 uv = v_uv;
-  
+
   color = texture(s_main, uv);
 }`
 
@@ -33,8 +33,8 @@ let dims
 const initApplication = (size) => {
   let c = components.canvas
   if (components.initialized !== true) {
-    c = document.createElement('canvas')
-    const gl = c.getContext('webgl2', {
+    c = document.createElement("canvas")
+    const gl = c.getContext("webgl2", {
       alpha: true,
       premultipliedAlpha: false,
       preserveDrawingBuffer: true,
@@ -148,9 +148,9 @@ const renderProgram = (gl, delta, texture, uniforms) => {
   gl.bindTexture(gl.TEXTURE_2D, texture)
 
   // bind the output texture uniform
-  components.renderer.bindUniform('s_main', 0)
-  components.renderer.bindUniform('u_time', delta * 0.001)
-  components.renderer.bindUniform('u_resolution', [
+  components.renderer.bindUniform("s_main", 0)
+  components.renderer.bindUniform("u_time", delta * 0.001)
+  components.renderer.bindUniform("u_resolution", [
     gl.canvas.width,
     gl.canvas.height,
   ])

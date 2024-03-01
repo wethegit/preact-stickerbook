@@ -4,6 +4,7 @@
     "es2021": true
   },
   "extends": ["eslint:recommended", "preact", "prettier"],
+
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -11,8 +12,26 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "rules": {},
+  // Limit TypeScript linting to TS/TSX
+  // https://github.com/typescript-eslint/typescript-eslint/issues/1928
+  "overrides": [
+    {
+      "files": ["**/*.{ts,tsx}"],
+      "extends": ["plugin:@typescript-eslint/recommended"],
+      "rules": {
+        // "@typescript-eslint/explicit-function-return-type": "off",
+      },
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "tsconfigRootDir": "./",
+        "project": "./tsconfig.json"
+      }
+    }
+  ],
+  "rules": {
+    "no-duplicate-imports": "off"
+  },
   "settings": {
-    "jest": { "version": 26 }
+    "jest": { "version": "latest" }
   }
 }
