@@ -1,4 +1,13 @@
-import { loadUrlAsImage } from './loadUrlAsImage'
+import { loadUrlAsImage } from "./loadUrlAsImage"
+
+interface CoverCanvasOptions {
+  ctx: CanvasRenderingContext2D
+  img: string | HTMLImageElement
+  width: number
+  height: number
+  offsetX?: number
+  offsetY?: number
+}
 
 export async function coverCanvas({
   ctx,
@@ -7,12 +16,12 @@ export async function coverCanvas({
   height,
   offsetX = 0.5,
   offsetY = 0.5,
-}) {
+}: CoverCanvasOptions): Promise<void> {
   if (!ctx || !(ctx instanceof CanvasRenderingContext2D))
-    throw Error('`ctx` is required and must be a valid canvas context')
-  if (!img) throw Error('`img` is required')
+    throw Error("`ctx` is required and must be a valid canvas context")
+  if (!img) throw Error("`img` is required")
 
-  const loadedImage = typeof img === 'string' ? await loadUrlAsImage(img) : img
+  const loadedImage = typeof img === "string" ? await loadUrlAsImage(img) : img
 
   const imageWidth =
     loadedImage.width || loadedImage.naturalWidth || loadedImage.offsetWidth
@@ -31,8 +40,8 @@ export async function coverCanvas({
 
   // first we our image/source onto a canvas resized
   // to the output size we want and with the correct ratio
-  const resizedCanvas = document.createElement('canvas')
-  const resizedCanvasCtx = resizedCanvas.getContext('2d')
+  const resizedCanvas = document.createElement("canvas")
+  const resizedCanvasCtx = resizedCanvas.getContext("2d")!
 
   resizedCanvas.width = outputWidth
   resizedCanvas.height = outputHeight

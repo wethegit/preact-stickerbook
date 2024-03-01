@@ -11,27 +11,34 @@ import { loadUrlAsImage } from "./loadUrlAsImage"
 import { renderSticker } from "./renderSticker"
 import { EXPORT_FORMATS } from "./consts"
 
-interface ExportStickerbookOptions {
+interface ExportStickerbookOptions<T extends ExportFormat> {
   canvas?: HTMLCanvasElement
   backgrounds?: BackgroundItem[]
   frame?: Frame
   stickers?: StickerItem[]
   foregrounds?: ForegroundItem[]
-  outputWidth?: number
-  outputHeight?: number
-  format?: ExportFormat
+  outputWidth: number
+  outputHeight: number
+  format: T
 }
 
-export async function exportStickerbook({
+// prettier-ignore
+type ExportReturn<K extends ExportFormat> =
+  K extends "canvas" ? HTMLCanvasElement :
+  K extends "blob" ? Blob :
+  K extends "image" ? string :
+  never
+
+export async function exportStickerbook<T extends ExportFormat>({
   canvas,
   backgrounds,
   frame,
   stickers,
   foregrounds,
-  outputWidth = 500,
-  outputHeight = 500,
-  format = "image",
-}: ExportStickerbookOptions) {
+  outputWidth,
+  outputHeight,
+  format,
+}: ExportStickerbookOptions<T>): Promise<ExportReturn<T>> {
   if (!outputWidth && !outputHeight)
     throw Error("'outputWidth' and 'outputHeight' needs to be bigger than 0")
 
@@ -81,10 +88,12 @@ export async function exportStickerbook({
 
     for (let i = 0; i < loadedStickers.length; i++) {
       const sticker = sortedStickers[i]
-      sticker.img = loadedStickers[i]
 
       // Render the sticker as a stamp
-      const stamp = renderSticker(sticker, [outputWidth, outputHeight])
+      const stamp = renderSticker(sticker, loadedStickers[i], [
+        outputWidth,
+        outputHeight,
+      ])
 
       // final draw
       outputCtx.drawImage(stamp, 0, 0)
@@ -105,19 +114,20 @@ export async function exportStickerbook({
   }
 
   // download
-  if (format === "canvas") return outputCanvas
+  if (format === "canvas") return outputCanvas as ExportReturn<T>
 
-  const imageUrl = await new Promise((resolve, reject) => {
+  const blob = await new Promise<Blob>((resolve, reject) => {
     try {
       outputCanvas.toBlob((blob) => {
         if (!blob) throw Error("Failed to create blob")
-        if (format === "blob") resolve(blob)
-        else resolve(window.URL.createObjectURL(blob))
+        resolve(blob)
       })
     } catch (err) {
       reject(err)
     }
   })
 
-  return imageUrl
+  if (format === "blob") return blob as ExportReturn<T>
+
+  return window.URL.createObjectURL(blob) as ExportReturn<T>
 }

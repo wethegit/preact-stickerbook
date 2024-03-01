@@ -285,6 +285,8 @@ export function Sticker({
     e.stopPropagation()
 
     if (state === STATES.ROTATESCALE) {
+      if (!elementRef.current || !imageDetails) return
+
       // Find the mouse position relative to the element
       const rect = elementRef.current.getBoundingClientRect()
 
@@ -311,6 +313,8 @@ export function Sticker({
 
       mousePositionRef.current = mousePosition
     } else if (state === STATES.MOVE) {
+      if (!mousePositionRef.current || !parentPosition) return
+
       const pos = new Vec2(e.clientX, e.clientY)
         .subtract(mousePositionRef.current)
         .subtract(parentPosition)
@@ -324,7 +328,7 @@ export function Sticker({
   }
 
   const onStickerFocus = function () {
-    parentRef.scrollTo(0, 0)
+    parentRef?.scrollTo(0, 0)
   }
 
   const onDeleteClick = function () {
@@ -344,7 +348,9 @@ export function Sticker({
   const onImagePointerDown = function (e: PointerEvent) {
     e.preventDefault()
 
-    const element = elementRef.current!
+    if (!elementRef.current || !imageDetails) return
+
+    const element = elementRef.current
 
     // Find the mouse position relative to the sticker
     const rect = element.getBoundingClientRect()
@@ -380,8 +386,10 @@ export function Sticker({
     // I couldn't find an elegant and non hacky way of doing this in a more react/preact manner. 😥
     // If the alpha of the clicked pixel is less than 5%, we want to click *through* the sticker
     if (imageData.data[3] < 15) {
-      // Add the Sticker--checking class to the image. This just ensures that we don't check this sticker again and get stuck in an infinite loop
-      e.currentTarget.classList.add("Sticker--checking")
+      if (e.currentTarget instanceof HTMLElement) {
+        // Add the Sticker--checking class to the image. This just ensures that we don't check this sticker again and get stuck in an infinite loop
+        e.currentTarget.classList.add("Sticker--checking")
+      }
 
       // Find all the elements in the document at the clicked point
       const elements = Array.from(
@@ -395,8 +403,11 @@ export function Sticker({
           a.classList.contains("Sticker__img") &&
           b.classList.contains("Sticker__img")
         ) {
-          const as = window.getComputedStyle(a.parentNode.parentNode)
-          const bs = window.getComputedStyle(b.parentNode.parentNode)
+          if (!a.parentNode?.parentElement || !b.parentNode?.parentElement)
+            return 0
+
+          const as = window.getComputedStyle(a.parentNode.parentElement)
+          const bs = window.getComputedStyle(b.parentNode.parentElement)
 
           if (as.zIndex < bs.zIndex) return -1
           if (as.zIndex > bs.zIndex) return 1
@@ -427,7 +438,9 @@ export function Sticker({
       })
 
       // Remove the "Sticker--checking class"
-      e.currentTarget.classList.remove("Sticker--checking")
+      if (e.currentTarget instanceof HTMLElement) {
+        e.currentTarget.classList.remove("Sticker--checking")
+      }
     } else {
       // If, instead, this sticker has been clicked then focus it, set it to moving and add the pointer move event
       element.focus()
@@ -514,9 +527,10 @@ export function Sticker({
     const imageSize = new Vec2(width, height)
     setImageDetails(imageSize)
 
-    if (initialPosition !== null) {
+    if (initialPosition !== undefined) {
       const position = !(initialPosition instanceof Vec2)
-        ? new Vec2(initialPosition.x, initialPosition.y)
+        ? // @ts-expect-error: this is an edge case where the position could be just an object
+          new Vec2(initialPosition.x, initialPosition.y)
         : initialPosition
 
       setPosition(
@@ -529,13 +543,13 @@ export function Sticker({
         new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
       )
 
-    if (initialScale !== null)
+    if (initialScale !== undefined)
       setScale(
         (initialScale * parentDimensions.width) / Math.min(width, height) / 0.5
       )
     else setScale(defaultScale || 0.3)
 
-    if (initialRotation !== null) setRotation(initialRotation)
+    if (initialRotation !== undefined) setRotation(initialRotation)
     else setRotation(0)
 
     setState(STATES.IDLE)

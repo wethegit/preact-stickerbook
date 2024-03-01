@@ -1,4 +1,4 @@
-import { h } from "preact"
+import { ComponentChildren } from "preact"
 import type { Vec2 } from "wtc-math"
 
 import { EXPORT_FORMATS, ORDER_DIRECTIONS, OVERLAY_TYPES } from "./helpers"
@@ -45,7 +45,7 @@ export interface StickerbookProps {
   frame?: Frame
   outputHeight?: number
   outputWidth?: number
-  children?: h.JSX.Element
+  children?: ComponentChildren
   className?: string
 }
 
@@ -83,6 +83,11 @@ export type OnScaleHandler = (scale: number, id: string) => void
 
 export type OnRotateHandler = (rotation: number, id: string) => void
 
+export type OnAddStickerHandler = (newSticker: {
+  image: string
+  alt?: string
+}) => void
+
 export interface StickerProps extends StickerItem {
   initialScale?: number
   initialRotation?: number
@@ -94,4 +99,11 @@ export interface StickerProps extends StickerItem {
   onScale?: OnScaleHandler
   onRotate?: OnRotateHandler
   className?: string
+}
+
+export interface UseStickerbookProps {
+  initialStickers?: StickerItem[]
+  initialBackgrounds?: BackgroundItem[]
+  initialFrame?: Frame
+  initialForegrounds?: ForegroundItem[]
 }
