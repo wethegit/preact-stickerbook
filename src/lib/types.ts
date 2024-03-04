@@ -48,6 +48,11 @@ export interface BackgroundDetailsReducer {
 }
 
 export interface BackgroundItem extends Overlay {
+  /**
+   * The types of overlays that can be used in the Stickerbook
+   * `scene` - a full-size image that covers the entire Stickerbook. Behaves like `background-size: cover`
+   * `pattern` - a repeating image that covers the entire Stickerbook.
+   */
   type?: OverlayType
 }
 
@@ -91,6 +96,11 @@ export interface StickerbookContextProps {
   dimensions: StickerbookDimensions
 }
 
+/**
+ * The types of overlays that can be used in the Stickerbook
+ * `scene` - a full-size image that covers the entire Stickerbook. Behaves like `background-size: cover`
+ * `pattern` - a repeating image that covers the entire Stickerbook.
+ */
 export type ExportFormat = (typeof EXPORT_FORMATS)[number]
 
 export type Timeout = ReturnType<typeof setTimeout>
