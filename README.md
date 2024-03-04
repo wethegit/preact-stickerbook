@@ -17,24 +17,11 @@ To run and test the library localy, simply:
 - [Basic usage](#basic-usage)
 - [Stickerbook](#stickerbook)
   - [Props](#props)
-    - [outputHeight](#outputHeight)
-    - [outputWidth](#outputWidth)
-    - [backgrounds](#backgrounds)
-    - [foregrounds](#foregrounds)
-    - [frame](#frame)
 - [Sticker](#sticker)
   - [Props](#props-1)
-    - [image](#image)
-    - [alt](#alt)
-    - [order](#order)
-    - [initialScale](#initialScale)
-    - [initialRotation](#initialRotation)
-    - [initialPosition](#initialPosition)
-    - [onDelete](#onDelete)
-    - [onReorder](#onReorder)
-    - [onPosition](#onPosition)
-    - [onScale](#onScale)
-    - [onRotate](#onRotate)
+- [useStickerbook](#usestickerbook)
+  - [Props](#props-2)
+  - [Returns](#returns)
 - [Helpers](#helpers)
   - [exportStickerbook](#exportStickerbook)
   - [reorderSticker](#reorderSticker)
@@ -46,18 +33,18 @@ To run and test the library localy, simply:
 
 ## Basic usage
 
-This is the most simplistic way of using it, it's an artboard with the stickers. No fuzz.  
+This is the most simplistic way of using it, it's an artboard with the stickers. No fuzz.
 Most likely you will want more control, you will want to generate downloads, add and remove stickers, and more. Check out the full demo on [Codepen](https://codepen.io/team/wtc/pen/KKNvWdo).
 
 ```jsx
-import { h, render } from 'preact'
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
+import { h, render } from "preact"
+import { Stickerbook, Sticker } from "@wethegit/preact-stickerbook"
 
 const App = () => {
   const stickers = [
     {
-      key: 'my-id-1',
-      image: 'https://media.giphy.com/media/10mgrhuEWNasNO/giphy.gif',
+      id: "my-id-1",
+      image: "https://media.giphy.com/media/10mgrhuEWNasNO/giphy.gif",
       order: 0,
     },
   ]
@@ -76,314 +63,20 @@ render(<App />, document.body)
 
 ## Stickerbook
 
-Your main artboard. Responsible for containing and providing the `Stickers` with a context and all the required references so they can properly scale.  
-Apart from the `Stickers`, the `Stickerbook` can also have a `background`, `foreground` and a `frame`.
+Your main artboard. Responsible for containing and providing the `Stickers` with a context and all the required references so they can properly scale and translate.
+Apart from the `Stickers`, the `Stickerbook` can also have `background`s, `foreground`s and a `frame`.
 
 ### Props
 
-#### outputHeight
-
-The height of your artboard.
-
-`Integer` default `500`
-
-#### outputWidth
-
-The width of your artboard.
-
-`Integer` default `500`
-
-#### backgrounds
-
-`Array` | **optional**
-
-The `backgrounds` prop accepts an array of background objects. Each background object contains:
-
-**image** | `String` - Path to an image, can also be a `base64` string or `blob` url.  
-**alt** | `String` default `""` - Alternate text.  
-**type** | `String` - A `background` can be of two types:
-
-- `scene`: behaves like `background-size: cover`
-- `pattern`: repeats until it fills the artboard.
-
-```js
-backgrounds={[
-  {
-    image: 'path-to/background.jpg',
-    type: 'scene',
-    alt: 'A paper crumble texture',
-  },
-]}
-```
-
-#### foregrounds
-
-`Array` | **optional**
-
-`foregrounds` will appear on top of all `Sticker`s. The `foregrounds` prop accepts an array of foreground objects:
-
-**image** | `String` - Path to an image, can also be a `base64` string or `blob` url.  
-**alt** | `String` default `""` - Alternate text.
-
-```js
-foregrounds={[
-  {
-    image: "path-to/foreground.png",
-    alt: "My company's logo"
-  },
-]}
-```
-
-#### frame
-
-`frame` will appear on top of `background` but behind `Sticker`s. Useful for borders.
-
-`Object` | **optional**
-
-**image** | `String` - Path to an image, can also be a `base64` string or `blob` url.  
-**alt** | `String` default `""` - Alternate text.
-
-```js
-{
-  image: "path-to/border.png",
-  alt: "Ornate painting-like frame"
-}
-```
+[`StickerbookProps`](https://github.com/wethegit/preact-stickerbook/blob/2782bb9616dbd9e1b6892d1f98d94afd7fcc67c5/src/lib/types.ts#L42)
 
 ## Sticker
 
-All of the elements that form the collage. At the very minimum a sticker element MUST have:
-
-- **key**: A unique identifier. An easy way to get a unique key is by using `Date.now()`. This is require to avoid rendering and reordering issues.
-- **image**: Path to a image, can be a `base64` string or a `blob` url.
-- **order**: the order of the element on the DOM, think `z-index`.
-
-```js
-const sticker = {
-  key: 'sticker-d47s7@##s',
-  image: 'path-to/image.png',
-  order: 0,
-}
-```
+All of the elements that form the collage.
 
 ### Props
 
-#### image
-
-Path to an image, can also be a `base64` string or `blob` url.
-
-`String`
-
-#### alt
-
-Alternate text.
-
-`String` default `""`
-
-#### order
-
-Order represents the `z-index` of the element on the `DOM`.
-
-`Integer` default `0`
-
-#### initialScale
-
-Initial **scale** value of the sticker when it's first mounted.  
-This is similar to [css scale()](<https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/scale()>) but it doesn't take `x` and `y` just a single value.
-
-`Float|null` | **optional**
-
-#### initialRotation
-
-Initial **rotation** value of the sticker when it's first mounted.  
-The value needs to be a [valid css](https://developer.mozilla.org/en-US/docs/Web/CSS/angle) `<angle>` in **radians** but without the unit notation.
-
-`Float|null` | **optional**
-
-#### initialPosition
-
-Initial **position** value of the sticker when it's first mounted.  
-The value needs to be a `Vec2` instance from the [wtc-math](https://github.com/wethegit/wtc-math) library.
-
-`Vec2|null` | **optional**
-
-#### defaultScale
-
-If no `initialScale` is provided `defaultScale` will be used.
-
-`number` default `0.3` | **optional**
-
-#### disableRotation
-
-Disables rotation of a given sticker.
-
-`Boolean` default `false` | **optional**
-
-#### onDelete
-
-A callback function to be called when the delete button is clicked.  
-It's importante to note that if no function is provided, then there _delete_ button **won't show**.  
-**Note:** use the [deleteSticker](#deleteSticker) helper function.
-
-`Function` | **optional**
-
-```jsx
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
-import { deleteSticker } from '@wethegit/preact-stickerbook/helpers'
-
-const App = () => {
-  const [stickers, setStickers] = useState([
-    /* your stickers */
-  ])
-
-  return (
-    <Stickerbook>
-      {stickers.map((sticker, index) => (
-        <Sticker
-          {...sticker}
-          onDelete={(id) => {
-            setStickers((stickers) => deleteSticker(stickers, id))
-          }}
-        />
-      ))}
-    </Stickerbook>
-  )
-}
-```
-
-#### onReorder
-
-A callback function to be called when the `Sticker` _should_ change its _order_.  
-This function receives two arguments indicating the **direction** as a `string` and a `boolean` indicating if `Sticker` should be brought before or after all the others.  
-Leaving this empty won't reorder the stickers when they are focused.  
-**Note:** use the [reorderSticker](#reorderSticker) helper function.
-
-`Function` | **optional**
-
-```jsx
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
-import { reorderSticker } from '@wethegit/preact-stickerbook/helpers'
-
-const App = () => {
-  const [stickers, setStickers] = useState([
-    /* your stickers */
-  ])
-
-  return (
-    <Stickerbook>
-      {stickers.map((sticker, index) => (
-        <Sticker
-          {...sticker}
-          onReorder={(direction, extreme, id) => {
-            setStickers((stickers) =>
-              reorderSticker({ id, direction, extreme, stickers })
-            )
-          }}
-        />
-      ))}
-    </Stickerbook>
-  )
-}
-```
-
-#### onPosition
-
-A callback function to be called when the _position_ of the `Sticker` changed.  
-**Note:** use the [patchSticker](#patchSticker) helper function.
-
-`Function` | **optional**
-
-```jsx
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
-import { patchSticker } from '@wethegit/preact-stickerbook/helpers'
-
-const App = () => {
-  const [stickers, setStickers] = useState([
-    /* your stickers */
-  ])
-
-  return (
-    <Stickerbook>
-      {stickers.map((sticker, index) => (
-        <Sticker
-          {...sticker}
-          onPosition={(value, id) => {
-            setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'position', value, id })
-            )
-          }}
-        />
-      ))}
-    </Stickerbook>
-  )
-}
-```
-
-#### onScale
-
-A callback function to be called when the _scale_ of the `Sticker` changed.  
-**Note:** use the [patchSticker](#patchSticker) helper function.
-
-`Function` | **optional**
-
-```jsx
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
-import { patchSticker } from '@wethegit/preact-stickerbook/helpers'
-
-const App = () => {
-  const [stickers, setStickers] = useState([
-    /* your stickers */
-  ])
-
-  return (
-    <Stickerbook>
-      {stickers.map((sticker, index) => (
-        <Sticker
-          {...sticker}
-          onScale={(value, id) => {
-            setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'scale', value, id })
-            )
-          }}
-        />
-      ))}
-    </Stickerbook>
-  )
-}
-```
-
-#### onRotate
-
-A callback function to be called when the _rotation_ of the `Sticker` changed.  
-**Note:** use the [patchSticker](#patchSticker) helper function.
-
-`Function` | **optional**
-
-```jsx
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
-import { patchSticker } from '@wethegit/preact-stickerbook/helpers'
-
-const App = () => {
-  const [stickers, setStickers] = useState([
-    /* your stickers */
-  ])
-
-  return (
-    <Stickerbook>
-      {stickers.map((sticker, index) => (
-        <Sticker
-          {...sticker}
-          onRotate={(value, id) => {
-            setStickers((stickers) =>
-              patchSticker({ stickers, prop: 'rotation', value, id })
-            )
-          }}
-        />
-      ))}
-    </Stickerbook>
-  )
-}
-```
+[`StickerProps`](https://github.com/wethegit/preact-stickerbook/blob/2782bb9616dbd9e1b6892d1f98d94afd7fcc67c5/src/lib/types.ts#L104).
 
 ## Helpers
 
@@ -393,14 +86,14 @@ Returns a representation of the stickerbook in the chosen `format`.
 
 `async Function`
 
-**options** | `Object`  
-**options.canvas** | `HTMLCanvasElement` | **optional** - A canvas element to draw to.  
-**options.backgrounds** | `Array` | **optional** - An array of valid [`background`](#backgrounds) objects.  
-**options.frame** | `Object` | **optional** - A valid [`frame`](#frame) object.  
-**options.foregrounds** | `Object` | **optional** - An array of valid [`foreground`](#foregrounds) objects.  
-**options.stickers** | `Array` | **optional** - An array of valid [`sticker`](#sticker) objects.  
-**options.outputWidth** | `Integer` default `500` - Output width.  
-**options.outputHeight** | `Integer` default `500` - Output height.  
+**options** | `Object`
+**options.canvas** | `HTMLCanvasElement` | **optional** - A canvas element to draw to.
+**options.backgrounds** | `Array` | **optional** - An array of valid [`background`](#backgrounds) objects.
+**options.frame** | `Object` | **optional** - A valid [`frame`](#frame) object.
+**options.foregrounds** | `Object` | **optional** - An array of valid [`foreground`](#foregrounds) objects.
+**options.stickers** | `Array` | **optional** - An array of valid [`sticker`](#sticker) objects.
+**options.outputWidth** | `Integer` default `500` - Output width.
+**options.outputHeight** | `Integer` default `500` - Output height.
 **options.format** | `String` default `"image"` - The returned value. Can be one of the following:
 
 - **image**: Will generate a url using `window.URL.createObjectURL`
@@ -439,15 +132,15 @@ Returns a reordered copy of the provided `stickers` array.
 
 `Function`
 
-**options** | `Object`  
-**options.id** | `String|Number` - The id of the sticker that will be reordered within the stickers array.  
-**options.direction** | `String` default `"up"` - The order in which to move the sticker.  
-**options.extreme** | `Boolean` default `false` - If it should be brought to the edges of the array.  
+**options** | `Object`
+**options.id** | `String|Number` - The id of the sticker that will be reordered within the stickers array.
+**options.direction** | `String` default `"up"` - The order in which to move the sticker.
+**options.extreme** | `Boolean` default `false` - If it should be brought to the edges of the array.
 **options.stickers** | `Array` default `[]` - An array of valid [`sticker`](#sticker) objects.
 
 ```jsx
-import Stickerbook, { Sticker } from '@wethegit/preact-stickerbook'
-import { reorderSticker } from '@wethegit/preact-stickerbook/helpers'
+import Stickerbook, { Sticker } from "@wethegit/preact-stickerbook"
+import { reorderSticker } from "@wethegit/preact-stickerbook/helpers"
 
 const App = () => {
   const [stickers, setStickers] = useState([
@@ -477,7 +170,7 @@ Returns a copy of the provided `stickers` array with the new sticker containing 
 
 `Function`
 
-**stickers** | `Array` | **optional** - An array of valid [`sticker`](#sticker) objects.  
+**stickers** | `Array` | **optional** - An array of valid [`sticker`](#sticker) objects.
 **sticker** | `Object` - A valid [`sticker`](#sticker) object. Note **key** and **order** will be overwritten.
 
 ### deleteSticker
@@ -486,7 +179,7 @@ Returns a copy of the provided `stickers` array without the selected sticker.
 
 `Function`
 
-**stickers** | `Array` - An array of valid [`sticker`](#sticker) objects.  
+**stickers** | `Array` - An array of valid [`sticker`](#sticker) objects.
 **id** | `String|Number` - The id of the sticker that will be deleted from the stickers array.
 
 ### patchSticker
@@ -495,10 +188,10 @@ Returns a copy of the provided `stickers` array with the updated ("patched") sti
 
 `Function`
 
-**options** | `Object`  
-**options.stickers** | `Array` - An array of valid [`sticker`](#sticker)  
+**options** | `Object`
+**options.stickers** | `Array` - An array of valid [`sticker`](#sticker)
 **options.id** | `String|Number` - The id of the sticker that will be amended within the stickers array.
-**options.value** | **optional** - The new value.  
+**options.value** | **optional** - The new value.
 **options.prop** | `String` - The prop to be updated. Can be one of the folllwing:
 
 - position

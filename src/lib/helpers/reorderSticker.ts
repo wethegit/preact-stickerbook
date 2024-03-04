@@ -12,7 +12,7 @@ export function reorderSticker({
   direction = "up",
   extreme = false,
   stickers,
-}: ReorderStickerOptions) {
+}: ReorderStickerOptions): StickerItem[] {
   if (!stickers || stickers.length <= 0)
     throw Error("`stickers` array is empty")
 
