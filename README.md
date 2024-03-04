@@ -52,8 +52,8 @@ const App = () => {
 
   return (
     <Stickerbook outputWidth={500} outputHeight={500}>
-      {stickers.map((sticker) => (
-        <Sticker {...sticker} />
+      {stickers.map(({ id, ...sticker }) => (
+        <Sticker key={id} id={id} {...sticker} />
       ))}
     </Stickerbook>
   )
