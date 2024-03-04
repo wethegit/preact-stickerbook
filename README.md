@@ -21,7 +21,7 @@ To run and test the library localy, simply:
   - [Props](#props-1)
 - [useStickerbook](#usestickerbook)
   - [Props](#props-2)
-  - [Returns](#returns)
+  - [Return](#return)
 - [Helpers](#helpers)
   - [exportStickerbook](#exportStickerbook)
   - [reorderSticker](#reorderSticker)
@@ -68,7 +68,7 @@ Apart from the `Stickers`, the `Stickerbook` can also have `background`s, `foreg
 
 ### Props
 
-[`StickerbookProps`](https://github.com/wethegit/preact-stickerbook/blob/2782bb9616dbd9e1b6892d1f98d94afd7fcc67c5/src/lib/types.ts#L57)
+**Type:** [StickerbookProps](https://github.com/wethegit/preact-stickerbook/blob/2782bb9616dbd9e1b6892d1f98d94afd7fcc67c5/src/lib/types.ts#L57)
 
 ## Sticker
 
@@ -76,7 +76,7 @@ All of the elements that form the collage.
 
 ### Props
 
-[`StickerProps`](https://github.com/wethegit/preact-stickerbook/blob/2782bb9616dbd9e1b6892d1f98d94afd7fcc67c5/src/lib/types.ts#L121).
+**Type:** [StickerProps](https://github.com/wethegit/preact-stickerbook/blob/2782bb9616dbd9e1b6892d1f98d94afd7fcc67c5/src/lib/types.ts#L121).
 
 ## useStickerbook
 
@@ -84,11 +84,11 @@ A hook that provides the `Stickerbook` context and all the handlers to manipulat
 
 ### Props
 
-[`useStickerbookProps`](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/types.ts#L166)
+**Type:** [UseStickerbookProps](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/types.ts#L166)
 
-### Returns
+### Return
 
-[`useStickerbookReturns`](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/types.ts#L173)
+**Type:** [UseStickerbookReturn](https://github.com/wethegit/preact-stickerbook/blob/97fc311412a0299dc9fc632a796b94f618ae4472/src/lib/types.ts#L173)
 
 ## Helpers
 
@@ -96,28 +96,28 @@ A hook that provides the `Stickerbook` context and all the handlers to manipulat
 
 Returns a representation of the stickerbook in the chosen `format`.
 
-[ExportStickerbookOptions](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/exportStickerbook.ts#L47)
+**Type:** [ExportStickerbookOptions](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/exportStickerbook.ts#L47)
 
 ### reorderSticker
 
 Returns a reordered copy of the provided `stickers` array.
 
-[ReorderStickerOptions](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/reorderSticker.ts#L15)
+**Type:** [ReorderStickerOptions](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/reorderSticker.ts#L3)
 
 ### addSticker
 
 Returns a copy of the provided `stickers` array with the new sticker containing the required required **id** and **id** fields.
 
-[addSticker](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/addSticker.ts#L13)
+**Type:** [AddStickerOptions](https://github.com/wethegit/preact-stickerbook/blob/97fc311412a0299dc9fc632a796b94f618ae4472/src/lib/helpers/addSticker.ts#L3)
 
 ### deleteSticker
 
 Returns a copy of the provided `stickers` array without the selected sticker.
 
-[addSticker](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/deleteSticker.ts#L13)
+**Type:** [DeleteStickerOptions](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/deleteSticker.ts#L3)
 
 ### patchSticker
 
 Returns a copy of the provided `stickers` array with the updated ("patched") sticker in place.
 
-[patchSticker](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/patchSticker.ts#L20)
+**Type:** [PatchStickerOptions](https://github.com/wethegit/preact-stickerbook/blob/6115c2c137e31a2edc77fdaa13bab406677552a9/src/lib/helpers/patchSticker.ts#L4)

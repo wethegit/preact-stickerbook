@@ -1,6 +1,6 @@
 import type { StickerItem } from "../types"
 
-interface StickerOptions {
+interface AddStickerOptions {
   stickers: StickerItem[]
   sticker: Omit<StickerItem, "id" | "order">
 }
@@ -13,7 +13,7 @@ interface StickerOptions {
 export function addSticker({
   stickers = [],
   sticker,
-}: StickerOptions): StickerItem[] {
+}: AddStickerOptions): StickerItem[] {
   if (!sticker) throw Error("No `sticker` provided")
 
   // we add a unique key based on the time because otherwise the
