@@ -7,12 +7,17 @@ interface ReorderStickerOptions {
   stickers: StickerItem[]
 }
 
+/**
+ * Returns a reordered copy of the provided `stickers` array.
+ * @param {ReorderStickerOptions[]}
+ * @returns {StickerItem[]}
+ */
 export function reorderSticker({
   id,
   direction = "up",
   extreme = false,
   stickers,
-}: ReorderStickerOptions) {
+}: ReorderStickerOptions): StickerItem[] {
   if (!stickers || stickers.length <= 0)
     throw Error("`stickers` array is empty")
 

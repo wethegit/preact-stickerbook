@@ -12,6 +12,7 @@ import type {
   OnScaleHandler,
   StickerItem,
   UseStickerbookProps,
+  UseStickerbookReturn,
 } from "./types"
 
 import {
@@ -26,7 +27,7 @@ export function useStickerbook({
   initialBackgrounds = [],
   initialForegrounds = [],
   initialFrame,
-}: UseStickerbookProps) {
+}: UseStickerbookProps): UseStickerbookReturn {
   const [stickers, setStickers] = useState<StickerItem[]>(initialStickers)
 
   const [backgrounds, setBackgrounds] =
@@ -47,7 +48,7 @@ export function useStickerbook({
   )
 
   const onDeleteSticker = useCallback<OnDeleteHandler>((id) => {
-    setStickers((stickers) => deleteSticker(stickers, id))
+    setStickers((stickers) => deleteSticker({ stickers, id }))
   }, [])
 
   const onPositionSticker = useCallback<OnPositionHandler>((value, id) => {
@@ -69,7 +70,7 @@ export function useStickerbook({
   }, [])
 
   const onAddSticker = useCallback<OnAddStickerHandler>((newSticker) => {
-    setStickers((stickers) => addSticker(stickers, newSticker))
+    setStickers((stickers) => addSticker({ stickers, sticker: newSticker }))
   }, [])
 
   return {

@@ -12,13 +12,27 @@ import { renderSticker } from "./renderSticker"
 import { EXPORT_FORMATS } from "./consts"
 
 interface ExportStickerbookOptions<T extends ExportFormat> {
+  /**
+   * A canvas element to draw to. If not provided, a new canvas will be created.
+   */
   canvas?: HTMLCanvasElement
   backgrounds?: BackgroundItem[]
   frame?: Frame
   stickers?: StickerItem[]
   foregrounds?: ForegroundItem[]
+  /**
+   * The width of the output image.
+   */
   outputWidth: number
+  /**
+   * The height of the output image.
+   */
   outputHeight: number
+  /**
+   * **`image`** will generate a url using `window.URL.createObjectURL`
+   * **`canvas`** will just return the provided `canvas` or a new one
+   * **`blob`** will return a `Blob` using `HTMLCanvasElement.toBlob()`
+   */
   format: T
 }
 
@@ -29,6 +43,11 @@ type ExportReturn<K extends ExportFormat> =
   K extends "image" ? string :
   never
 
+/**
+ * Returns a representation of the stickerbook in the chosen `format`.
+ * @param {ExportStickerbookOptions[]}
+ * @returns {Promise<ExportReturn<T>>}
+ */
 export async function exportStickerbook<T extends ExportFormat>({
   canvas,
   backgrounds,

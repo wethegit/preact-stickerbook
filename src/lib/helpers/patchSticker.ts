@@ -15,16 +15,17 @@ type PatchStickerOptions = {
     }
 )
 
-const PROPS = ["position", "scale", "rotation"] as const
-
-export type PatchStickerProps = (typeof PROPS)[number]
-
+/**
+ * Returns a copy of the provided `stickers` array with the updated ("patched") sticker in place.
+ * @param {PatchStickerOptions}
+ * @returns {StickerItem[]}
+ */
 export function patchSticker({
   stickers,
   prop,
   value,
   id,
-}: PatchStickerOptions) {
+}: PatchStickerOptions): StickerItem[] {
   if (!stickers || !(stickers instanceof Array) || stickers.length <= 0)
     throw Error("`stickers` array is empty")
 
