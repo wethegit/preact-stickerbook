@@ -28,7 +28,11 @@ interface ExportStickerbookOptions<T extends ExportFormat> {
    * The height of the output image.
    */
   outputHeight: number
-  // **`image`** will generate a url using `window.URL.createObjectURL`. **`canvas`** will just return the provided `canvas` or a new one. **`blob`** will return a `Blob` using `HTMLCanvasElement.toBlob()`
+  /**
+   * **`image`** will generate a url using `window.URL.createObjectURL`
+   * **`canvas`** will just return the provided `canvas` or a new one
+   * **`blob`** will return a `Blob` using `HTMLCanvasElement.toBlob()`
+   */
   format: T
 }
 
