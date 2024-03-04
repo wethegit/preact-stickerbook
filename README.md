@@ -34,7 +34,8 @@ To run and test the library localy, simply:
 ## Basic usage
 
 This is the most simplistic way of using it, it's an artboard with the stickers. No fuzz.
-Most likely you will want more control, you will want to generate downloads, add and remove stickers, and more. Check out the full demo on [Codepen](https://codepen.io/team/wtc/pen/KKNvWdo).
+
+Most likely you will want more control, you will want to generate downloads, add and remove stickers, and more. Check out the full demo on [Codepen](https://codepen.io/team/wtc/pen/KKNvWdo) and also the complete implementation in the [Playground](./src/app.tsx).
 
 ```jsx
 import { h, render } from "preact"
