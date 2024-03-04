@@ -1,28 +1,38 @@
-import { useEffect, useContext, useMemo, useRef, useState } from 'preact/hooks'
-import { Vec2, Mat2 } from 'wtc-math'
+import { h } from "preact"
+import { useEffect, useContext, useMemo, useRef, useState } from "preact/hooks"
+import { Vec2, Mat2 } from "wtc-math"
 
-import { StickerbookContext } from './stickerbook-context'
-import { classnames } from './helpers/classnames'
-import './sticker.scss'
+import { StickerbookContext } from "./stickerbook-context"
+import { classnames } from "./helpers/classnames"
+import type { StickerProps, Timeout } from "./types"
 
-const STATES = {
-  LOADING: 0,
-  IDLE: 1,
-  ROTATESCALE: 2,
-  MOVE: 3,
+import styles from "./sticker.module.scss"
+
+interface Bounds {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
+enum STATES {
+  LOADING = 0,
+  IDLE = 1,
+  ROTATESCALE = 2,
+  MOVE = 3,
 }
 
 const ROTATION_BUTTON_OFFSET = 0.785
 
-export default function Sticker({
+export function Sticker({
   id,
   image,
-  alt = '',
+  alt = "",
   order = 0,
   // optional
-  initialScale = null,
-  initialRotation = null,
-  initialPosition = null,
+  initialScale,
+  initialRotation,
+  initialPosition,
   defaultScale = 0.3,
   disableRotation = false,
   // hooks
@@ -34,33 +44,45 @@ export default function Sticker({
   // others
   className,
   ...props
-}) {
+}: StickerProps) {
   // parent stickerbook information
+  const stickerContext = useContext(StickerbookContext)
+
+  if (!stickerContext) {
+    throw new Error(
+      "Sticker component must be used within a Stickerbook component"
+    )
+  }
+
   const {
     position: parentPosition,
     parentRef,
     dimensions: parentDimensions,
-  } = useContext(StickerbookContext)
+  } = stickerContext
+
   // main refs
-  const elementRef = useRef()
-  const canvasRef = useRef(document.createElement('canvas'))
-  const ctx = useMemo(() => canvasRef.current.getContext('2d'), [])
-  const mousePositionRef = useRef()
+  const elementRef = useRef<HTMLDivElement | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(document.createElement("canvas"))
+  const ctx = useMemo<CanvasRenderingContext2D>(
+    () => canvasRef.current.getContext("2d")!,
+    []
+  )
+  const mousePositionRef = useRef<Vec2 | null>(null)
   // main states
-  const [state, setState] = useState(STATES.LOADING)
-  const [position, setPosition] = useState()
-  const [rotation, setRotation] = useState(0)
-  const [scale, setScale] = useState(1)
+  const [state, setState] = useState<STATES>(STATES.LOADING)
+  const [position, setPosition] = useState<Vec2>(new Vec2(0, 0))
+  const [rotation, setRotation] = useState<number>(0)
+  const [scale, setScale] = useState<number>(1)
   // control scale is a state for now, we can explore how this
   // will scale based on size, it might become a prop
   const [controlsScale] = useState(0.8)
   // these are used for internal calculations
   const [rotationOffset, setRotationOffset] = useState(0)
-  const [imageDetails, setImageDetails] = useState()
+  const [imageDetails, setImageDetails] = useState<Vec2>()
   // hooks refs for delayed callback
-  const onPositionTimer = useRef()
-  const onScaleTimer = useRef()
-  const onRotateTimer = useRef()
+  const onPositionTimer = useRef<Timeout | undefined>()
+  const onScaleTimer = useRef<Timeout | undefined>()
+  const onRotateTimer = useRef<Timeout | undefined>()
 
   // Composed variables
   const radius = useMemo(() => {
@@ -69,13 +91,19 @@ export default function Sticker({
     return Math.min(imageDetails.x, imageDetails.y) * scale * 0.5
   }, [scale, imageDetails])
 
-  const bounds = useMemo(() => {
-    if (!imageDetails) return {}
+  const bounds = useMemo<Bounds>(() => {
+    if (!imageDetails)
+      return {
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+      }
 
     // Find the half image dimensions
-    let halfImage = imageDetails.scaleNew(0.5)
+    const halfImage = imageDetails.scaleNew(0.5)
     // Generate the unmodified image boundaries (all 4 corners)
-    let imageBounds = [
+    const imageBounds = [
       halfImage.multiplyNew(new Vec2(-1, -1)), // Top-left
       halfImage.multiplyNew(new Vec2(1, -1)), // top-right
       halfImage.multiplyNew(new Vec2(1, 1)), // bottom-right
@@ -86,16 +114,16 @@ export default function Sticker({
     // This is just taking all 4 points and applying our transformations
     // to them, resulting in the real position of all 4
     // corners after rotation and positional transformation
-    let stickerBounds = []
+    const stickerBounds: Vec2[] = []
     imageBounds.forEach((corner) => {
       // Create the rotation matrix - this is used to transform the point coordinates for the purpose of testing the rotated bounds
-      let s = Math.sin(rotation)
-      let c = Math.cos(rotation)
-      let rMat = new Mat2(c, s, -s, c)
+      const s = Math.sin(rotation)
+      const c = Math.cos(rotation)
+      const rMat = new Mat2(c, s, -s, c)
 
       // Transform the corner by rotating it, scaling it and adding
       // the sticker position
-      let transformedPosition = corner
+      const transformedPosition = corner
         .transformByMat2New(rMat)
         .scale(scale)
         .add(position)
@@ -104,7 +132,7 @@ export default function Sticker({
 
     // Reduce the bounds 4 times to get the left, top, right and
     // bottom bounds.
-    let bounds = {
+    const bounds = {
       left: stickerBounds.reduce((acc, val) => (val.x < acc.x ? val : acc)).x,
       top: stickerBounds.reduce((acc, val) => (val.y < acc.y ? val : acc)).y,
       right: stickerBounds.reduce((acc, val) => (val.x > acc.x ? val : acc)).x,
@@ -163,102 +191,104 @@ export default function Sticker({
 
   // event listeners
 
-  const onStickerKeyDown = function (e) {
+  const onStickerKeyDown = function (e: KeyboardEvent) {
     if (state === STATES.IDLE) {
       const { shiftKey, key } = e
       const multiplier = shiftKey ? 10 : 1
 
-      if ((key === 'Delete' || key === 'Backspace') && onDelete) onDelete(id)
+      if ((key === "Delete" || key === "Backspace") && onDelete) onDelete(id)
 
       // move left
-      if (key === 'ArrowLeft') {
+      if (key === "ArrowLeft") {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x - 1 * multiplier, cur.y))
       }
       // move right
-      else if (key === 'ArrowRight') {
+      else if (key === "ArrowRight") {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x + 1 * multiplier, cur.y))
       }
 
       // move up
-      if (key === 'ArrowUp') {
+      if (key === "ArrowUp") {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x, cur.y - 1 * multiplier))
       }
       // move down
-      else if (key === 'ArrowDown') {
+      else if (key === "ArrowDown") {
         e.preventDefault()
         e.stopPropagation()
         setPosition((cur) => new Vec2(cur.x, cur.y + 1 * multiplier))
       }
 
       // scale down
-      if (key === '-' || key === '_')
+      if (key === "-" || key === "_")
         setScale((cur) => Math.max(0.05, cur - 0.01 * multiplier))
       // scale up
-      else if (key === '+' || key === '=')
+      else if (key === "+" || key === "=")
         setScale((cur) => cur + 0.01 * multiplier)
 
       // rotate left
-      if (key === '<' || key === ',') {
+      if (key === "<" || key === ",") {
         if (disableRotation) return
         setRotation((cur) => cur - 0.01 * multiplier)
       }
       // rotate right
-      else if (key === '>' || key === '.') {
+      else if (key === ">" || key === ".") {
         if (disableRotation) return
         setRotation((cur) => cur + 0.01 * multiplier)
       }
 
       // Align top
-      if (key === 'w') setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
+      if (key === "w") setPosition((cur) => new Vec2(cur.x, cur.y - bounds.top))
       // align bottom
-      else if (key === 's')
+      else if (key === "s")
         setPosition(
           (cur) =>
             new Vec2(cur.x, parentDimensions.height - (bounds.bottom - cur.y))
         )
 
       // Align left
-      if (key === 'a')
+      if (key === "a")
         setPosition((cur) => new Vec2(cur.x - bounds.left, cur.y))
       // align right
-      else if (key === 'd')
+      else if (key === "d")
         setPosition(
           (cur) =>
             new Vec2(parentDimensions.width - (bounds.right - cur.x), cur.y)
         )
 
       // center align vertically
-      if (key === 'v')
+      if (key === "v")
         setPosition((cur) => new Vec2(cur.x, parentDimensions.height * 0.5))
       // center align horizontally
-      else if (key === 'c')
+      else if (key === "c")
         setPosition((cur) => new Vec2(parentDimensions.width * 0.5, cur.y))
 
       if (onReorder) {
         // bring forwards
-        if (key === '[' || key === '{') onReorder('up', multiplier > 1, id)
+        if (key === "[" || key === "{") onReorder("up", multiplier > 1, id)
         // bring backwards
-        else if (key === ']' || key === '}')
-          onReorder('down', multiplier > 1, id)
+        else if (key === "]" || key === "}")
+          onReorder("down", multiplier > 1, id)
       }
     }
   }
 
-  const onStickerPointerMove = function (e) {
+  const onStickerPointerMove = function (e: PointerEvent) {
     if (state !== STATES.ROTATESCALE && state !== STATES.MOVE) return
 
     e.preventDefault()
     e.stopPropagation()
 
     if (state === STATES.ROTATESCALE) {
+      if (!elementRef.current || !imageDetails) return
+
       // Find the mouse position relative to the element
-      let rect = elementRef.current.getBoundingClientRect()
+      const rect = elementRef.current.getBoundingClientRect()
 
       const mousePosition = new Vec2(
         e.clientX - rect.left,
@@ -266,7 +296,7 @@ export default function Sticker({
       )
 
       // Get the radius of the element as well as the initial (1x) radius
-      let initalradius = Math.min(imageDetails.x, imageDetails.y)
+      const initalradius = Math.min(imageDetails.x, imageDetails.y)
 
       // Update the rotation / scale of the sticker
       if (!disableRotation)
@@ -283,6 +313,8 @@ export default function Sticker({
 
       mousePositionRef.current = mousePosition
     } else if (state === STATES.MOVE) {
+      if (!mousePositionRef.current || !parentPosition) return
+
       const pos = new Vec2(e.clientX, e.clientY)
         .subtract(mousePositionRef.current)
         .subtract(parentPosition)
@@ -296,7 +328,7 @@ export default function Sticker({
   }
 
   const onStickerFocus = function () {
-    parentRef.scrollTo(0, 0)
+    parentRef?.scrollTo(0, 0)
   }
 
   const onDeleteClick = function () {
@@ -313,33 +345,35 @@ export default function Sticker({
     setState(STATES.IDLE)
   }
 
-  const onImagePointerDown = function (e) {
+  const onImagePointerDown = function (e: PointerEvent) {
     e.preventDefault()
+
+    if (!elementRef.current || !imageDetails) return
 
     const element = elementRef.current
 
     // Find the mouse position relative to the sticker
-    let rect = element.getBoundingClientRect()
+    const rect = element.getBoundingClientRect()
 
     const mousePosition = new Vec2(e.clientX - rect.left, e.clientY - rect.top)
 
     // Create the rotation matrix - this is used to transform the mouse coordinates for the purpose of testing for transparent pixels
-    let s = Math.sin(-rotation)
-    let c = Math.cos(-rotation)
-    let matRotation = new Mat2(c, s, -s, c)
+    const s = Math.sin(-rotation)
+    const c = Math.cos(-rotation)
+    const matRotation = new Mat2(c, s, -s, c)
 
     // Transform the mouse position so that we get a new coordinate inside the rotated, scaled sticker.
     // What we're doing here, in order, is:
     // 1. Rotating the mouse position
     // 2. Adding half of the scaled dimensions of the sticker (because stickers are centered, and we want comp coords)
     // 3. scaling it by the inverse of the sticker's scale value
-    let transformedMousePosition = mousePosition
+    const transformedMousePosition = mousePosition
       .transformByMat2New(matRotation)
       .add(imageDetails.scaleNew(scale).scale(0.5))
       .scale(1 / scale)
 
     // Find the image data for the pixel at the transformed mouse coordinates
-    let imageData = ctx.getImageData(
+    const imageData = ctx.getImageData(
       transformedMousePosition.x,
       transformedMousePosition.y,
       1,
@@ -352,11 +386,13 @@ export default function Sticker({
     // I couldn't find an elegant and non hacky way of doing this in a more react/preact manner. 😥
     // If the alpha of the clicked pixel is less than 5%, we want to click *through* the sticker
     if (imageData.data[3] < 15) {
-      // Add the Sticker--checking class to the image. This just ensures that we don't check this sticker again and get stuck in an infinite loop
-      e.currentTarget.classList.add('Sticker--checking')
+      if (e.currentTarget instanceof HTMLElement) {
+        // Add the Sticker--checking class to the image. This just ensures that we don't check this sticker again and get stuck in an infinite loop
+        e.currentTarget.classList.add("Sticker--checking")
+      }
 
       // Find all the elements in the document at the clicked point
-      let elements = Array.from(
+      const elements = Array.from(
         document.elementsFromPoint(e.clientX, e.clientY)
       )
 
@@ -364,11 +400,14 @@ export default function Sticker({
       // This makes sure that when we click *through* the sticker we get the next one below instead of some random one in the stack.
       elements.sort((a, b) => {
         if (
-          a.classList.contains('Sticker__img') &&
-          b.classList.contains('Sticker__img')
+          a.classList.contains("Sticker__img") &&
+          b.classList.contains("Sticker__img")
         ) {
-          let as = window.getComputedStyle(a.parentNode.parentNode)
-          let bs = window.getComputedStyle(b.parentNode.parentNode)
+          if (!a.parentNode?.parentElement || !b.parentNode?.parentElement)
+            return 0
+
+          const as = window.getComputedStyle(a.parentNode.parentElement)
+          const bs = window.getComputedStyle(b.parentNode.parentElement)
 
           if (as.zIndex < bs.zIndex) return -1
           if (as.zIndex > bs.zIndex) return 1
@@ -380,8 +419,8 @@ export default function Sticker({
       // Loop through the elements. If it belongs to a sticker then create a pointer event and "click" that sticker
       elements.forEach((element) => {
         if (
-          element.classList.contains('Sticker__img') &&
-          !element.classList.contains('Sticker--checking')
+          element.classList.contains("Sticker__img") &&
+          !element.classList.contains("Sticker--checking")
         ) {
           // create a specific "pointerdown" event
           const details = {
@@ -389,7 +428,7 @@ export default function Sticker({
             clientY: e.clientY,
           }
 
-          const pointerDownEvent = new PointerEvent('pointerdown', details)
+          const pointerDownEvent = new PointerEvent("pointerdown", details)
           // const pointerUpEvent = new PointerEvent("pointerup", details);
 
           // Dispatch the event
@@ -399,11 +438,13 @@ export default function Sticker({
       })
 
       // Remove the "Sticker--checking class"
-      e.currentTarget.classList.remove('Sticker--checking')
+      if (e.currentTarget instanceof HTMLElement) {
+        e.currentTarget.classList.remove("Sticker--checking")
+      }
     } else {
       // If, instead, this sticker has been clicked then focus it, set it to moving and add the pointer move event
       element.focus()
-      if (onReorder) onReorder('up', true, id)
+      if (onReorder) onReorder("up", true, id)
       setState(STATES.MOVE)
     }
   }
@@ -471,8 +512,8 @@ export default function Sticker({
   }, [onScale, radius, parentDimensions.width, id])
 
   // start it all after image loads
-  const init = async function (e) {
-    const img = e.target
+  const init = async function (e: Event) {
+    const img = e.target as HTMLImageElement
     const width = img.width
     const height = img.height
     // canvas is used to check for click on the transparent area of the image
@@ -486,9 +527,10 @@ export default function Sticker({
     const imageSize = new Vec2(width, height)
     setImageDetails(imageSize)
 
-    if (initialPosition !== null) {
+    if (initialPosition !== undefined) {
       const position = !(initialPosition instanceof Vec2)
-        ? new Vec2(initialPosition.x, initialPosition.y)
+        ? // @ts-expect-error: this is an edge case where the position could be just an object
+          new Vec2(initialPosition.x, initialPosition.y)
         : initialPosition
 
       setPosition(
@@ -501,13 +543,13 @@ export default function Sticker({
         new Vec2(parentDimensions.width / 2, parentDimensions.height / 2)
       )
 
-    if (initialScale !== null)
+    if (initialScale !== undefined)
       setScale(
         (initialScale * parentDimensions.width) / Math.min(width, height) / 0.5
       )
     else setScale(defaultScale || 0.3)
 
-    if (initialRotation !== null) setRotation(initialRotation)
+    if (initialRotation !== undefined) setRotation(initialRotation)
     else setRotation(0)
 
     setState(STATES.IDLE)
@@ -533,17 +575,18 @@ export default function Sticker({
 
     const img = new Image()
     img.onload = init
-    img.crossOrigin = 'anonymous'
+    img.crossOrigin = "anonymous"
     img.src = image
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image])
 
-  if (state === STATES.LOADING) return
+  if (state === STATES.LOADING) return null
 
   return (
     <div
       ref={elementRef}
-      className={classnames(['Sticker', className])}
-      tabindex="0"
+      className={classnames([styles.Sticker, className])}
+      tabindex={0}
       style={{
         ...(position && { left: `${position.x}px`, top: `${position.y}px` }),
         zIndex: order,
@@ -556,16 +599,17 @@ export default function Sticker({
       {...props}
     >
       <div
-        className="Sticker__container"
+        className={styles.Sticker__container}
         style={{
           ...(imageDetails && {
             width: `${imageDetails.x}px`,
             height: `${imageDetails.y}px`,
           }),
         }}
+        data-sticker-container
       >
         <img
-          className="Sticker__img"
+          className={styles.Sticker__img}
           src={image}
           style={{
             transform: `scale(${scale}) rotate(${
@@ -575,22 +619,29 @@ export default function Sticker({
           alt={alt}
           onPointerDown={onImagePointerDown}
           onPointerUp={onImagePointerUp}
+          data-sticker-img
         />
       </div>
-      <div className="Sticker__controls" style={controlsStyle}>
+      <div
+        className={styles.Sticker__controls}
+        style={controlsStyle}
+        data-sticker-controls
+      >
         <div
-          className="Sticker__controll-pin"
+          className={styles["Sticker__controll-pin"]}
           style={controlsPinStyle}
           onPointerDown={onPinPointerDown}
           onPointerUp={onPinPointerUp}
+          data-sticker-control-pin
         />
         {onDelete && (
           <button
-            tabIndex="-1"
+            tabIndex={-1}
             aria-hidden="true"
-            className="Sticker__controll-delete"
+            className={styles["Sticker__controll-delete"]}
             style={controlsDeleteStyle}
             onClick={onDeleteClick}
+            data-sticker-control-delete
           />
         )}
       </div>

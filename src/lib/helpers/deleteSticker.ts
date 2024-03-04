@@ -1,8 +1,12 @@
-export function deleteSticker(stickers, id) {
-  if (!stickers || !(stickers instanceof Array) || stickers.length <= 0)
-    throw Error('`stickers` array is empty')
+import type { StickerItem } from "../types"
 
-  const [filteredStickers, deletedSticker] = stickers.reduce(
+export function deleteSticker(stickers: StickerItem[], id: string) {
+  if (!stickers || !(stickers instanceof Array) || stickers.length <= 0)
+    throw Error("`stickers` array is empty")
+
+  const [filteredStickers, deletedSticker] = stickers.reduce<
+    [StickerItem[], StickerItem | null]
+  >(
     (acc, s) => {
       if (s.id !== id) acc[0].push(s)
       else acc[1] = s
@@ -12,7 +16,7 @@ export function deleteSticker(stickers, id) {
     [[], null]
   )
   if (!id || !deletedSticker)
-    throw Error('`id` needs to be a valid `sticker` id')
+    throw Error("`id` needs to be a valid `sticker` id")
 
   return filteredStickers.map((item) => {
     // fix the order

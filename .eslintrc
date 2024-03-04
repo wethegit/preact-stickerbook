@@ -3,7 +3,12 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["eslint:recommended", "preact", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "preact",
+    "prettier"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -11,8 +16,33 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "rules": {},
+  "overrides": [
+    {
+      "files": ["**/*.{ts,tsx}"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/typescript"
+      ],
+      "rules": {
+        // "@typescript-eslint/explicit-function-return-type": "off",
+      },
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "tsconfigRootDir": "./",
+        "project": "./tsconfig.json"
+      },
+      "settings": {
+        "import/resolver": {
+          "typescript": true,
+          "node": true
+        }
+      }
+    }
+  ],
+  "rules": {
+    "no-duplicate-imports": "off"
+  },
   "settings": {
-    "jest": { "version": 26 }
+    "jest": { "version": "latest" }
   }
 }
