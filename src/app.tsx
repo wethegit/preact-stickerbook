@@ -1,8 +1,9 @@
 import { h } from "preact"
-import { useState, useRef, useCallback } from "preact/hooks"
+import { useRef, useCallback } from "preact/hooks"
 
 import { Sticker, Stickerbook } from "./lib"
 import { addSticker, exportStickerbook } from "./lib/helpers"
+import { useStickerbook } from "./lib/use-stickerbook"
 
 import backgroundImage from "./background.jpg"
 import backgroundImage2 from "./background-2.png"
@@ -10,8 +11,6 @@ import frameImage from "./frame.png"
 import foregroundImage from "./foreground.png"
 import foregroundImage2 from "./foreground-2.png"
 import stickerImage from "./sticker.png"
-
-import { useStickerbook } from "./lib/use-stickerbook"
 
 const CANVAS_SIZE = {
   width: 500,
@@ -69,22 +68,25 @@ export function App() {
 
   const downloadRef = useRef<HTMLAnchorElement | null>(null)
 
-  const [hidden, setHidden] = useState(false)
-
   const onAddSticker = useCallback(async () => {
-    const res = await fetch(GIPHY_API_URL).then((res) => res.json())
-    const {
-      data: {
-        images: {
-          preview_gif: { url },
-        },
-        caption,
-      },
-    } = res
+    try {
+      const res = await fetch(GIPHY_API_URL).then((res) => res.json())
 
-    setStickers((stickers) =>
-      addSticker(stickers, { image: url, alt: caption })
-    )
+      const {
+        data: {
+          images: {
+            preview_gif: { url },
+          },
+          caption,
+        },
+      } = res
+
+      setStickers((stickers) =>
+        addSticker({ stickers, sticker: { image: url, alt: caption } })
+      )
+    } catch (err) {
+      console.error(err)
+    }
   }, [setStickers])
 
   // Download
@@ -117,42 +119,35 @@ export function App() {
 
       <a ref={downloadRef} hidden={true} href="#" download="Stickerbook.png" />
 
-      {/* Toggle button for testing re-renders */}
-      <button onClick={() => setHidden((state) => !state)}>
-        {hidden ? "show" : "hide"} stickerbook
-      </button>
-
-      {!hidden && (
-        <div
-          style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
-            return { ...acc, [`max-${key}`]: `${val}px` }
-          }, {})}
+      <div
+        style={Object.entries(CANVAS_SIZE).reduce((acc, [key, val]) => {
+          return { ...acc, [`max-${key}`]: `${val}px` }
+        }, {})}
+      >
+        <Stickerbook
+          outputWidth={CANVAS_SIZE.width}
+          outputHeight={CANVAS_SIZE.height}
+          backgrounds={backgrounds}
+          frame={frame}
+          foregrounds={foregrounds}
         >
-          <Stickerbook
-            outputWidth={CANVAS_SIZE.width}
-            outputHeight={CANVAS_SIZE.height}
-            backgrounds={backgrounds}
-            frame={frame}
-            foregrounds={foregrounds}
-          >
-            {stickers.map((sticker) => (
-              <Sticker
-                key={sticker.id}
-                initialPosition={sticker.position}
-                initialRotation={sticker.rotation}
-                initialScale={sticker.scale}
-                onReorder={onReorderSticker}
-                onDelete={onDeleteSticker}
-                onPosition={onPositionSticker}
-                onScale={onScaleSticker}
-                onRotate={onRotateSticker}
-                disableRotation={sticker.disableRotation}
-                {...sticker}
-              />
-            ))}
-          </Stickerbook>
-        </div>
-      )}
+          {stickers.map((sticker) => (
+            <Sticker
+              key={sticker.id}
+              initialPosition={sticker.position}
+              initialRotation={sticker.rotation}
+              initialScale={sticker.scale}
+              onReorder={onReorderSticker}
+              onDelete={onDeleteSticker}
+              onPosition={onPositionSticker}
+              onScale={onScaleSticker}
+              onRotate={onRotateSticker}
+              disableRotation={sticker.disableRotation}
+              {...sticker}
+            />
+          ))}
+        </Stickerbook>
+      </div>
 
       <a href="https://giphy.com/" target="_blank" rel="noreferrer">
         <img

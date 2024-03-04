@@ -2,6 +2,7 @@ import { ComponentChildren } from "preact"
 import type { Vec2 } from "wtc-math"
 
 import { EXPORT_FORMATS, ORDER_DIRECTIONS, OVERLAY_TYPES } from "./helpers"
+import { StateUpdater } from "preact/hooks"
 
 export interface StickerItem {
   /**
@@ -172,13 +173,13 @@ export interface UseStickerbookProps {
 
 export interface UseStickerbookReturn {
   stickers: StickerItem[]
-  setStickers: (stickers: StickerItem[]) => void
+  setStickers: StateUpdater<StickerItem[]>
   backgrounds: BackgroundItem[]
-  setBackgrounds: (backgrounds: BackgroundItem[]) => void
+  setBackgrounds: StateUpdater<BackgroundItem[]>
   frame: Frame | undefined
-  setFrame: (frame: Frame | undefined) => void
+  setFrame: StateUpdater<Overlay | undefined>
   foregrounds: ForegroundItem[]
-  setForegrounds: (foregrounds: ForegroundItem[]) => void
+  setForegrounds: StateUpdater<ForegroundItem[]>
 
   onReorderSticker: OnReorderHandler
   onDeleteSticker: OnDeleteHandler
