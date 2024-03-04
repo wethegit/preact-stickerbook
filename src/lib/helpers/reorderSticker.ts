@@ -7,6 +7,11 @@ interface ReorderStickerOptions {
   stickers: StickerItem[]
 }
 
+/**
+ * Returns a reordered copy of the provided `stickers` array.
+ * @param {ReorderStickerOptions[]}
+ * @returns {StickerItem[]}
+ */
 export function reorderSticker({
   id,
   direction = "up",

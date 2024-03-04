@@ -169,3 +169,21 @@ export interface UseStickerbookProps {
   initialFrame?: Frame
   initialForegrounds?: ForegroundItem[]
 }
+
+export interface UseStickerbookReturn {
+  stickers: StickerItem[]
+  setStickers: (stickers: StickerItem[]) => void
+  backgrounds: BackgroundItem[]
+  setBackgrounds: (backgrounds: BackgroundItem[]) => void
+  frame: Frame | undefined
+  setFrame: (frame: Frame | undefined) => void
+  foregrounds: ForegroundItem[]
+  setForegrounds: (foregrounds: ForegroundItem[]) => void
+
+  onReorderSticker: OnReorderHandler
+  onDeleteSticker: OnDeleteHandler
+  onPositionSticker: OnPositionHandler
+  onScaleSticker: OnScaleHandler
+  onRotateSticker: OnRotateHandler
+  onAddSticker: OnAddStickerHandler
+}

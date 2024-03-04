@@ -1,9 +1,19 @@
 import type { StickerItem } from "../types"
 
-export function deleteSticker(
-  stickers: StickerItem[],
+interface DeleteStickerOptions {
+  stickers: StickerItem[]
   id: string
-): StickerItem[] {
+}
+
+/**
+ * Returns a copy of the provided `stickers` array without the selected sticker.
+ * @param {DeleteStickerOptions}
+ * @returns {StickerItem[]}
+ */
+export function deleteSticker({
+  stickers,
+  id,
+}: DeleteStickerOptions): StickerItem[] {
   if (!stickers || !(stickers instanceof Array) || stickers.length <= 0)
     throw Error("`stickers` array is empty")
 
