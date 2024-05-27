@@ -28,7 +28,7 @@
   "dependencies": {
     "preact": "^10.13.1",
     "wtc-math": "^1.0.20",
-    "wtc-simplegl": "^0.0.4"
+    "wtc-simplegl": "^1.0.2"
   },
   "peerDependencies": {
     "preact": "^10.13.1"
