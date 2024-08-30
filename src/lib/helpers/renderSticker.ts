@@ -48,9 +48,17 @@ export function renderSticker(
   loadedImage: HTMLImageElement,
   canvasSize: Size
 ) {
-  if (!sticker.position) throw Error("Sticker position is not defined")
-  if (!sticker.scale) throw Error("Sticker scale is not defined")
-  if (!sticker.rotation) throw Error("Sticker rotation is not defined")
+  if (typeof sticker.position === "undefined") {
+    throw Error("Sticker position is not defined")
+  }
+
+  if (typeof sticker.scale === "undefined") {
+    throw Error("Sticker scale is not defined")
+  }
+
+  if (typeof sticker.rotation === "undefined") {
+    throw Error("Sticker rotation is not defined")
+  }
 
   initApplication(canvasSize)
 
