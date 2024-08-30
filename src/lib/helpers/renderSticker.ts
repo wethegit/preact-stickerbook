@@ -48,15 +48,21 @@ export function renderSticker(
   loadedImage: HTMLImageElement,
   canvasSize: Size
 ) {
-  if (typeof sticker.position === "undefined") {
+  if (
+    typeof sticker.position === "undefined" ||
+    typeof sticker.position.x === "undefined" ||
+    typeof sticker.position.y === "undefined" ||
+    isNaN(sticker.position.x) ||
+    isNaN(sticker.position.y)
+  ) {
     throw Error("Sticker position is not defined")
   }
 
-  if (typeof sticker.scale === "undefined") {
+  if (typeof sticker.scale === "undefined" || isNaN(sticker.scale)) {
     throw Error("Sticker scale is not defined")
   }
 
-  if (typeof sticker.rotation === "undefined") {
+  if (typeof sticker.rotation === "undefined" || isNaN(sticker.rotation)) {
     throw Error("Sticker rotation is not defined")
   }
 
