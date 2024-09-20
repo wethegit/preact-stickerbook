@@ -34,8 +34,9 @@ precision highp float;
 in vec2 v_uv;
 out vec4 color;
 uniform sampler2D s_main;
+uniform vec2 u_resolution;
 void main() {
-  vec2 uv = v_uv;
+  vec2 uv = gl_FragCoord.xy / u_resolution;
 
   color = texture(s_main, uv);
 }`
