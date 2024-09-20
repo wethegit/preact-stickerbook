@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Easily create collage apps that are accessible by default.",
   "files": [
     "dist/*"
@@ -28,7 +28,7 @@
   "dependencies": {
     "preact": "^10.13.1",
     "wtc-math": "^1.0.20",
-    "wtc-simplegl": "^0.0.6"
+    "wtc-simplegl": "^1.0.3"
   },
   "peerDependencies": {
     "preact": "^10.13.1"
