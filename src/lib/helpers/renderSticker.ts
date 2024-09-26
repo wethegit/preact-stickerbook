@@ -71,7 +71,10 @@ export function renderSticker(
 
   const { gl, canvas: c } = components
 
-  const texture = createTexture(gl, { img: loadedImage })
+  const texture = createTexture(gl, {
+    img: loadedImage,
+    minFilter: gl.LINEAR_MIPMAP_LINEAR,
+  })
 
   const d = new Vec2(loadedImage.width, loadedImage.height)
 
