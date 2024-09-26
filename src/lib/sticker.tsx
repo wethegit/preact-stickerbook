@@ -400,8 +400,8 @@ export function Sticker({
       // This makes sure that when we click *through* the sticker we get the next one below instead of some random one in the stack.
       elements.sort((a, b) => {
         if (
-          a.classList.contains("Sticker__img") &&
-          b.classList.contains("Sticker__img")
+          a.classList.contains(styles.Sticker__img) &&
+          b.classList.contains(styles.Sticker__img)
         ) {
           if (!a.parentNode?.parentElement || !b.parentNode?.parentElement)
             return 0
@@ -419,7 +419,7 @@ export function Sticker({
       // Loop through the elements. If it belongs to a sticker then create a pointer event and "click" that sticker
       elements.forEach((element) => {
         if (
-          element.classList.contains("Sticker__img") &&
+          element.classList.contains(styles.Sticker__img) &&
           !element.classList.contains("Sticker--checking")
         ) {
           // create a specific "pointerdown" event
