@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "Easily create collage apps that are accessible by default.",
   "files": [
     "dist/*"
