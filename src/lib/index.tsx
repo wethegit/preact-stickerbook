@@ -6,6 +6,7 @@ export {
   addSticker,
   deleteSticker,
   exportStickerbook,
+  exportStickerbookFallback,
   patchSticker,
   reorderSticker,
 } from "./helpers"

@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useRef, useCallback } from "preact/hooks"
 
 import { Sticker, Stickerbook } from "./lib"
-import { addSticker, exportStickerbook } from "./lib/helpers"
+import { addSticker, exportStickerbookFallback } from "./lib/helpers"
 import { useStickerbook } from "./lib/use-stickerbook"
 
 import backgroundImage from "./background.jpg"
@@ -97,7 +97,7 @@ export function App() {
 
     if (!downloadLink) return
 
-    const newUrl = await exportStickerbook<"image">({
+    const newUrl = await exportStickerbookFallback<"image">({
       outputWidth: CANVAS_SIZE.width,
       outputHeight: CANVAS_SIZE.height,
       stickers,
