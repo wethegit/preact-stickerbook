@@ -25,7 +25,7 @@ import styles from "./stickerbook.module.scss"
 export function Stickerbook({
   backgrounds = [],
   foregrounds = [],
-  frame,
+  frames,
   outputHeight = 500,
   outputWidth = 500,
   children,
@@ -194,33 +194,41 @@ export function Stickerbook({
         }}
         data-stickerbook-container
       >
-        {backgrounds.length > 0 &&
-          backgrounds.map((bg, i) => {
-            if (!bg.image) return null
+        {backgrounds.length > 0
+          ? backgrounds.map((bg, i) => {
+              if (!bg.image) return null
 
-            return (
-              <div
-                key={i}
-                role="img"
-                className={styles.Stickerbook__background}
-                style={{
-                  backgroundImage: `url(${bg.image})`,
-                  ...backgroundStyles[i],
-                }}
-                aria-label={bg.alt || ""}
-                data-stickerbook-background={i}
-              />
-            )
-          })}
+              return (
+                <div
+                  key={i}
+                  role="img"
+                  className={styles.Stickerbook__background}
+                  style={{
+                    backgroundImage: `url(${bg.image})`,
+                    ...backgroundStyles[i],
+                  }}
+                  aria-label={bg.alt || ""}
+                  data-stickerbook-background={i}
+                />
+              )
+            })
+          : null}
 
-        {frame && frame.image && (
-          <img
-            src={frame.image}
-            alt={frame.alt || ""}
-            className={styles.Stickerbook__frame}
-            data-stickerbook-frame
-          />
-        )}
+        {frames && frames?.length > 0
+          ? frames.map(({ image, alt }, i) => {
+              if (!image) return null
+
+              return (
+                <img
+                  key={`frame-${image}-${i}`}
+                  src={image}
+                  alt={alt || ""}
+                  className={styles.Stickerbook__frame}
+                  data-stickerbook-frame
+                />
+              )
+            })
+          : null}
 
         <StickerbookContext.Provider
           value={{

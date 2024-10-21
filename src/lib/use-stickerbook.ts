@@ -26,14 +26,14 @@ export function useStickerbook({
   initialStickers = [],
   initialBackgrounds = [],
   initialForegrounds = [],
-  initialFrame,
+  initialFrames = [],
 }: UseStickerbookProps): UseStickerbookReturn {
   const [stickers, setStickers] = useState<StickerItem[]>(initialStickers)
 
   const [backgrounds, setBackgrounds] =
     useState<BackgroundItem[]>(initialBackgrounds)
 
-  const [frame, setFrame] = useState<Frame | undefined>(initialFrame)
+  const [frames, setFrames] = useState<Frame[]>(initialFrames)
 
   const [foregrounds, setForegrounds] =
     useState<ForegroundItem[]>(initialForegrounds)
@@ -78,8 +78,8 @@ export function useStickerbook({
     setStickers,
     backgrounds,
     setBackgrounds,
-    frame,
-    setFrame,
+    frames,
+    setFrames,
     foregrounds,
     setForegrounds,
 

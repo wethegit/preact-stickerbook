@@ -17,7 +17,7 @@ interface ExportStickerbookOptions<T extends ExportFormat> {
    */
   canvas?: HTMLCanvasElement
   backgrounds?: BackgroundItem[]
-  frame?: Frame
+  frames?: Frame[]
   stickers?: StickerItem[]
   foregrounds?: ForegroundItem[]
   /**
@@ -51,7 +51,7 @@ type ExportReturn<K extends ExportFormat> =
 export async function exportStickerbook<T extends ExportFormat>({
   canvas,
   backgrounds,
-  frame,
+  frames,
   stickers,
   foregrounds,
   outputWidth,
@@ -88,13 +88,18 @@ export async function exportStickerbook<T extends ExportFormat>({
   }
 
   // draw frame
-  if (frame && frame.image)
-    await coverCanvas({
-      ctx: outputCtx,
-      img: frame.image,
-      width: outputWidth,
-      height: outputHeight,
-    })
+  if (frames && frames.length) {
+    for (const frame of frames) {
+      if (!frame.image) continue
+
+      await coverCanvas({
+        ctx: outputCtx,
+        img: frame.image,
+        width: outputWidth,
+        height: outputHeight,
+      })
+    }
+  }
 
   if (stickers && stickers.length > 0) {
     // sort by order
