@@ -2,7 +2,7 @@ import { ComponentChildren } from "preact"
 import type { Vec2 } from "wtc-math"
 
 import { EXPORT_FORMATS, ORDER_DIRECTIONS, OVERLAY_TYPES } from "./helpers"
-import { StateUpdater } from "preact/hooks"
+import type { Dispatch, StateUpdater } from "preact/hooks"
 
 export interface StickerItem {
   /**
@@ -69,7 +69,7 @@ export interface StickerbookProps {
   /**
    * The `frame` will appear on top of all the `background`s but behind all the `Sticker`s. Useful for borders.
    */
-  frame?: Frame
+  frames?: Frame[]
   /**
    * The height of your artboard.
    */
@@ -177,19 +177,19 @@ export interface StickerProps extends StickerItem {
 export interface UseStickerbookProps {
   initialStickers?: StickerItem[]
   initialBackgrounds?: BackgroundItem[]
-  initialFrame?: Frame
+  initialFrames?: Frame[]
   initialForegrounds?: ForegroundItem[]
 }
 
 export interface UseStickerbookReturn {
   stickers: StickerItem[]
-  setStickers: StateUpdater<StickerItem[]>
+  setStickers: Dispatch<StateUpdater<StickerItem[]>>
   backgrounds: BackgroundItem[]
-  setBackgrounds: StateUpdater<BackgroundItem[]>
-  frame: Frame | undefined
-  setFrame: StateUpdater<Overlay | undefined>
+  setBackgrounds: Dispatch<StateUpdater<BackgroundItem[]>>
+  frames: Frame[]
+  setFrames: Dispatch<StateUpdater<Frame[]>>
   foregrounds: ForegroundItem[]
-  setForegrounds: StateUpdater<ForegroundItem[]>
+  setForegrounds: Dispatch<StateUpdater<ForegroundItem[]>>
 
   onReorderSticker: OnReorderHandler
   onDeleteSticker: OnDeleteHandler

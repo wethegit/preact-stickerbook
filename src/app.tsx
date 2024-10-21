@@ -29,7 +29,7 @@ export function App() {
     setStickers,
     backgrounds,
     foregrounds,
-    frame,
+    frames,
     onReorderSticker,
     onDeleteSticker,
     onPositionSticker,
@@ -43,9 +43,11 @@ export function App() {
         order: 0,
       },
     ],
-    initialFrame: {
-      image: frameImage,
-    },
+    initialFrames: [
+      {
+        image: frameImage,
+      },
+    ],
     initialBackgrounds: [
       {
         image: backgroundImage,
@@ -102,7 +104,7 @@ export function App() {
       outputHeight: CANVAS_SIZE.height,
       stickers,
       backgrounds,
-      frame,
+      frames,
       foregrounds,
       format: "image",
     })
@@ -128,7 +130,7 @@ export function App() {
           outputWidth={CANVAS_SIZE.width}
           outputHeight={CANVAS_SIZE.height}
           backgrounds={backgrounds}
-          frame={frame}
+          frames={frames}
           foregrounds={foregrounds}
         >
           {stickers.map((sticker) => (

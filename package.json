@@ -1,6 +1,6 @@
 {
   "name": "@wethegit/preact-stickerbook",
-  "version": "4.0.7",
+  "version": "5.0.0",
   "description": "Easily create collage apps that are accessible by default.",
   "files": [
     "dist/*"
@@ -23,6 +23,7 @@
     "lint:scripts": "eslint --fix --ext .jsx,.js,.ts,.tsx --ignore-path .gitignore .",
     "lint:styles": "stylelint src/**/*.{css,scss}",
     "lint": "npm run lint:scripts && npm run lint:styles",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write ."
   },
   "dependencies": {
