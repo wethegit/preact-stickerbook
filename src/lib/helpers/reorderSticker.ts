@@ -43,8 +43,8 @@ export function reorderSticker({
         ? max
         : Math.min(max, currentOrder + 1)
       : extreme
-      ? min
-      : Math.max(min, currentOrder - 1)
+        ? min
+        : Math.max(min, currentOrder - 1)
 
   // if the order didn't change, than we just return
   if (newOrder === currentOrder) return stickers
