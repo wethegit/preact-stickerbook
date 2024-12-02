@@ -83,6 +83,7 @@ export async function exportStickerbook<T extends ExportFormat>({
         img: background.image,
         width: outputWidth,
         height: outputHeight,
+        type: background.type,
       })
     }
   }
