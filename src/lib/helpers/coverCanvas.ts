@@ -1,3 +1,4 @@
+import { OverlayType } from "../types"
 import { loadUrlAsImage } from "./loadUrlAsImage"
 
 interface CoverCanvasOptions {
@@ -7,6 +8,7 @@ interface CoverCanvasOptions {
   height: number
   offsetX?: number
   offsetY?: number
+  type?: OverlayType
 }
 
 export async function coverCanvas({
@@ -16,6 +18,7 @@ export async function coverCanvas({
   height,
   offsetX = 0.5,
   offsetY = 0.5,
+  type = "scene",
 }: CoverCanvasOptions): Promise<void> {
   if (!ctx || !(ctx instanceof CanvasRenderingContext2D))
     throw Error("`ctx` is required and must be a valid canvas context")
@@ -34,29 +37,48 @@ export async function coverCanvas({
   let outputWidth = width
   let outputHeight = height
 
-  if (imageRatio > outputRatio) outputWidth = outputHeight * imageRatio
-  else if (imageRatio < outputRatio)
-    outputHeight = outputWidth * (imageHeight / imageWidth)
-
   // first we our image/source onto a canvas resized
   // to the output size we want and with the correct ratio
   const resizedCanvas = document.createElement("canvas")
   const resizedCanvasCtx = resizedCanvas.getContext("2d")!
 
+  if (type === "scene") {
+    if (imageRatio > outputRatio) outputWidth = outputHeight * imageRatio
+    else if (imageRatio < outputRatio)
+      outputHeight = outputWidth * (imageHeight / imageWidth)
+  } else {
+    // backgrounds should base themselves on the size of the stickerbook
+    // meaning, they should look good with the output size in mind
+    // so we don't alter their dimensions here, just like we don't
+    // on the stickerbook preview itself, see size matching there
+    // https://github.com/wethegit/preact-stickerbook/blob/4f33afc7ac1fb25090d2f799798b104797758229/src/lib/stickerbook.tsx
+    outputWidth = imageWidth
+    outputHeight = imageHeight
+  }
+
   resizedCanvas.width = outputWidth
   resizedCanvas.height = outputHeight
   resizedCanvasCtx.drawImage(loadedImage, 0, 0, outputWidth, outputHeight)
 
-  // now we draw the scaled canvas onto the original context passed
-  ctx.drawImage(
-    resizedCanvas,
-    (outputWidth - width) * offsetX,
-    (outputHeight - height) * offsetY,
-    width,
-    height,
-    0,
-    0,
-    width,
-    height
-  )
+  if (type === "scene") {
+    // now we draw the scaled canvas onto the original context passed
+    ctx.drawImage(
+      resizedCanvas,
+      (outputWidth - width) * offsetX,
+      (outputHeight - height) * offsetY,
+      width,
+      height,
+      0,
+      0,
+      width,
+      height
+    )
+  } else {
+    // create a pattern
+    const pattern = ctx.createPattern(resizedCanvas, "repeat")!
+
+    // fill canvas
+    ctx.fillStyle = pattern
+    ctx.fillRect(0, 0, width, height)
+  }
 }

@@ -5,12 +5,12 @@ import { Sticker, Stickerbook } from "./lib"
 import { addSticker, exportStickerbook } from "./lib/helpers"
 import { useStickerbook } from "./lib/use-stickerbook"
 
-import backgroundImage from "./background.jpg"
 import backgroundImage2 from "./background-2.png"
 import frameImage from "./frame.png"
 import foregroundImage from "./foreground.png"
 import foregroundImage2 from "./foreground-2.png"
 import stickerImage from "./sticker.png"
+import patternImage from "./sweet-potato-pattern.jpg"
 
 const CANVAS_SIZE = {
   width: 500,
@@ -50,8 +50,8 @@ export function App() {
     ],
     initialBackgrounds: [
       {
-        image: backgroundImage,
-        type: "scene",
+        image: patternImage,
+        type: "pattern",
       },
       {
         image: backgroundImage2,

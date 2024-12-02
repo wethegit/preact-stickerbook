@@ -65,6 +65,7 @@ export function Stickerbook({
       const bgSize =
         (backgroundDetails[i].width * dimensions.width) / outputWidth
       return {
+        backgroundPosition: "left top",
         backgroundRepeat: "repeat",
         backgroundSize: `${bgSize}px auto`,
       }
